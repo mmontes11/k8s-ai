@@ -1,0 +1,50 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: ollama
+spec:
+  chart:
+    spec:
+      chart: ollama
+      sourceRef:
+        kind: HelmRepository
+        name: ollama
+      version: "1.35.0"
+  interval: 1h0m0s
+  values:
+    ollama:
+      port: 11434
+      models:
+        pull:
+          - codestral:22b
+          - deepseek-r1:8b
+          - gemma3:4b
+          - gpt-oss:20b
+          - llama3.1:8b
+          - llama3.2:3b
+          - mistral:7b
+          - qwen2.5-coder:7b
+          - qwen3-vl:8b
+          - qwen3:8b
+        run: []
+    service:
+      type: LoadBalancer
+      port: 11434
+      annotations:
+        metallb.universe.tf/loadBalancerIPs: 10.0.0.90
+    resources:
+      requests:
+        cpu: 2
+        memory: 4Gi
+      limits:
+        memory: 20Gi
+    persistentVolume:
+      enabled: true
+      size: 100Gi
+      storageClass: topolvm
+    tolerations:
+    - effect: NoSchedule
+      key: node.mmontes.io/type
+      value: compute-xlarge
+    nodeSelector:
+      node.mmontes.io/type: compute-xlarge
