@@ -37,7 +37,7 @@ spec:
         cpu: 2
         memory: 4Gi
       limits:
-        memory: 20Gi
+        memory: 24Gi
     persistentVolume:
       enabled: true
       size: 100Gi
