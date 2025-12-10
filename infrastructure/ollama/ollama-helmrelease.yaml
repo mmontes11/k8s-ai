@@ -29,10 +29,8 @@ spec:
           - qwen3:8b
         run: []
     service:
-      type: LoadBalancer
+      type: ClusterIP
       port: 11434
-      annotations:
-        metallb.universe.tf/loadBalancerIPs: 10.0.0.90
     resources:
       requests:
         cpu: 2

@@ -4,3 +4,4 @@ namespace: ai
 resources:
   - ollama-helmrelease.yaml
   - ollama-helmrepository.yaml
+  - ollama-httproute.yaml
