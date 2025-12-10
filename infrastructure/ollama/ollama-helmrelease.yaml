@@ -25,7 +25,6 @@ spec:
           - mistral:7b
           - qwen2.5-coder:1.5b
           - qwen2.5-coder:7b
-          - qwen3-coder:30b
           - qwen3-vl:8b
           - qwen3:8b
         run: []

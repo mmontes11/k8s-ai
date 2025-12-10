@@ -16,6 +16,8 @@ spec:
       enabled: false
     ollamaUrls:
       - http://ollama:11434
+    pipelines:
+      enabled: false
     persistence:
       enabled: true
       size: 2Gi
