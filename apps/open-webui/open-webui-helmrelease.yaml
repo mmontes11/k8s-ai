@@ -27,3 +27,6 @@ spec:
     service:
       type: ClusterIP
       port: 80
+    extraEnvVars:
+      - name: WEBUI_NAME
+        value: LLM
