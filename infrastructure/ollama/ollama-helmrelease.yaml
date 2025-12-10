@@ -33,10 +33,10 @@ spec:
       port: 11434
     resources:
       requests:
-        cpu: 2
-        memory: 4Gi
+        cpu: 4
+        memory: 8Gi
       limits:
-        memory: 24Gi
+        memory: 32Gi
     persistentVolume:
       enabled: true
       size: 100Gi
