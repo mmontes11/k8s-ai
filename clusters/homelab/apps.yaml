@@ -4,6 +4,8 @@ metadata:
   name: open-webui
   namespace: ai
 spec:
+  dependsOn:
+    - name: ollama
   interval: 5m
   sourceRef:
     kind: GitRepository
