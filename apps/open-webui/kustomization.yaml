@@ -7,4 +7,5 @@ resources:
   - open-webui-helmrepository.yaml
   - open-webui-pvc.yaml
   - open-webui-replicationsource.yaml
+  - open-webui-replicationdestination.yaml
   - restic-open-webui-sealedsecret.yaml

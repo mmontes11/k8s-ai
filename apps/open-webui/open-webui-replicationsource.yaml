@@ -5,8 +5,8 @@ metadata:
 spec:
   sourcePVC: open-webui
   trigger:
-    # schedule: "0 2 * * *"
-    manual: open-webui-2
+    schedule: "0 2 * * *"
+    # manual: open-webui-2
   restic:
     repository: restic-open-webui
     retain:
