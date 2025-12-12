@@ -21,9 +21,6 @@ spec:
     persistence:
       enabled: true
       existingClaim: open-webui
-      # size: 5Gi
-      # storageClass: rook-ceph
-  # @section -- Per
     service:
       type: ClusterIP
       port: 80

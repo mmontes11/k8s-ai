@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: open-webui
+spec:
+  accessModes:
+  - ReadWriteOnce
+  dataSourceRef:
+    kind: ReplicationDestination
+    apiGroup: volsync.backube
+    name: open-webui
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: rook-ceph
