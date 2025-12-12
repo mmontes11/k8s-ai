@@ -5,7 +5,6 @@ resources:
   - llm-httproute.yaml
   - open-webui-helmrelease.yaml
   - open-webui-helmrepository.yaml
-  - open-webui-pvc.yaml
   - open-webui-replicationdestination.yaml
   - open-webui-replicationsource.yaml
   - restic-open-webui-sealedsecret.yaml
