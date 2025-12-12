@@ -20,10 +20,7 @@ spec:
       enabled: false
     persistence:
       enabled: true
-      size: 2Gi
-      accessModes:
-        - ReadWriteOnce
-      storageClass: rook-ceph
+      existingClaim: open-webui
     service:
       type: ClusterIP
       port: 80
