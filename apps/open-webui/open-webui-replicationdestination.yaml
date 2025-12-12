@@ -24,7 +24,7 @@ spec:
                 app.kubernetes.io/name: open-webui
                 app.kubernetes.io/instance: open-webui
             topologyKey: kubernetes.io/hostname
-    cacheCapacity: 10Gi
+    cacheCapacity: 5Gi
     cacheAccessModes:
       - ReadWriteOnce
     customCA:

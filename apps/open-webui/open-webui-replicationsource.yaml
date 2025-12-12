@@ -20,7 +20,7 @@ spec:
         memory: 300Mi
       limits:
         memory: 4Gi
-    cacheCapacity: 10Gi
+    cacheCapacity: 5Gi
     cacheAccessModes:
       - ReadWriteOnce
     customCA:
