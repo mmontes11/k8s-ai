@@ -5,10 +5,6 @@ metadata:
 spec:
   accessModes:
   - ReadWriteOnce
-  dataSourceRef:
-    kind: ReplicationDestination
-    apiGroup: volsync.backube
-    name: open-webui
   resources:
     requests:
       storage: 5Gi
