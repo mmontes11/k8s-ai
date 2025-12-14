@@ -27,9 +27,12 @@ spec:
           - qwen2.5-coder:7b
           - qwen3-coder:30b
           - qwen3-vl:8b
+          - qwen3-vl:8b-instruct
           - qwen3-vl:4b
-          - qwen3-vl:2b
+          - qwen3-vl:4b-instruct
+          - qwen3-vl:2b-instruct
           - qwen3:8b
+          - qwen3:4b-instruct
         run: []
     service:
       type: ClusterIP
@@ -70,7 +73,7 @@ spec:
     #    value: "1"
     persistentVolume:
       enabled: true
-      size: 100Gi
+      size: 300Gi
       storageClass: topolvm
     tolerations:
     - effect: NoSchedule
