@@ -19,6 +19,7 @@ spec:
           - codestral:22b
           - deepseek-r1:8b
           - gemma3:4b
+          - gemma3:1b
           - gpt-oss:20b
           - llama3.1:8b
           - llama3.2:3b
@@ -27,6 +28,8 @@ spec:
           - qwen2.5-coder:7b
           - qwen3-coder:30b
           - qwen3-vl:8b
+          - qwen3-vl:4b
+          - qwen3-vl:2b
           - qwen3:8b
         run: []
     service:
