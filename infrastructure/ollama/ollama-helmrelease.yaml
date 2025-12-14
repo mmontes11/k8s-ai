@@ -19,7 +19,6 @@ spec:
           - codestral:22b
           - deepseek-r1:8b
           - gemma3:4b
-          - gemma3:1b
           - gpt-oss:20b
           - llama3.1:8b
           - llama3.2:3b
