@@ -9,7 +9,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: ollama
-      version: "1.35.0"
+      version: "1.36.0"
   interval: 1h0m0s
   values:
     ollama:
@@ -25,6 +25,7 @@ spec:
           - mistral:7b
           - qwen2.5-coder:1.5b
           - qwen2.5-coder:7b
+          - qwen3-coder:30b
           - qwen3-vl:8b
           - qwen3:8b
         run: []
@@ -37,6 +38,34 @@ spec:
         memory: 8Gi
       limits:
         memory: 32Gi
+    # See: https://github.com/ollama/ollama/blob/main/envconfig/config.go
+    extraEnv:
+      - name: OLLAMA_MAX_QUEUE
+        value: "100"
+      - name: OLLAMA_NUM_PARALLEL
+        value: "1"
+      - name: OLLAMA_MAX_LOADED_MODELS
+        value: "1"
+      - name: OLLAMA_KEEP_ALIVE
+        value: "5m"
+      - name: OLLAMA_LOAD_TIMEOUT
+        value: "5m"
+      - name: OLLAMA_CONTEXT_LENGTH
+        value: "4096"
+      - name: OLLAMA_MULTIUSER_CACHE
+        value: "false"
+      - name: OLLAMA_NOPRUNE
+        value: "false"
+      - name: OLLAMA_NOHISTORY
+        value: "false"
+      - name: OLLAMA_KV_CACHE_TYPE
+        value: "f16"
+      - name: OLLAMA_SCHED_SPREAD
+        value: "false"
+      - name: OLLAMA_NEW_ENGINE
+        value: "true"
+    #  - name: OLLAMA_DEBUG
+    #    value: "1"
     persistentVolume:
       enabled: true
       size: 100Gi
