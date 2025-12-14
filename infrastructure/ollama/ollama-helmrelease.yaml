@@ -26,7 +26,6 @@ spec:
           - qwen2.5-coder:1.5b
           - qwen2.5-coder:7b
           - qwen3-coder:30b
-          - qwen3-vl:2b-instruct
           - qwen3-vl:4b
           - qwen3-vl:4b-instruct
           - qwen3-vl:8b
