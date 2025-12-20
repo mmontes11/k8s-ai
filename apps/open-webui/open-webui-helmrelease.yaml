@@ -28,4 +28,4 @@ spec:
       - name: WEBUI_NAME
         value: 草泥马🦙
       - name: BYPASS_MODEL_ACCESS_CONTROL
-        value: true
+        value: "true"
