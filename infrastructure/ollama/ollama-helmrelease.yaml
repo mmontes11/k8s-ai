@@ -68,8 +68,8 @@ spec:
         value: "false"
       - name: OLLAMA_NEW_ENGINE
         value: "true"
-    #  - name: OLLAMA_DEBUG
-    #    value: "1"
+      - name: OLLAMA_DEBUG
+        value: "1"
     persistentVolume:
       enabled: true
       size: 300Gi
