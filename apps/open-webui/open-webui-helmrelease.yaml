@@ -26,4 +26,6 @@ spec:
       port: 80
     extraEnvVars:
       - name: WEBUI_NAME
-        value: LLM
+        value: 草泥马🦙
+      - name: BYPASS_MODEL_ACCESS_CONTROL
+        value: true
