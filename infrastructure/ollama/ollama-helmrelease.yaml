@@ -44,6 +44,8 @@ spec:
         memory: 32Gi
     # See: https://github.com/ollama/ollama/blob/main/envconfig/config.go
     extraEnv:
+      # - name: OLLAMA_DEBUG
+      #   value: "1"
       - name: OLLAMA_MAX_QUEUE
         value: "100"
       - name: OLLAMA_NUM_PARALLEL
@@ -68,8 +70,6 @@ spec:
         value: "false"
       - name: OLLAMA_NEW_ENGINE
         value: "true"
-      - name: OLLAMA_DEBUG
-        value: "1"
     persistentVolume:
       enabled: true
       size: 300Gi
