@@ -18,6 +18,7 @@ spec:
         pull:
           - codestral:22b
           - deepseek-r1:8b
+          - embeddinggemma:300m
           - gemma3:4b
           - gpt-oss:20b
           - llama3.1:8b
@@ -26,6 +27,7 @@ spec:
           - qwen2.5-coder:1.5b
           - qwen2.5-coder:7b
           - qwen3-coder:30b
+          - qwen3-embedding:8b
           - qwen3-vl:4b
           - qwen3-vl:4b-instruct
           - qwen3-vl:8b
