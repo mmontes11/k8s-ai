@@ -61,7 +61,7 @@ spec:
       - name: OLLAMA_LOAD_TIMEOUT
         value: "5m"
       - name: OLLAMA_CONTEXT_LENGTH
-        value: "65536"
+        value: "32768"
       - name: OLLAMA_MULTIUSER_CACHE
         value: "false"
       - name: OLLAMA_NOPRUNE
