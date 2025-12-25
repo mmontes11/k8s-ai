@@ -1,8 +1,9 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: grafana
+  name: mcp-grafana
 spec:
+  releaseName: mcp-grafana
   chart:
     spec:
       chart: grafana-mcp
