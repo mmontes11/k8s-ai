@@ -1,0 +1,19 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: grafana
+spec:
+  chart:
+    spec:
+      chart: grafana-mcp
+      sourceRef:
+        kind: HelmRepository
+        name: grafana-mcp
+      version: "0.2.2"
+  interval: 1h0m0s
+  values:
+    grafana:
+      url: "http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local:3000"
+      apiKeySecret:
+        name: mcp-grafana
+        key: token
