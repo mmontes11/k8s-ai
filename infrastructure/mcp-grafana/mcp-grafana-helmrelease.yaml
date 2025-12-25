@@ -14,7 +14,7 @@ spec:
   values:
     fullnameOverride: mcp-grafana
     grafana:
-      url: "http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local:3000"
+      url: "http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local"
       apiKeySecret:
         name: mcp-grafana
         key: token
