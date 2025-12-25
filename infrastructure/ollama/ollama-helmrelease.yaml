@@ -32,6 +32,7 @@ spec:
           - qwen3-vl:4b-instruct
           - qwen3-vl:8b
           - qwen3-vl:8b-instruct
+          - qwen3-vl:32b
           - qwen3:4b-instruct
           - qwen3:8b
         run: []
