@@ -21,7 +21,7 @@ metadata:
 spec:
   dependsOn:
     - name: prometheus
-      namespace: monitoring
+      namespace: flux-system
   interval: 5m
   sourceRef:
     kind: GitRepository
