@@ -3,7 +3,6 @@ kind: HelmRelease
 metadata:
   name: mcp-grafana
 spec:
-  releaseName: mcp-grafana
   chart:
     spec:
       chart: grafana-mcp
@@ -13,6 +12,7 @@ spec:
       version: "0.2.2"
   interval: 1h0m0s
   values:
+    fullnameOverride: mcp-grafana
     grafana:
       url: "http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local:3000"
       apiKeySecret:
