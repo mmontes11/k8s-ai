@@ -8,7 +8,7 @@ spec:
       chart: grafana-mcp
       sourceRef:
         kind: HelmRepository
-        name: grafana-mcp
+        name: grafana
       version: "0.2.2"
   interval: 1h0m0s
   values:
