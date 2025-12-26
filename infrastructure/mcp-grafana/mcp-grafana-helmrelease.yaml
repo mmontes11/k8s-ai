@@ -19,8 +19,6 @@ spec:
         name: mcp-grafana
         key: token
     extraArgs:
-      - -t
-      - streamable-http
       - --disable-write
       - --debug
       - --log-level
