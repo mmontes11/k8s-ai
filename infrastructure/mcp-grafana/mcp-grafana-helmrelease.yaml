@@ -23,3 +23,5 @@ spec:
       - streamable-http
       - --disable-write
       - --debug
+      - --log-level
+      - debug
