@@ -22,29 +22,12 @@ spec:
       - --address
       - localhost:8000
       - -t
-      - sse
+      - streamable-http
       - --disable-write
       - --debug
       - --log-level
       - debug
     env:
        GRAFANA_ORG_ID: "1"
-    extraContainers:
-      - name: mcpo
-        image: ghcr.io/open-webui/mcpo:main
-        command:
-          - sh
-          - -c
-          - |
-            echo "mcpo: sleeping 10s to wait for grafana mcp server..."
-            sleep infinity
-        ports:
-          - containerPort: 9000
-            name: mcpo
     service:
       port: 8000
-      extraPorts:
-        - port: 9000
-          targetPort: mcpo
-          protocol: TCP
-          name: mcpo
