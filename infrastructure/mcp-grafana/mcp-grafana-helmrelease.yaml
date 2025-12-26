@@ -25,3 +25,6 @@ spec:
       - --debug
       - --log-level
       - debug
+    env:
+      - name: GRAFANA_ORG_ID
+        value: "1"
