@@ -29,21 +29,21 @@ spec:
       - debug
     env:
        GRAFANA_ORG_ID: "1"
-    extraContainers:
-      - name: mcpo
-        image: ghcr.io/open-webui/mcpo:main
-        command:
-          - mcpo
-        args:
-          - --port 
-          - "9000"
-          - --server-type
-          - --sse 
-          - -- 
-          - http://localhost:8000/
-        ports:
-          - containerPort: 9000
-            name: mcpo
+    # extraContainers:
+    #   - name: mcpo
+    #     image: ghcr.io/open-webui/mcpo:main
+    #     command:
+    #       - mcpo
+    #     args:
+    #       - --port 
+    #       - "9000"
+    #       - --server-type
+    #       - --sse 
+    #       - -- 
+    #       - http://localhost:8000/
+    #     ports:
+    #       - containerPort: 9000
+    #         name: mcpo
     service:
       port: 8000
       extraPorts:
