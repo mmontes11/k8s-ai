@@ -37,7 +37,7 @@ spec:
           - -c
           - |
             sleep 30s
-            mcpo --port "9000" --server-type --sse -- http://localhost:8000/sse
+            mcpo --port 9000 --server-type --sse -- http://localhost:8000/sse
         ports:
           - containerPort: 9000
             name: mcpo
