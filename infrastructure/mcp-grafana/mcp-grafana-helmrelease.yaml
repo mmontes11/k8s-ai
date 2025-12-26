@@ -21,3 +21,5 @@ spec:
     extraArgs:
       - -t
       - streamable-http
+      - --disable-write
+      - --debug
