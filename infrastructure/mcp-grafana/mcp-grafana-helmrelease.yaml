@@ -19,8 +19,6 @@ spec:
         name: mcp-grafana
         key: token
     extraArgs:
-      - --address
-      - localhost:8000
       - -t
       - streamable-http
       - --disable-write
@@ -29,5 +27,3 @@ spec:
       - debug
     env:
        GRAFANA_ORG_ID: "1"
-    service:
-      port: 8000
