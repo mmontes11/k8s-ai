@@ -19,9 +19,32 @@ spec:
         name: mcp-grafana
         key: token
     extraArgs:
+      - --address
+      - localhost:8000
+      - -t
+      - sse
       - --disable-write
       - --debug
       - --log-level
       - debug
     env:
        GRAFANA_ORG_ID: "1"
+    extraContainers:
+      - name: mcpo
+        image: ghcr.io/open-webui/mcpo:main
+        command:
+          - sh
+          - -c
+          - |
+            sleep 30s
+            mcpo --port "9000" --server-type --sse -- http://localhost:8000/sse
+        ports:
+          - containerPort: 9000
+            name: mcpo
+    service:
+      port: 8000
+      extraPorts:
+        - port: 9000
+          targetPort: mcpo
+          protocol: TCP
+          name: mcpo
