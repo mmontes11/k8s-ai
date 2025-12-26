@@ -37,8 +37,7 @@ spec:
           - -c
           - |
             echo "mcpo: sleeping 10s to wait for grafana mcp server..."
-            sleep 10
-            exec mcpo --port 9000 --server-type --sse -- http://localhost:8000/sse
+            sleep infinity
         ports:
           - containerPort: 9000
             name: mcpo
