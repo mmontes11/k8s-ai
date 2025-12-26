@@ -40,7 +40,7 @@ spec:
           - --server-type
           - --sse 
           - -- 
-          - http://localhost:8000/sse
+          - http://localhost:8000/
         ports:
           - containerPort: 9000
             name: mcpo
