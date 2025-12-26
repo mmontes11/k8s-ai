@@ -33,14 +33,12 @@ spec:
       - name: mcpo
         image: ghcr.io/open-webui/mcpo:main
         command:
-          - mcpo
-        args:
-          - --port 
-          - "9000"
-          - --server-type
-          - --sse 
-          - -- 
-          - http://localhost:8000/sse
+          - sh
+          - -c
+          - |
+            echo "mcpo: sleeping 10s to wait for grafana mcp server..."
+            sleep 10
+            exec mcpo --port 9000 --server-type --sse -- http://localhost:8000/sse
         ports:
           - containerPort: 9000
             name: mcpo
