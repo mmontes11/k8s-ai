@@ -20,7 +20,7 @@ spec:
         key: token
     extraArgs:
       - --address
-      - localhost:8000
+      - 0.0.0.0:8000
       - -t
       -  streamable-http
       - --disable-write
