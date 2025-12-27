@@ -8,6 +8,7 @@ spec:
     name: kubernetes-mcp-server
   interval: 10m
   values:
+    fullnameOverride: mcp-kubernetes
     extraVolumes:
       - name: kubeconfig
         nfs:
