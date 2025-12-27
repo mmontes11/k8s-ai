@@ -20,7 +20,7 @@ spec:
           readOnly: true
     service:
       type: ClusterIP
-      port: 8000
+      port: 8080
     ingress:
       enabled: false
     # Path to the configuration file inside the container
