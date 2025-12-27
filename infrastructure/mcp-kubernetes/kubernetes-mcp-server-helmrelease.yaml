@@ -3,10 +3,10 @@ kind: HelmRelease
 metadata:
   name: kubernetes-mcp-server
 spec:
-  interval: 5m
   chartRef:
     kind: OCIRepository
     name: kubernetes-mcp-server
+  interval: 10m
   values:
     extraVolumes:
       - name: kubeconfig
