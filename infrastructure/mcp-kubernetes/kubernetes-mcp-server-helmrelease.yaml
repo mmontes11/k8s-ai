@@ -29,5 +29,5 @@ spec:
     config:
       port: "{{ .Values.service.port }}"
       kubeconfig: /etc/kubernetes/config
-      read-only: "true"
-      log-level: "9"
+      read_only: true
+      log_level: 9
