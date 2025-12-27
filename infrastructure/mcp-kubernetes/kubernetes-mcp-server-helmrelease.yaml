@@ -29,4 +29,4 @@ spec:
     config:
       port: "{{ .Values.service.port }}"
       kubeconfig: /etc/kubernetes/config
-      read_only: "true"
+      read-only: "true"
