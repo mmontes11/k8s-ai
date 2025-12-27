@@ -1,0 +1,30 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kubernetes-mcp-server
+spec:
+  interval: 5m
+  chartRef:
+    kind: OCIRepository
+    name: kubernetes-mcp-server
+  values:
+    extraVolumes:
+      - name: kubeconfig
+        nfs:
+          server: 10.0.0.50
+          path: /volume1/kubernetes
+          readOnly: true
+    extraVolumeMounts:
+        - name: kubeconfig
+          mountPath: /etc/kubernetes
+          readOnly: true
+    service:
+      type: ClusterIP
+      port: 8000
+    # Path to the configuration file inside the container
+    configFilePath: /etc/kubernetes-mcp-server/config.toml
+    # MCP Server configuration options. See https://github.com/containers/kubernetes-mcp-server/blob/main/pkg/config/config.go.
+    config:
+      port: "{{ .Values.service.port }}"
+      kubeconfig: /etc/kubernetes/config
+      read_only: "true"
