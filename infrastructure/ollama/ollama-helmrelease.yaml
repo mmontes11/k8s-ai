@@ -14,6 +14,10 @@ spec:
   values:
     ollama:
       port: 11434
+      gpu:
+        enabled: true
+        type: nvidia
+        number: 1
       models:
         pull:
           - codestral:22b
@@ -36,6 +40,7 @@ spec:
           - qwen3:4b-instruct
           - qwen3:8b
         run: []
+    runtimeClassName: nvidia
     service:
       type: ClusterIP
       port: 11434
@@ -44,7 +49,7 @@ spec:
         cpu: 4
         memory: 8Gi
       limits:
-        memory: 32Gi
+        memory: 24Gi
     # See: https://github.com/ollama/ollama/blob/main/envconfig/config.go
     extraEnv:
       - name: OLLAMA_DEBUG
