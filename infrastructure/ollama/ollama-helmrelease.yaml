@@ -14,10 +14,6 @@ spec:
   values:
     ollama:
       port: 11434
-      gpu:
-        enabled: true
-        type: nvidia
-        number: 1
       models:
         pull:
           - codestral:22b
@@ -40,7 +36,6 @@ spec:
           - qwen3:4b-instruct
           - qwen3:8b
         run: []
-    runtimeClassName: nvidia
     service:
       type: ClusterIP
       port: 11434
@@ -84,9 +79,19 @@ spec:
       enabled: true
       size: 300Gi
       storageClass: topolvm
+    gpu:
+      enabled: true
+      type: nvidia
+      number: 1
+    runtimeClassName: nvidia
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: nvidia.com/gpu.present
+              operator: Exists
     tolerations:
     - effect: NoSchedule
       key: node.mmontes.io/type
       value: compute-xlarge
-    nodeSelector:
-      node.mmontes.io/type: compute-xlarge
