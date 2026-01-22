@@ -9,7 +9,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: open-webui
-      version: "8.19.0"
+      version: "10.2.1"
   interval: 1h0m0s
   values:
     ollama:
