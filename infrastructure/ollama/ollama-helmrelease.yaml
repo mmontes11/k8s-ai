@@ -9,7 +9,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: ollama
-      version: "1.36.0"
+      version: "1.38.0"
   interval: 1h0m0s
   values:
     ollama:
