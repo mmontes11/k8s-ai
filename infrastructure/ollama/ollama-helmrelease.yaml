@@ -54,20 +54,23 @@ spec:
     extraEnv:
       - name: OLLAMA_DEBUG
         value: "1"
-      # See: https://docs.ollama.com/faq#how-does-ollama-handle-concurrent-requests
+      # See: https://docs.ollama.com/faq#how-does-ollama-handle-concurrent-requests ------
       - name: OLLAMA_MAX_LOADED_MODELS
-        value: "3"
+        value: "0"
       - name: OLLAMA_NUM_PARALLEL
         value: "3"
       - name: OLLAMA_MAX_QUEUE
-        value: "100"
-      # ---
+        value: "512"
+      # ------------------------------------------------------------------------------
       - name: OLLAMA_KEEP_ALIVE
-        value: "5m"
+        # value: "5m"
+        value: "3h"
       - name: OLLAMA_LOAD_TIMEOUT
         value: "5m"
+      # See: https://docs.ollama.com/context-length
       - name: OLLAMA_CONTEXT_LENGTH
-        value: "32768"
+        # value: "32768"
+        value: "16384"
       - name: OLLAMA_MULTIUSER_CACHE
         value: "false"
       - name: OLLAMA_NOPRUNE
