@@ -12,6 +12,9 @@ spec:
       version: "1.38.0"
   interval: 1h0m0s
   values:
+    image:
+      repository: ollama/ollama
+      tag: "0.14.3"
     ollama:
       port: 11434
       models:
@@ -20,6 +23,7 @@ spec:
           - deepseek-r1:8b
           - embeddinggemma:300m
           - gemma3:4b
+          - glm-4.7-flash:q4_K_M
           - gpt-oss:20b
           - llama3.1:8b
           - llama3.2:3b
@@ -28,13 +32,14 @@ spec:
           - qwen2.5-coder:7b
           - qwen3-coder:30b
           - qwen3-embedding:8b
+          - qwen3-vl:32b
           - qwen3-vl:4b
           - qwen3-vl:4b-instruct
           - qwen3-vl:8b
           - qwen3-vl:8b-instruct
-          - qwen3-vl:32b
           - qwen3:4b-instruct
           - qwen3:8b
+          - translategemma:4b
         run: []
     service:
       type: ClusterIP
