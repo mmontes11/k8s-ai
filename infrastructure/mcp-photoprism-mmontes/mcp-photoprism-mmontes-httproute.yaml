@@ -10,5 +10,5 @@ spec:
     - "mcp-photoprism-mmontes.mmontes-internal.duckdns.org"
   rules:
     - backendRefs:
-        - name: mcp-grafana
+        - name: mcp-photoprism-mmontes
           port: 9001

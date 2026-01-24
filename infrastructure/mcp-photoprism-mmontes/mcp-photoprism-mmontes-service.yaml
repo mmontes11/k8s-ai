@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mcp-server
+  name: mcp-photoprism-mmontes
 spec:
   selector:
-    app: mcp-server
+    app: mcp-photoprism-mmontes
   ports:
     - protocol: TCP
       port: 9001
