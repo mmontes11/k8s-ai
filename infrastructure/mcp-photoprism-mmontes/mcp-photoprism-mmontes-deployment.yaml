@@ -38,8 +38,10 @@ spec:
               value: "true"
             - name: ALLOWED_HOSTS
               value: mcp-photoprism-mmontes.mmontes-internal.duckdns.org,localhost,127.0.0.1
-            - name: DB_HOST
+            - name: MCP_MAX_POOL_SIZE
               value: "maxscale-mmontes.media.svc.cluster.local"
+            - name: DB_HOST
+              value: "3"
             - name: DB_PORT
               value: "3306"
             - name: DB_NAME
