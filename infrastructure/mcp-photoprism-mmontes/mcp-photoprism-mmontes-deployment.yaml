@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: mcp-photoprism-mmontes
-          image: mmontes11/mcp-mariadb:0.0.1
+          image: mmontes11/mcp-mariadb:0.1.0
           imagePullPolicy: IfNotPresent
           args:
             - --transport 
