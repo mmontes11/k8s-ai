@@ -36,6 +36,8 @@ spec:
           env:
             - name: MCP_READ_ONLY
               value: "true"
+            - name: ALLOWED_HOSTS
+              value: mcp-photoprism-mmontes.mmontes-internal.duckdns.org,localhost,127.0.0.1
             - name: DB_HOST
               value: "maxscale-mmontes.media.svc.cluster.local"
             - name: DB_PORT
