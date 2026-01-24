@@ -1,0 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: ai
+resources:
+  - mcp-photoprism-mmontes-deployment.yaml
+  - mcp-photoprism-mmontes-httproute.yaml
+  - mcp-photoprism-mmontes-service.yaml
+  - photoprism-mmontes-sealedsecret.yaml

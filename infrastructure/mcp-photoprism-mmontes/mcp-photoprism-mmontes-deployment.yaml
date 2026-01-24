@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-photoprism-mmontes
+  labels:
+    app: mcp-photoprism-mmontes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcp-photoprism-mmontes
+  template:
+    metadata:
+      labels:
+        app: mcp-photoprism-mmontes
+    spec:
+      containers:
+        - name: mcp-photoprism-mmontes
+          image: mmontes11/mcp-mariadb:0.0.1
+          imagePullPolicy: IfNotPresent
+          args:
+            - --transport 
+            - http
+            - --port
+            - "9001"
+            - --path
+            - /mcp
+          ports:
+            - containerPort: 9001
+              name: http
+          env:
+            - name: MCP_READ_ONLY
+              value: "true"
+            - name: DB_HOST
+              value: "maxscale-mmontes.media.svc.cluster.local"
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_NAME
+              value: "photoprism"
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: photoprism-mmontes
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: photoprism-mmontes
+                  key: DB_PASSWORD
+          readinessProbe:
+            tcpSocket:
+              port: 9001
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 9001
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
