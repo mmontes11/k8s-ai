@@ -16,13 +16,18 @@ spec:
     spec:
       containers:
         - name: mcp-photoprism-mmontes
-          image: mmontes11/mcp-mariadb:0.1.0
+          image: mmontes11/mcp-mariadb:0.2.0
           imagePullPolicy: IfNotPresent
+          command:
+            - "python"
+            - "src/server.py"
           args:
-            - --transport 
-            - http
+            - --host
+            - 0.0.0.0
             - --port
             - "9001"
+            - --transport
+            - http
             - --path
             - /mcp
           ports:
