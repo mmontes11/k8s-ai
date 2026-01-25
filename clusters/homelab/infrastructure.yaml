@@ -52,11 +52,32 @@ metadata:
   name: mcp-photoprism-mmontes
   namespace: ai
 spec:
+  dependsOn:
+    - name: mariadb-mmontes
+      namespace: media
   interval: 5m
   sourceRef:
     kind: GitRepository
     name: flux-tenant-ai
     namespace: flux-system
   path: ./infrastructure/mcp-photoprism-mmontes
+  prune: true
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: mcp-photoprism-xiaowen
+  namespace: ai
+spec:
+  dependsOn:
+    - name: mariadb-xiaowen
+      namespace: media
+  interval: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-tenant-ai
+    namespace: flux-system
+  path: ./infrastructure/mcp-photoprism-xiaowen
   prune: true
   timeout: 5m

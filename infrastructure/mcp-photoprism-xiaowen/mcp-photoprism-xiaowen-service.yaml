@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-photoprism-xiaowen
+spec:
+  selector:
+    app: mcp-photoprism-xiaowen
+  ports:
+    - protocol: TCP
+      port: 9001
+      targetPort: 9001
+  type: ClusterIP

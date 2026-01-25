@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-photoprism-xiaowen
+  labels:
+    app: mcp-photoprism-xiaowen
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcp-photoprism-xiaowen
+  template:
+    metadata:
+      labels:
+        app: mcp-photoprism-xiaowen
+    spec:
+      containers:
+        - name: mcp-photoprism-xiaowen
+          image: mmontes11/mcp-mariadb:0.3.0
+          imagePullPolicy: IfNotPresent
+          command:
+            - "python"
+            - "src/server.py"
+          args:
+            - --host
+            - 0.0.0.0
+            - --port
+            - "9001"
+            - --transport
+            - http
+            - --path
+            - /mcp
+          ports:
+            - containerPort: 9001
+              name: http
+          env:
+            - name: MCP_READ_ONLY
+              value: "true"
+            - name: MCP_MAX_POOL_SIZE
+              value: "3"
+            - name: ALLOWED_HOSTS
+              value: mcp-photoprism-xiaowen.mmontes-internal.duckdns.org,localhost,127.0.0.1
+            - name: DB_HOST
+              value: "maxscale-xiaowen.media.svc.cluster.local"
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_NAME
+              value: "photoprism"
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mcp-photoprism-xiaowen
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mcp-photoprism-xiaowen
+                  key: DB_PASSWORD
+          readinessProbe:
+            tcpSocket:
+              port: 9001
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 9001
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
