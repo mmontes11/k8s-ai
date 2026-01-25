@@ -17,6 +17,10 @@ spec:
       tag: "0.14.3"
     ollama:
       port: 11434
+      # gpu:
+      #   enabled: true
+      #   type: nvidia
+      #   number: 1
       models:
         pull:
           - codestral:22b
@@ -87,6 +91,7 @@ spec:
       enabled: true
       size: 300Gi
       storageClass: topolvm
+    # TODO: move this at the ollama level
     gpu:
       enabled: true
       type: nvidia
