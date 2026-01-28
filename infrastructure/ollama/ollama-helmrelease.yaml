@@ -79,6 +79,10 @@ spec:
         value: "false"
       - name: OLLAMA_NOHISTORY
         value: "false"
+      # See: https://docs.ollama.com/faq#how-can-i-enable-flash-attention
+      - name: OLLAMA_FLASH_ATTENTION
+        value: "true"
+      # See: https://docs.ollama.com/faq?utm_source=chatgpt.com#how-can-i-set-the-quantization-type-for-the-k/v-cache
       - name: OLLAMA_KV_CACHE_TYPE
         value: "f16"
       - name: OLLAMA_SCHED_SPREAD
