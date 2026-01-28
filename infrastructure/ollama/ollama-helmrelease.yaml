@@ -72,7 +72,7 @@ spec:
         value: "5m"
       # See: https://docs.ollama.com/context-length
       - name: OLLAMA_CONTEXT_LENGTH
-        value: "32768"
+        value: "16384"
       - name: OLLAMA_MULTIUSER_CACHE
         value: "false"
       - name: OLLAMA_NOPRUNE
@@ -84,7 +84,7 @@ spec:
         value: "true"
       # See: https://docs.ollama.com/faq?utm_source=chatgpt.com#how-can-i-set-the-quantization-type-for-the-k/v-cache
       - name: OLLAMA_KV_CACHE_TYPE
-        value: "q4_0"
+        value: "f16"
       - name: OLLAMA_SCHED_SPREAD
         value: "false"
       - name: OLLAMA_NEW_ENGINE
