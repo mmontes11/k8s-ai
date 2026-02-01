@@ -8,7 +8,7 @@ spec:
     manual: comfyui-1
   restic:
     repository: restic-comfyui
-    destinationPVC: comfyui
+    destinationPVC: comfyui-user
     copyMethod: Snapshot
     moverResources:
       requests:
