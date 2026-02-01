@@ -5,4 +5,7 @@ resources:
   - comfyui-deployment.yaml
   - comfyui-httproute.yaml
   - comfyui-pvc.yaml
+  - comfyui-replicationsource.yaml
+  # - comfyui-replicationdestination.yaml
   - comfyui-service.yaml
+  - restic-comfyui-sealedsecret.yaml

@@ -1,0 +1,24 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: comfyui
+spec:
+  trigger:
+    # schedule: "0 4 * * *"
+    manual: comfyui-1
+  restic:
+    repository: restic-comfyui
+    destinationPVC: comfyui
+    copyMethod: Snapshot
+    moverResources:
+      requests:
+        cpu: 1
+        memory: 300Mi
+      limits:
+        memory: 4Gi
+    cacheCapacity: 5Gi
+    cacheAccessModes:
+      - ReadWriteOnce
+    customCA:
+      secretName: homelab-bundle
+      key: ca.crt
