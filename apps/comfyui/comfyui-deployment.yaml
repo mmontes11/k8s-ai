@@ -28,7 +28,7 @@ spec:
         value: compute-xlarge
       containers:
       - name: comfyui
-        image: mmontes11/comfyui:0.1.0
+        image: mmontes11/comfyui:0.1.0 # TODO: bump
         imagePullPolicy: IfNotPresent
         ports:
         - name: http
@@ -61,9 +61,9 @@ spec:
         resources:
           requests:
             cpu: "1"
-            memory: 2Gi
+            memory: 4Gi
           limits:
-            memory: 16Gi
+            memory: 32Gi
             nvidia.com/gpu: "1"
         livenessProbe:
           httpGet:
