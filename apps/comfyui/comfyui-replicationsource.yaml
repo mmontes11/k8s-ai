@@ -13,7 +13,8 @@ spec:
       daily: 7
     pruneIntervalDays: 14
     unlock: comfyui-1
-    copyMethod: Clone
+    # Direct method is required to inherit tolerations from Pod.
+    copyMethod: Direct
     moverResources:
       requests:
         cpu: 1

@@ -9,7 +9,8 @@ spec:
   restic:
     repository: restic-comfyui
     destinationPVC: comfyui-user
-    copyMethod: Snapshot
+    # Direct method is required to inherit tolerations from Pod.
+    copyMethod: Direct
     moverResources:
       requests:
         cpu: 1
