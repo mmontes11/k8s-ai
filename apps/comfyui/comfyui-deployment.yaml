@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comfyui
+  labels:
+    app: comfyui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: comfyui
+  template:
+    metadata:
+      labels:
+        app: comfyui
+    spec:
+      runtimeClassName: nvidia
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: nvidia.com/gpu.present
+                operator: Exists
+      tolerations:
+      - effect: NoSchedule
+        key: node.mmontes.io/type
+        value: compute-xlarge
+      containers:
+      - name: comfyui
+        image: mmontes11/comfyui:0.1.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 8188
+        env:
+        # Helps with VRAM fragmentation - improves stability
+        - name: PYTORCH_CUDA_ALLOC_CONF
+          value: "expandable_segments:True"
+        - name: TORCH_CUDA_ARCH_LIST
+          value: "12.0"
+        command:
+        - /bin/bash
+        - -c
+        - |
+          python3 main.py --listen 0.0.0.0 --reserve-vram 1 --async-offload --use-sage-attention
+        volumeMounts:
+        - name: models
+          mountPath: /app/models
+        - name: user
+          mountPath: /app/user
+        - name: nas
+          mountPath: /app/input
+          subPath: input
+        - name: nas
+          mountPath: /app/output
+          subPath: output
+        - name: nas
+          mountPath: /app/custom_nodes
+          subPath: custom_nodes
+        resources:
+          requests:
+            cpu: "1"
+            memory: 300Mi
+          limits:
+            memory: 4Gi
+            nvidia.com/gpu: "1"
+        livenessProbe:
+          httpGet:
+            path: /queue
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /queue
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          failureThreshold: 3
+      volumes:
+      - name: models
+        persistentVolumeClaim:
+          claimName: comfyui-models
+      - name: user
+        persistentVolumeClaim:
+          claimName: comfyui-user
+      - name: nas
+        nfs:
+          path: /volume1/comfyui
+          server: 10.0.0.50

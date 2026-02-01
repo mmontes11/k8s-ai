@@ -14,3 +14,18 @@ spec:
   path: ./apps/open-webui
   prune: true
   timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: comfyui
+  namespace: ai
+spec:
+  interval: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-tenant-ai
+    namespace: flux-system
+  path: ./apps/comfyui
+  prune: true
+  timeout: 5m
