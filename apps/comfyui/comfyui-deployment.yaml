@@ -28,7 +28,7 @@ spec:
         value: compute-xlarge
       containers:
       - name: comfyui
-        image: mmontes11/comfyui:0.1.0 # TODO: bump
+        image: mmontes11/comfyui:0.2.0
         imagePullPolicy: IfNotPresent
         ports:
         - name: http
