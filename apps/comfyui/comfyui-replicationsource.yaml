@@ -5,8 +5,8 @@ metadata:
 spec:
   sourcePVC: comfyui-user
   trigger:
-    # schedule: "0 1 * * *"
-    manual: comfyui-1
+    schedule: "0 1 * * *"
+    # manual: comfyui-1
   restic:
     repository: restic-comfyui
     retain:
