@@ -63,21 +63,22 @@ spec:
             cpu: "1"
             memory: 4Gi
           limits:
+            # memory: 32Gi
             nvidia.com/gpu: "1"
-        livenessProbe:
-          httpGet:
-            path: /queue
-            port: http
-          initialDelaySeconds: 30
-          periodSeconds: 15
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            path: /queue
-            port: http
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          failureThreshold: 3
+        # livenessProbe:
+        #   httpGet:
+        #     path: /queue
+        #     port: http
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 15
+        #   failureThreshold: 3
+        # readinessProbe:
+        #   httpGet:
+        #     path: /queue
+        #     port: http
+        #   initialDelaySeconds: 10
+        #   periodSeconds: 10
+        #   failureThreshold: 3
       volumes:
       - name: models
         persistentVolumeClaim:
