@@ -60,12 +60,12 @@ spec:
           subPath: custom_nodes
         resources:
           requests:
-            cpu: "1"
-            memory: 4Gi
+            cpu: 4
+            memory: 8Gi
           limits:
-            memory: 48Gi
+            memory: 24Gi
             nvidia.com/gpu: "1"
-        # livenessProbe:
+      # livenessProbe:
         #   httpGet:
         #     path: /queue
         #     port: http
