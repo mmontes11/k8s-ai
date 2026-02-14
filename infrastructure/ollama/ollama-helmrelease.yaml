@@ -50,9 +50,12 @@ spec:
         - name: qwen3-coder-next:IQ1_M
           template: |
             FROM hf.co/unsloth/Qwen3-Coder-Next-GGUF:IQ1_M
-        - name: qwen3-coder-next:IQ1_M-ctx8K
+        - name: qwen3-coder-next:IQ1_S
           template: |
-            FROM hf.co/unsloth/Qwen3-Coder-Next-GGUF:IQ1_M
+            FROM hf.co/unsloth/Qwen3-Coder-Next-GGUF:IQ1_S
+        - name: qwen3-coder-next:IQ1_S
+          template: |
+            FROM hf.co/unsloth/Qwen3-Coder-Next-GGUF:IQ1_S
             PARAMETER num_ctx 8192
         run: []
         clean: true
