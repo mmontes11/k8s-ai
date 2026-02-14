@@ -14,7 +14,7 @@ spec:
   values:
     image:
       repository: ollama/ollama
-      tag: "0.15.4"
+      tag: "0.16.1"
     ollama:
       port: 11434
       gpu:
