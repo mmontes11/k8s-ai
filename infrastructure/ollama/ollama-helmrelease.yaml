@@ -9,12 +9,12 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: ollama
-      version: "1.38.0"
+      version: "1.42.0"
   interval: 1h0m0s
   values:
     image:
       repository: ollama/ollama
-      tag: "0.15.1"
+      tag: "0.16.1"
     ollama:
       port: 11434
       gpu:
@@ -34,6 +34,7 @@ spec:
           - mistral:7b
           - qwen2.5-coder:1.5b
           - qwen2.5-coder:7b
+          - qwen3-coder-next:q4_K_M
           - qwen3-coder:30b
           - qwen3-embedding:8b
           - qwen3-vl:32b
