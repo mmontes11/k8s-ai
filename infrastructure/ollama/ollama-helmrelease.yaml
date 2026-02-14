@@ -47,9 +47,19 @@ spec:
           - qwen3:8b
           - translategemma:4b
         create:
+        - name: qwen3-coder:30b-ctx32k
+          template: |
+            FROM qwen3-coder:30b
+            PARAMETER num_ctx 32768
         - name: qwen3-coder-next:IQ1_M
           template: |
             FROM hf.co/unsloth/Qwen3-Coder-Next-GGUF:IQ1_M
+        - name: qwen3-coder-next:IQ1_S
+          template: |
+            FROM hf.co/unsloth/Qwen3-Coder-Next-GGUF:IQ1_S
+        - name: qwen3-coder-next:TQ1_0
+          template: |
+            FROM hf.co/unsloth/Qwen3-Coder-Next-GGUF:TQ1_0
         run: []
         clean: true
     service:
@@ -80,7 +90,7 @@ spec:
         value: "5m"
       # See: https://docs.ollama.com/context-length
       - name: OLLAMA_CONTEXT_LENGTH
-        value: "24000"
+        value: "16384"
       - name: OLLAMA_MULTIUSER_CACHE
         value: "false"
       - name: OLLAMA_NOPRUNE
