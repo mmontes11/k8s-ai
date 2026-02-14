@@ -29,6 +29,7 @@ spec:
           - gemma3:4b
           - glm-4.7-flash:q4_K_M
           - gpt-oss:20b
+          - hf.co/unsloth/Qwen3-Coder-Next-GGUF:IQ1_M
           - llama3.1:8b
           - llama3.2:3b
           - mistral:7b
