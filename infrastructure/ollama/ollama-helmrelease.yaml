@@ -50,6 +50,7 @@ spec:
         - name: qwen3-coder-next:IQ1_M
           template: |
             FROM hf.co/unsloth/Qwen3-Coder-Next-GGUF:IQ1_M
+        run: []
         clean: true
     service:
       type: ClusterIP
