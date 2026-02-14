@@ -30,7 +30,6 @@ spec:
           - gemma3:4b
           - glm-4.7-flash:q4_K_M
           - gpt-oss:20b
-          - hf.co/unsloth/Qwen3-Coder-Next-GGUF:IQ1_M
           - llama3.1:8b
           - llama3.2:3b
           - mistral:7b
@@ -48,6 +47,11 @@ spec:
           - qwen3:8b
           - translategemma:4b
         run: []
+        create:
+        - name: qwen3-coder-next:IQ1_M
+          template: |
+            FROM hf.co/unsloth/Qwen3-Coder-Next-GGUF:IQ1_M
+            PARAMETER num_ctx 200000
     service:
       type: ClusterIP
       port: 11434
