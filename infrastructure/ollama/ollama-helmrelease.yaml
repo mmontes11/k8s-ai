@@ -46,10 +46,10 @@ spec:
           - qwen3:8b
           - translategemma:4b
         create:
-        - name: qwen3-coder:30b-ctx24k
+        - name: qwen3-coder:30b-ctx32k
           template: |
             FROM qwen3-coder:30b
-            PARAMETER num_ctx 24000
+            PARAMETER num_ctx 32768
         # See: 
         # https://huggingface.co/unsloth/Qwen3-Coder-Next-GGUF
         # https://github.com/ollama/ollama/issues/14086
