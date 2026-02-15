@@ -54,6 +54,10 @@ spec:
           template: |
             FROM gpt-oss:20b
             PARAMETER num_ctx 65536
+        - name: gpt-oss:20b-ctx100k
+          template: |
+            FROM gpt-oss:20b
+            PARAMETER num_ctx 100000
         # See: 
         # https://huggingface.co/unsloth/Qwen3-Coder-Next-GGUF
         # https://github.com/ollama/ollama/issues/14086
