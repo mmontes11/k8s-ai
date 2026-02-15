@@ -50,6 +50,10 @@ spec:
           template: |
             FROM qwen3-coder:30b
             PARAMETER num_ctx 32768
+        - name: gpt-oss:20b-ctx64k
+          template: |
+            FROM gpt-oss:20b
+            PARAMETER num_ctx 65536
         # See: 
         # https://huggingface.co/unsloth/Qwen3-Coder-Next-GGUF
         # https://github.com/ollama/ollama/issues/14086
@@ -86,7 +90,7 @@ spec:
         value: "5m"
       # See: https://docs.ollama.com/context-length
       - name: OLLAMA_CONTEXT_LENGTH
-        value: "16384"
+        value: "8192"
       - name: OLLAMA_MULTIUSER_CACHE
         value: "false"
       - name: OLLAMA_NOPRUNE
