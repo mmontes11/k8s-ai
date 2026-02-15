@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-github
+  labels:
+    app: mcp-github
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcp-github
+  template:
+    metadata:
+      labels:
+        app: mcp-github
+    spec:
+      containers:
+        - name: mcp-github
+          image: ghcr.io/github/github-mcp-server:sha-d44894e
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
