@@ -46,14 +46,6 @@ spec:
           - qwen3:8b
           - translategemma:4b
         create:
-        - name: qwen3-coder:30b-ctx32k
-          template: |
-            FROM qwen3-coder:30b
-            PARAMETER num_ctx 32768
-        - name: gpt-oss:20b-ctx64k
-          template: |
-            FROM gpt-oss:20b
-            PARAMETER num_ctx 65536
         - name: gpt-oss:20b-ctx128k
           template: |
             FROM gpt-oss:20b
@@ -94,7 +86,7 @@ spec:
         value: "5m"
       # See: https://docs.ollama.com/context-length
       - name: OLLAMA_CONTEXT_LENGTH
-        value: "8192"
+        value: "32768"
       - name: OLLAMA_MULTIUSER_CACHE
         value: "false"
       - name: OLLAMA_NOPRUNE
