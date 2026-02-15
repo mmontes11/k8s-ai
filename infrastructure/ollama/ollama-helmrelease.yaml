@@ -14,8 +14,7 @@ spec:
   values:
     image:
       repository: ollama/ollama
-      # See: https://github.com/ollama/ollama/issues/14086
-      tag: "0.15.5-rc1"
+      tag: "0.16.1"
     ollama:
       port: 11434
       gpu:
@@ -51,15 +50,12 @@ spec:
           template: |
             FROM qwen3-coder:30b
             PARAMETER num_ctx 24000
-        - name: qwen3-coder-next:IQ1_M
-          template: |
-            FROM hf.co/unsloth/Qwen3-Coder-Next-GGUF:IQ1_M
+        # See: 
+        # https://huggingface.co/unsloth/Qwen3-Coder-Next-GGUF
+        # https://github.com/ollama/ollama/issues/14086
         - name: qwen3-coder-next:IQ1_S
           template: |
             FROM hf.co/unsloth/Qwen3-Coder-Next-GGUF:IQ1_S
-        - name: qwen3-coder-next:TQ1_0
-          template: |
-            FROM hf.co/unsloth/Qwen3-Coder-Next-GGUF:TQ1_0
         run: []
         clean: true
     service:
