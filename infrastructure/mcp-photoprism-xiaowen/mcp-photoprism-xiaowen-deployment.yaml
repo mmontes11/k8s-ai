@@ -41,7 +41,7 @@ spec:
             - name: ALLOWED_HOSTS
               value: mcp-photoprism-xiaowen.mmontes-internal.duckdns.org,mcp-photoprism-xiaowen,localhost,127.0.0.1
             - name: DB_HOST
-              value: "maxscale-xiaowen.media.svc.cluster.local"
+              value: "mariadb-xiaowen-primary.media.svc.cluster.local"
             - name: DB_PORT
               value: "3306"
             - name: DB_NAME
