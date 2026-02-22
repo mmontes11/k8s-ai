@@ -16,11 +16,28 @@ spec:
     spec:
       containers:
         - name: mcp-github
-          image: ghcr.io/github/github-mcp-server:sha-d44894e
+          image: ghcr.io/github/github-mcp-server:v0.31.0
           imagePullPolicy: IfNotPresent
+          args:
+            - http
+            - --read-only
+            - --base-path
+            - /mcp
+            - --host
+            - "0.0.0.0"
+            - --port
+            - "8080"
           ports:
             - containerPort: 8080
               name: http
+          env:
+            - name: GITHUB_PERSONAL_ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: mcp-github
+                  key: token
+            - name: GITHUB_READ_ONLY
+              value: "true"
           readinessProbe:
             tcpSocket:
               port: 8080
