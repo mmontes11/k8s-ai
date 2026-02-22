@@ -7,7 +7,7 @@ spec:
     - name: traefik-internal
       namespace: networking
   hostnames:
-    - "mcp-github.internal.duckdns.org"
+    - "mcp-github.mmontes-internal.duckdns.org"
   rules:
     - backendRefs:
         - name: mcp-github
