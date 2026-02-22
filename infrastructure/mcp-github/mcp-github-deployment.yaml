@@ -21,6 +21,8 @@ spec:
           args:
             - http
             - --read-only
+            - --base-url
+            - https://mcp-github.mmontes-internal.duckdns.org
             - --base-path
             - /mcp
             - --port
