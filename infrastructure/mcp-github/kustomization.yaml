@@ -1,8 +1,0 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-namespace: ai
-resources:
-  - mcp-github-deployment.yaml
-  - mcp-github-httproute.yaml
-  - mcp-github-sealedsecret.yaml
-  - mcp-github-service.yaml
