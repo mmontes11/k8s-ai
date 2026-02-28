@@ -9,12 +9,12 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: ollama
-      version: "1.42.0"
+      version: "1.46.0"
   interval: 1h0m0s
   values:
     image:
       repository: ollama/ollama
-      tag: "0.16.1"
+      tag: "0.17.4"
     ollama:
       port: 11434
       gpu:
@@ -44,12 +44,17 @@ spec:
           - qwen3-vl:8b-instruct
           - qwen3:4b-instruct
           - qwen3:8b
+          - qwen3.5:27b
           - translategemma:4b
         create:
         - name: gpt-oss:20b-ctx128k
           template: |
             FROM gpt-oss:20b
             PARAMETER num_ctx 131072
+        - name: qwen3.5:27b-ctx256k
+          template: |
+            FROM qwen3.5:27b
+            PARAMETER num_ctx 262144
         # See: 
         # https://huggingface.co/unsloth/Qwen3-Coder-Next-GGUF
         # https://github.com/ollama/ollama/issues/14086
