@@ -52,17 +52,17 @@ spec:
           template: |
             FROM gpt-oss:20b
             PARAMETER num_ctx 131072
-        - name: qwen3.5:9b-ctx-128K
+        - name: qwen3.5:9b-ctx-256K
           template: |
             FROM qwen3.5:9b
-            PARAMETER num_ctx 131072
+            PARAMETER num_ctx 262144
         # llama_model_load: error loading model: error loading model architecture: unknown model architecture: 'qwen35moe'
         # https://huggingface.co/unsloth/Qwen3.5-35B-A3B-GGUF
-        - name: qwen3.5-35b:q4_K_S
+        - name: qwen3.5:35b-q4_K_S
           template: |
             FROM hf.co/unsloth/Qwen3.5-35B-A3B-GGUF:Q4_K_S
         # https://huggingface.co/unsloth/Qwen3-Coder-Next-GGUF
-        - name: qwen3-coder-next:IQ1_S
+        - name: qwen3-coder-next:80b-IQ1_S
           template: |
             FROM hf.co/unsloth/Qwen3-Coder-Next-GGUF:IQ1_S
         run: []
