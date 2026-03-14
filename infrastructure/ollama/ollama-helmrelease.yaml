@@ -52,6 +52,11 @@ spec:
           template: |
             FROM gpt-oss:20b
             PARAMETER num_ctx 131072
+        - name: qwen3.5:9b-ctx-128K
+          template: |
+            FROM qwen3.5:9b
+            PARAMETER num_ctx 131072
+        # llama_model_load: error loading model: error loading model architecture: unknown model architecture: 'qwen35moe'
         # https://huggingface.co/unsloth/Qwen3.5-35B-A3B-GGUF
         - name: qwen3.5-35b:q4_K_S
           template: |
