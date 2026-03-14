@@ -98,7 +98,7 @@ spec:
         value: "false"
       # See: https://docs.ollama.com/faq#how-can-i-enable-flash-attention
       - name: OLLAMA_FLASH_ATTENTION
-        value: "false"
+        value: "true"
       # See: https://docs.ollama.com/faq?utm_source=chatgpt.com#how-can-i-set-the-quantization-type-for-the-k/v-cache
       - name: OLLAMA_KV_CACHE_TYPE
         value: "q8_0"
