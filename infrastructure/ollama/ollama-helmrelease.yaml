@@ -76,7 +76,7 @@ spec:
         value: "1"
       # See: https://docs.ollama.com/faq#how-does-ollama-handle-concurrent-requests ------
       - name: OLLAMA_MAX_LOADED_MODELS
-        value: "1"
+        value: "3"
       - name: OLLAMA_NUM_PARALLEL
         value: "1"
       - name: OLLAMA_MAX_QUEUE
@@ -88,7 +88,8 @@ spec:
         value: "5m"
       # See: https://docs.ollama.com/context-length
       - name: OLLAMA_CONTEXT_LENGTH
-        value: "16384"
+        # value: "16384"
+        value: "8192"
       - name: OLLAMA_MULTIUSER_CACHE
         value: "false"
       - name: OLLAMA_NOPRUNE
@@ -97,10 +98,11 @@ spec:
         value: "false"
       # See: https://docs.ollama.com/faq#how-can-i-enable-flash-attention
       - name: OLLAMA_FLASH_ATTENTION
-        value: "true"
+        value: "false"
       # See: https://docs.ollama.com/faq?utm_source=chatgpt.com#how-can-i-set-the-quantization-type-for-the-k/v-cache
       - name: OLLAMA_KV_CACHE_TYPE
-        value: "q8_0"
+        # value: "q8_0"
+        value: "f16"
       - name: OLLAMA_SCHED_SPREAD
         value: "false"
       - name: OLLAMA_NEW_ENGINE
