@@ -81,9 +81,9 @@ spec:
         value: "1"
       # See: https://docs.ollama.com/faq#how-does-ollama-handle-concurrent-requests ------
       - name: OLLAMA_MAX_LOADED_MODELS
-        value: "0"
+        value: "1"
       - name: OLLAMA_NUM_PARALLEL
-        value: "3"
+        value: "1"
       - name: OLLAMA_MAX_QUEUE
         value: "512"
       # ------------------------------------------------------------------------------
@@ -93,7 +93,7 @@ spec:
         value: "5m"
       # See: https://docs.ollama.com/context-length
       - name: OLLAMA_CONTEXT_LENGTH
-        value: "32768"
+        value: "16384"
       - name: OLLAMA_MULTIUSER_CACHE
         value: "false"
       - name: OLLAMA_NOPRUNE
