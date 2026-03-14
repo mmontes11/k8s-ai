@@ -47,7 +47,6 @@ spec:
           - qwen3.5:9b
           - qwen3.5:27b
           - qwen3.5:35b
-          - translategemma:4b
         create:
         - name: gpt-oss:20b-ctx128k
           template: |
