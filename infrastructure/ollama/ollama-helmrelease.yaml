@@ -101,8 +101,7 @@ spec:
         value: "false"
       # See: https://docs.ollama.com/faq?utm_source=chatgpt.com#how-can-i-set-the-quantization-type-for-the-k/v-cache
       - name: OLLAMA_KV_CACHE_TYPE
-        # value: "q8_0"
-        value: "f16"
+        value: "q8_0"
       - name: OLLAMA_SCHED_SPREAD
         value: "false"
       - name: OLLAMA_NEW_ENGINE
