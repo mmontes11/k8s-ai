@@ -10,5 +10,5 @@ spec:
     - "opencode.mmontes-internal.duckdns.org"
   rules:
     - backendRefs:
-        - name: opencode
+        - name: workspace
           port: 4096
