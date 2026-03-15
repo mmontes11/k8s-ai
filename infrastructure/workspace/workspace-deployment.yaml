@@ -32,7 +32,23 @@ spec:
           command: ["/bin/bash", "-c"]
           args:
             - |
-              sleep infinity
+              set -e
+              if [ $(ls -A /home/mmontes | grep -v "lost+found" | wc -l) -eq 0 ]; then
+                echo "PVC is empty (ignoring lost+found). Initializing home dir..."
+                cp -rp /opt/template/. /home/mmontes/
+              else
+                echo "PVC exists. Syncing dependencies..."  
+                
+                [ -d "/opt/template/usr/local/go" ] && mkdir -p /home/mmontes/usr/local && rsync -av --delete /opt/template/usr/local/go/ /home/mmontes/usr/local/go/
+                
+                for dir in .local/bin .cargo/bin; do
+                  if [ -d "/opt/template/$dir" ]; then
+                    mkdir -p "/home/mmontes/$dir"
+                    rsync -av --delete "/opt/template/$dir/" "/home/mmontes/$dir/"
+                  fi
+                done
+              fi
+              echo "Sync complete."
           volumeMounts:
             - name: home-storage
               mountPath: /home/mmontes
