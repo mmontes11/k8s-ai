@@ -27,13 +27,11 @@ spec:
           - deepseek-r1:8b
           - embeddinggemma:300m
           - gemma3:4b
-          - gemma3:12b
           - glm-4.7-flash:q4_K_M
           - gpt-oss:20b
           - llama3.2:3b
           - qwen2.5-coder:1.5b
           - qwen2.5-coder:7b
-          - qwen3-coder-next:q4_K_M
           - qwen3-coder:30b
           - qwen3-embedding:8b
           - qwen3-vl:4b-instruct
@@ -46,10 +44,6 @@ spec:
         - name: gpt-oss:20b-ctx128k
           template: |
             FROM gpt-oss:20b
-            PARAMETER num_ctx 131072
-        - name: gemma3:12b-ctx128k
-          template: |
-            FROM gemma3:12b
             PARAMETER num_ctx 131072
         - name: qwen3.5:9b-ctx-256K
           template: |
