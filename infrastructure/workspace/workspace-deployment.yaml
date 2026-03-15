@@ -28,7 +28,7 @@ spec:
         value: compute-xlarge
       initContainers:
         - name: sync
-          image: ghcr.io/mmontes11/ai-workspace:0.5.0
+          image: ghcr.io/mmontes11/ai-workspace:0.6.0
           command: ["/bin/bash", "-c"]
           args:
             - |
@@ -42,7 +42,7 @@ spec:
                   if [ -d "/opt/template/$dir" ]; then
                     echo "Updating $dir..."
                     mkdir -p "/home/mmontes/$dir"
-                    rsync -rlptDq --delete "/opt/template/$dir/" "/home/mmontes/$dir/" || true
+                    rsync -rlptDq --no-perms --delete "/opt/template/$dir/" "/home/mmontes/$dir/" || true
                   fi
                 done
               fi
@@ -52,7 +52,7 @@ spec:
               mountPath: /home/mmontes
       containers:
         - name: workspace
-          image: ghcr.io/mmontes11/ai-workspace:0.5.0
+          image: ghcr.io/mmontes11/ai-workspace:0.6.0
           resources:
             requests:
               cpu: "1"
