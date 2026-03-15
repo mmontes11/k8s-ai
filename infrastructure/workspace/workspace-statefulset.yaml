@@ -1,8 +1,9 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: workspace
 spec:
+  serviceName: "workspace"
   replicas: 1
   selector:
     matchLabels:
@@ -26,15 +27,16 @@ spec:
       - effect: NoSchedule
         key: node.mmontes.io/type
         value: compute-xlarge
+    
       initContainers:
         - name: sync
-          image: ghcr.io/mmontes11/ai-workspace:0.6.0
+          image: ghcr.io/mmontes11/ai-workspace:0.7.0
           command: ["/bin/bash", "-c"]
           args:
             - |
               set -e
               if [ $(ls -A /home/mmontes | grep -v "lost+found" | wc -l) -eq 0 ]; then
-                echo "PVC is empty. Initializing home directory..."
+                echo "PVC is empty. Initializing..."
                 rsync -rlptDq /opt/template/ /home/mmontes/
               else
                 echo "PVC exists. Syncing..."
@@ -48,24 +50,29 @@ spec:
               fi
               echo "Sync complete."
           volumeMounts:
-            - name: home-storage
+            - name: home-storage # Must match the volumeClaimTemplate name
               mountPath: /home/mmontes
       containers:
         - name: workspace
-          image: ghcr.io/mmontes11/ai-workspace:0.6.0
+          image: ghcr.io/mmontes11/ai-workspace:0.7.0
           resources:
             requests:
               cpu: "1"
               memory: "2Gi"
             limits:
               memory: "8Gi"
-              nvidia.com/gpu: 1
+              nvidia.com/gpu: "1"
           ports:
             - containerPort: 4096
           volumeMounts:
             - name: home-storage
               mountPath: /home/mmontes
-      volumes:
-        - name: home-storage
-          persistentVolumeClaim:
-            claimName: workspace
+  volumeClaimTemplates:
+    - metadata:
+        name: home-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "topolvm"
+        resources:
+          requests:
+            storage: 100Gi
