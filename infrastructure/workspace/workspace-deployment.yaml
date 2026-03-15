@@ -32,26 +32,25 @@ spec:
           command: ["/bin/bash", "-c"]
           args:
             - |
-              if [ -z "$(ls -A /home/mmontes)" ]; then
-                echo "PVC is empty. Initializing home dir..."
+              set -e
+              if [ $(ls -A /home/mmontes | grep -v "lost+found" | wc -l) -eq 0 ]; then
+                echo "PVC is empty (ignoring lost+found). Initializing home dir..."
                 cp -rp /opt/template/. /home/mmontes/
               else
                 echo "PVC exists. Syncing dependencies..."  
-                # Sync Go
-                mkdir -p /home/mmontes/usr/local
-                rsync -av --delete /opt/template/usr/local/go/ /home/mmontes/usr/local/go/
-
-                # Sync Node
-                mkdir -p /home/mmontes/.npm-global
-                rsync -av --delete /opt/template/.npm-global/ /home/mmontes/.npm-global/
                 
-                # Sync binaries
-                mkdir -p /home/mmontes/.cargo/bin
-                rsync -av --delete /opt/template/.cargo/bin/ /home/mmontes/.cargo/bin/
-                mkdir -p /home/mmontes/.local/bin
-                rsync -av --delete /opt/template/.local/bin/ /home/mmontes/.local/bin/
+                # Targeted Sync: Only update what is managed by the image
+                [ -d "/opt/template/usr/local/go" ] && mkdir -p /home/mmontes/usr/local && rsync -av --delete /opt/template/usr/local/go/ /home/mmontes/usr/local/go/
+                [ -d "/opt/template/.npm-global" ] && mkdir -p /home/mmontes/.npm-global && rsync -av --delete /opt/template/.npm-global/ /home/mmontes/.npm-global/
+                
+                for dir in .local/bin .cargo/bin; do
+                  if [ -d "/opt/template/$dir" ]; then
+                    mkdir -p "/home/mmontes/$dir"
+                    rsync -av --delete "/opt/template/$dir/" "/home/mmontes/$dir/"
+                  fi
+                done
               fi
-              chown -R 1111:1111 /home/mmontes
+              echo "Sync complete."
           volumeMounts:
             - name: home-storage
               mountPath: /home/mmontes
