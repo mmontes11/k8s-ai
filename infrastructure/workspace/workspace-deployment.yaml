@@ -26,6 +26,21 @@ spec:
       - effect: NoSchedule
         key: node.mmontes.io/type
         value: compute-xlarge
+      initContainers:
+        - name: sync
+          image: ghcr.io/mmontes11/ai-workspace:0.2.0
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              set -e
+              if [ $(ls -A /home/mmontes | grep -v "lost+found" | wc -l) -eq 0 ]; then
+                echo "PVC is empty. Initializing home directory from template..."
+                rsync -av /opt/template/ /home/mmontes/
+              fi
+              echo "Sync complete."
+          volumeMounts:
+            - name: home-storage
+              mountPath: /home/mmontes
       containers:
         - name: workspace
           image: ghcr.io/mmontes11/ai-workspace:0.1.0
