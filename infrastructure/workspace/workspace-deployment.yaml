@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workspace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: workspace
+  template:
+    metadata:
+      labels:
+        app: workspace
+    spec:
+      securityContext:
+        fsGroup: 1111
+      runtimeClassName: nvidia
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: nvidia.com/gpu.present
+                operator: Exists
+      tolerations:
+      - effect: NoSchedule
+        key: node.mmontes.io/type
+        value: compute-xlarge
+      initContainers:
+        - name: sync
+          image: ghcr.io/mmontes11/ai-workspace:0.1.0
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              if [ -z "$(ls -A /home/mmontes)" ]; then
+                echo "PVC is empty. Initializing home dir..."
+                cp -rp /opt/template/. /home/mmontes/
+              else
+                echo "PVC exists. Syncing dependencies..."  
+                # Sync Go
+                mkdir -p /home/mmontes/usr/local
+                rsync -av --delete /opt/template/usr/local/go/ /home/mmontes/usr/local/go/
+
+                # Sync Node
+                mkdir -p /home/mmontes/.npm-global
+                rsync -av --delete /opt/template/.npm-global/ /home/mmontes/.npm-global/
+                
+                # Sync binaries
+                mkdir -p /home/mmontes/.cargo/bin
+                rsync -av --delete /opt/template/.cargo/bin/ /home/mmontes/.cargo/bin/
+                mkdir -p /home/mmontes/.local/bin
+                rsync -av --delete /opt/template/.local/bin/ /home/mmontes/.local/bin/
+              fi
+              chown -R 1111:1111 /home/mmontes
+          volumeMounts:
+            - name: home-storage
+              mountPath: /home/mmontes
+      containers:
+        - name: workspace
+          image: ghcr.io/mmontes11/ai-workspace:0.1.0
+          resources:
+            requests:
+              cpu: "1"
+              memory: "2Gi"
+            limits:
+              memory: "8Gi"
+              nvidia.com/gpu: 1
+          ports:
+            - containerPort: 4096
+          volumeMounts:
+            - name: home-storage
+              mountPath: /home/mmontes
+      volumes:
+        - name: home-storage
+          persistentVolumeClaim:
+            claimName: workspace
