@@ -39,9 +39,7 @@ spec:
               else
                 echo "PVC exists. Syncing dependencies..."  
                 
-                # Targeted Sync: Only update what is managed by the image
                 [ -d "/opt/template/usr/local/go" ] && mkdir -p /home/mmontes/usr/local && rsync -av --delete /opt/template/usr/local/go/ /home/mmontes/usr/local/go/
-                [ -d "/opt/template/.npm-global" ] && mkdir -p /home/mmontes/.npm-global && rsync -av --delete /opt/template/.npm-global/ /home/mmontes/.npm-global/
                 
                 for dir in .local/bin .cargo/bin; do
                   if [ -d "/opt/template/$dir" ]; then
