@@ -50,7 +50,7 @@ spec:
               fi
               echo "Sync complete."
           volumeMounts:
-            - name: home-storage # Must match the volumeClaimTemplate name
+            - name: home-storage
               mountPath: /home/mmontes
       containers:
         - name: workspace
