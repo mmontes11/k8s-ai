@@ -42,7 +42,7 @@ spec:
                   if [ -d "/opt/template/$dir" ]; then
                     echo "Updating $dir..."
                     mkdir -p "/home/mmontes/$dir"
-                    rsync -rlptDq --delete "/opt/template/$dir/" "/home/mmontes/$dir/"
+                    rsync -rlptDq --delete "/opt/template/$dir/" "/home/mmontes/$dir/" || true
                   fi
                 done
               fi
