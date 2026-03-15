@@ -26,16 +26,6 @@ spec:
       - effect: NoSchedule
         key: node.mmontes.io/type
         value: compute-xlarge
-      initContainers:
-        - name: sync
-          image: ghcr.io/mmontes11/ai-workspace:0.2.0
-          command: ["/bin/bash", "-c"]
-          args:
-            - |
-              sleep infinity
-          volumeMounts:
-            - name: home-storage
-              mountPath: /home/mmontes
       containers:
         - name: workspace
           image: ghcr.io/mmontes11/ai-workspace:0.1.0
