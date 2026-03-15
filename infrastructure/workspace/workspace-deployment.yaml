@@ -28,21 +28,21 @@ spec:
         value: compute-xlarge
       initContainers:
         - name: sync
-          image: ghcr.io/mmontes11/ai-workspace:0.4.0
+          image: ghcr.io/mmontes11/ai-workspace:0.5.0
           command: ["/bin/bash", "-c"]
           args:
             - |
               set -e
               if [ $(ls -A /home/mmontes | grep -v "lost+found" | wc -l) -eq 0 ]; then
                 echo "PVC is empty. Initializing home directory..."
-                rsync -av /opt/template/ /home/mmontes/
+                rsync -rlptDq /opt/template/ /home/mmontes/
               else
                 echo "PVC exists. Syncing..."
                 for dir in .opencode/bin .local/bin usr/local/go go/bin; do
                   if [ -d "/opt/template/$dir" ]; then
                     echo "Updating $dir..."
                     mkdir -p "/home/mmontes/$dir"
-                    rsync -av --delete "/opt/template/$dir/" "/home/mmontes/$dir/"
+                    rsync -rlptDq --delete "/opt/template/$dir/" "/home/mmontes/$dir/"
                   fi
                 done
               fi
@@ -52,7 +52,7 @@ spec:
               mountPath: /home/mmontes
       containers:
         - name: workspace
-          image: ghcr.io/mmontes11/ai-workspace:0.4.0
+          image: ghcr.io/mmontes11/ai-workspace:0.5.0
           resources:
             requests:
               cpu: "1"
