@@ -4,7 +4,6 @@ namespace: ai
 resources:
   - opencode-httproute.yaml
   - restic-workspace-sealedsecret.yaml
-  - workspace-pvc.yaml
   - workspace-replicationdestination.yaml
   - workspace-replicationsource.yaml
   - workspace-service.yaml
