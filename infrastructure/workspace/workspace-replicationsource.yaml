@@ -5,8 +5,8 @@ metadata:
 spec:
   sourcePVC: home-storage-workspace-0
   trigger:
-    # schedule: "0 1 * * *"
-    manual: workspace-4
+    schedule: "0 1 * * *"
+    # manual: workspace-4
   restic:
     repository: restic-workspace
     retain:
