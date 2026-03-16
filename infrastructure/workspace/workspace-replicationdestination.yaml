@@ -5,7 +5,7 @@ metadata:
 spec:
   trigger:
     # schedule: "0 4 * * *"
-    manual: workspace-1
+    manual: workspace-2
   restic:
     repository: restic-workspace
     destinationPVC: home-storage-workspace-0
