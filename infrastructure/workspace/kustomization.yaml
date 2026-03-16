@@ -7,4 +7,4 @@ resources:
   - workspace-replicationsource.yaml
   - workspace-service.yaml
   - workspace-statefulset.yaml
-  # - workspace-replicationdestination.yaml
+  - workspace-replicationdestination.yaml
