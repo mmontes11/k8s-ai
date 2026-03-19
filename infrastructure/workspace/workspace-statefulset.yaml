@@ -60,7 +60,6 @@ spec:
               cpu: "1"
               memory: "2Gi"
             limits:
-              memory: "16Gi"
               nvidia.com/gpu: "1"
           ports:
             - containerPort: 4096
