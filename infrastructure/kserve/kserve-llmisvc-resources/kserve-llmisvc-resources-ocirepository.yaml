@@ -1,0 +1,9 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: OCIRepository
+metadata:
+  name: kserve-llmisvc-resources
+spec:
+  interval: 5m
+  url: oci://ghcr.io/kserve/charts/kserve-llmisvc-resources 
+  ref:
+    tag: "v0.17.0"

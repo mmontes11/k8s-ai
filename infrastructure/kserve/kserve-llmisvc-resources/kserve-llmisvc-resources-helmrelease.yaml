@@ -1,0 +1,12 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kserve-llmisvc-resources
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: kserve-llmisvc-resources
+  interval: 10m
+  values:
+    kserve:
+      createSharedResources: false 
