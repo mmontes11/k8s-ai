@@ -1,0 +1,9 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: OCIRepository
+metadata:
+  name: lws
+spec:
+  interval: 5m
+  url: oci://registry.k8s.io/lws/charts/lws
+  ref:
+    tag: "0.8.0"

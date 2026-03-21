@@ -100,6 +100,21 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
+  name: lws
+  namespace: ai
+spec:
+  interval: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-tenant-ai
+    namespace: flux-system
+  path: ./infrastructure/lws
+  prune: true
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
   name: kserve-crds
   namespace: kserve
 spec:
@@ -156,6 +171,7 @@ metadata:
 spec:
   dependsOn:
     - name: kserve-config
+    - name: lws
     - name: cert-manager-crds
       namespace: flux-system
   interval: 5m
