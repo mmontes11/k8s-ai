@@ -1,0 +1,28 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kserve-resources
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: kserve-resources
+  interval: 10m
+  values:
+    kserve:
+      createSharedResources: true
+      inferenceServiceConfig:
+        enabled: true
+      certManager:
+        enabled: true
+      storagecontainer:
+        enabled: true
+      metricsaggregator:
+        enableMetricAggregation: 'true'
+        enablePrometheusScraping: 'true'
+      controller:
+        deploymentMode: Standard
+      gateway:
+        ingressGateway:
+          enableGatewayApi: true
+          kserveGateway: networking/traefik-internal
+          createGateway: false    
