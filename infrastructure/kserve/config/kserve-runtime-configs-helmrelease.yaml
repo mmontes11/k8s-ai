@@ -1,0 +1,15 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kserve-runtime-configs
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: kserve-runtime-configs
+  interval: 10m
+  values:
+    kserve:
+      llmisvcConfigs:
+        enabled: true
+      servingruntime:
+        enabled: true
