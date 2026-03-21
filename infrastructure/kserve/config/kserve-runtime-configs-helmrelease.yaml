@@ -9,7 +9,10 @@ spec:
   interval: 10m
   values:
     kserve:
+      # TODO: raise PR to support a namespace different than "kserve"
+      # https://github.com/kserve/kserve/blob/85065a9bd94f1b55ad9cc5efe92aefce5a00d05a/charts/kserve-runtime-configs/templates/llmisvcconfigs/resources.yaml#L2
+      # https://github.com/kserve/kserve/blob/85065a9bd94f1b55ad9cc5efe92aefce5a00d05a/charts/kserve-runtime-configs/files/llmisvcconfigs/resources.yaml#L5
       llmisvcConfigs:
-        enabled: true
+        enabled: false
       servingruntime:
         enabled: true
