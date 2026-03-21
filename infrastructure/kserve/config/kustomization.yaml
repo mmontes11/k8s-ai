@@ -7,3 +7,4 @@ resources:
   - kserve-runtime-configs-helmrelease.yaml
   - kserve-runtime-configs-ocirepository.yaml
   - nvidia-template-llminferenceserviceconfig.yaml
+  - sleep-template-llminferenceserviceconfig.yaml

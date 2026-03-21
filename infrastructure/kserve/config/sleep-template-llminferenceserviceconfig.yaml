@@ -1,0 +1,13 @@
+apiVersion: serving.kserve.io/v1alpha2
+kind: LLMInferenceServiceConfig
+metadata:
+  name: sleep-template
+spec:
+  template:
+    containers:
+      - name: main
+        args:
+          - --enable-sleep-mode
+        env:
+          - name: VLLM_SERVER_DEV_MODE
+            value: "1"
