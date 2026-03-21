@@ -21,8 +21,8 @@ spec:
         enablePrometheusScraping: 'true'
       controller:
         deploymentMode: Standard
-      gateway:
-        ingressGateway:
-          enableGatewayApi: true
-          kserveGateway: networking/traefik-internal
-          createGateway: false    
+        gateway:
+          ingressGateway:
+            enableGatewayApi: true
+            kserveGateway: networking/traefik-internal
+            createGateway: false    
