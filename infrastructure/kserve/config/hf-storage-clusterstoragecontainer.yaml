@@ -1,0 +1,25 @@
+apiVersion: serving.kserve.io/v1alpha1
+kind: ClusterStorageContainer
+metadata:
+  name: hf-hub
+spec:
+  container:
+    name: storage-initializer
+    image: kserve/storage-initializer:v0.17.0
+    imagePullPolicy: IfNotPresent
+    env:
+    - name: HF_TOKEN
+      valueFrom:
+        secretKeyRef:
+          name: hf-token
+          key: HF_TOKEN
+          optional: false
+    resources:
+      requests:
+        cpu: 1
+        memory: 2Gi
+      limits:
+        memory: 4Gi
+  supportedUriFormats:
+    - prefix: hf://
+  workloadType: initContainer
