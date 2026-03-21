@@ -172,6 +172,7 @@ spec:
   dependsOn:
     - name: kserve-config
     - name: lws
+      namespace: ai
     - name: cert-manager-crds
       namespace: flux-system
   interval: 5m
