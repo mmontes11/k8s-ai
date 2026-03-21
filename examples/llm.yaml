@@ -4,40 +4,17 @@ metadata:
   name: facebook-opt
   namespace: kserve
 spec:
+  baseRefs:
+    - name: nvidia-template
+    - name: sleep-template
   model:
     name: facebook/opt-125m
     uri: hf://facebook/opt-125m
-
-  replicas: 1
-
-  template:
-    runtimeClassName: nvidia
-    affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-          - matchExpressions:
-            - key: nvidia.com/gpu.present
-              operator: Exists
-    tolerations:
-    - effect: NoSchedule
-      key: node.mmontes.io/type
-      value: compute-xlarge
-    containers:
-      - name: main
-        image: vllm/vllm-openai:cu130-nightly
-        resources:
-          requests:
-            cpu: "500m"
-            memory: 4Gi
-          limits:
-            memory: 8Gi
-            nvidia.com/gpu: "1"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: facebook-test
+  name: facebook-opt
   namespace: kserve
 spec:
   ports:
@@ -58,21 +35,12 @@ metadata:
   name: facebook-opt
   namespace: kserve
 spec:
-  hostnames:
-  - facebook-test.mmontes-internal.duckdns.org
   parentRefs:
-  - group: gateway.networking.k8s.io
-    kind: Gateway
-    name: traefik-internal
-    namespace: networking
+    - name: traefik-internal
+      namespace: networking
+  hostnames:
+    - facebook-opt.mmontes-internal.duckdns.org
   rules:
-  - backendRefs:
-    - group: ""
-      kind: Service
-      name: facebook-test
-      port: 8000
-      weight: 1
-    matches:
-    - path:
-        type: PathPrefix
-        value: /
+    - backendRefs:
+      - name: facebook-opt
+        port: 8000
