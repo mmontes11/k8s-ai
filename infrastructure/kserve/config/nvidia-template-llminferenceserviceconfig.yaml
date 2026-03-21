@@ -1,0 +1,29 @@
+apiVersion: serving.kserve.io/v1alpha2
+kind: LLMInferenceServiceConfig
+metadata:
+  name: nvidia-template
+spec:
+  replicas: 1
+  template:
+    runtimeClassName: nvidia
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: nvidia.com/gpu.present
+              operator: Exists
+    tolerations:
+    - effect: NoSchedule
+      key: node.mmontes.io/type
+      value: compute-xlarge
+    containers:
+      - name: main
+        image: vllm/vllm-openai:cu130-nightly
+        resources:
+          requests:
+            cpu: "500m"
+            memory: 4Gi
+          limits:
+            memory: 8Gi
+            nvidia.com/gpu: "1"
