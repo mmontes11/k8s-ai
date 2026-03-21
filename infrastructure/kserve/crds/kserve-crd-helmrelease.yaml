@@ -1,0 +1,9 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRelease
+metadata:
+  name: kserve-crd
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: kserve-crd
+  interval: 10m

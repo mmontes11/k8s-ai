@@ -1,0 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: ai
+resources:
+  - kserve-crd-helmrelease.yaml
+  - kserve-crd-ocirepository.yaml
+  - kserve-llmisvc-crd-helmrelease.yaml
+  - kserve-llmisvc-crd-ocirepository.yaml
