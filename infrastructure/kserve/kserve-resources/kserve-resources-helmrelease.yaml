@@ -21,12 +21,6 @@ spec:
         enablePrometheusScraping: 'true'
       controller:
         deploymentMode: Standard
-        resources:
-          limits:
-            cpu: 100m
-            memory: 300Mi
-          requests:
-            memory: 300Mi
         gateway:
           ingressGateway:
             enableGatewayApi: true
