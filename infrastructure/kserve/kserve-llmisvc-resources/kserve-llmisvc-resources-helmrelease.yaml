@@ -9,4 +9,12 @@ spec:
   interval: 10m
   values:
     kserve:
-      createSharedResources: false 
+      createSharedResources: false
+      llmisvc:
+        controller:
+          resources:
+            limits:
+              cpu: 100m
+              memory: 300Mi
+            requests:
+              memory: 300Mi
