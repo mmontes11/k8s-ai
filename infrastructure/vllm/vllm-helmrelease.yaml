@@ -87,7 +87,7 @@ spec:
           vllmConfig:
             enablePrefixCaching: true
             enableChunkedPrefill: true
-            maxModelLen: 4096
+            maxModelLen: 2048
             gpuMemoryUtilization: 0.85
             extraArgs:
               - --served-model-name=qwen35-35B
