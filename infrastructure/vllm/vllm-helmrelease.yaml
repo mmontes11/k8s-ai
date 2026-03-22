@@ -26,40 +26,40 @@ spec:
       imagePullPolicy: "IfNotPresent"
 
       modelSpec:
-        - name: opt-125m
-          repository: vllm/vllm-openai
-          tag: cu130-nightly
+        # - name: opt-125m
+        #   repository: vllm/vllm-openai
+        #   tag: cu130-nightly
 
-          modelURL: facebook/opt-125m
-          hf_token:
-            secretName: hf-token
-            secretKey: HF_TOKEN
+        #   modelURL: facebook/opt-125m
+        #   hf_token:
+        #     secretName: hf-token
+        #     secretKey: HF_TOKEN
 
-          vllmConfig:
-            extraArgs:
-              - --enable-sleep-mode
+        #   vllmConfig:
+        #     extraArgs:
+        #       - --enable-sleep-mode
 
-          env:
-            - name: VLLM_SERVER_DEV_MODE
-              value: "1"
+        #   env:
+        #     - name: VLLM_SERVER_DEV_MODE
+        #       value: "1"
 
-          replicaCount: 1
-          requestGPU: 1
-          requestCPU: 1
-          requestMemory: 4Gi
+        #   replicaCount: 1
+        #   requestGPU: 1
+        #   requestCPU: 1
+        #   requestMemory: 4Gi
 
-          pvcStorage: 5Gi
-          pvcAccessMode:
-            - ReadWriteOnce
-          storageClass: topolvm
+        #   pvcStorage: 5Gi
+        #   pvcAccessMode:
+        #     - ReadWriteOnce
+        #   storageClass: topolvm
 
-          affinity:
-            nodeAffinity:
-              requiredDuringSchedulingIgnoredDuringExecution:
-                nodeSelectorTerms:
-                - matchExpressions:
-                  - key: nvidia.com/gpu.present
-                    operator: Exists
+        #   affinity:
+        #     nodeAffinity:
+        #       requiredDuringSchedulingIgnoredDuringExecution:
+        #         nodeSelectorTerms:
+        #         - matchExpressions:
+        #           - key: nvidia.com/gpu.present
+        #             operator: Exists
 
         - name: qwen35-35b
           repository: vllm/vllm-openai
@@ -74,9 +74,8 @@ spec:
             enablePrefixCaching: false
             enableChunkedPrefill: false
             maxModelLen: 8192
-            gpuMemoryUtilization: 0.95
+            gpuMemoryUtilization: 0.90
             extraArgs:
-              - --quantization=NVFP4
               - --language-model-only
               - --reasoning-parser=qwen3
               - --enable-sleep-mode
