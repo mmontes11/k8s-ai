@@ -103,11 +103,19 @@ spec:
           hostnames:
             - vllm.mmontes-internal.duckdns.org
 
-  # tolerations not supported
-  # see: https://github.com/vllm-project/production-stack/blob/c5eb8dc21c7f81bfc2ee9f7cf74e82f206fe5776/helm/templates/deployment-router.yaml#L36
   postRenderers:
     - kustomize:
         patches:
+          # this is to avoid the following error logs in vllm:
+          # (APIServer pid=1) WARNING 03-22 14:24:51 [envs.py:1730] Unknown vLLM environment variable detected: VLLM_O
+          - target:
+              kind: Deployment
+            patch: |
+              - op: add
+                path: /spec/template/spec/enableServiceLinks
+                value: false
+          # tolerations not supported in router
+          # see: https://github.com/vllm-project/production-stack/blob/c5eb8dc21c7f81bfc2ee9f7cf74e82f206fe5776/helm/templates/deployment-router.yaml#L36
           - target:
               kind: Deployment
               name: vllm-deployment-router
