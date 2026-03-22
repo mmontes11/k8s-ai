@@ -79,7 +79,6 @@ spec:
               - --language-model-only
               - --kv-cache-dtype=fp8
               - --max-num-seqs=4
-              - --max-num-batched-tokens=4096
               - --reasoning-parser=qwen3
               - --tool-call-parser=qwen3_coder
               - --enable-sleep-mode
