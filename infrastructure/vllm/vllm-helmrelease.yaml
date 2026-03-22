@@ -110,6 +110,7 @@ spec:
           # (APIServer pid=1) WARNING 03-22 14:24:51 [envs.py:1730] Unknown vLLM environment variable detected: VLLM_O
           - target:
               kind: Deployment
+              labelSelector: "app.kubernetes.io/component=serving-engine"
             patch: |
               - op: add
                 path: /spec/template/spec/enableServiceLinks
