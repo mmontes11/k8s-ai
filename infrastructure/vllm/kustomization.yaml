@@ -3,5 +3,7 @@ kind: Kustomization
 namespace: ai
 resources:
   - hf-token-sealedsecret.yaml
+  - vllm-engine-servicemonitor.yaml
   - vllm-helmrelease.yaml
   - vllm-helmrepository.yaml
+  - vllm-router-servicemonitor.yaml

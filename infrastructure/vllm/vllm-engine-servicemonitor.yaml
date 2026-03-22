@@ -1,0 +1,22 @@
+# TODO: wait for a new release of the helm chart
+# see: https://github.com/vllm-project/production-stack/blob/main/helm/templates/servicemonitor-engine.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: vllm-engine-servicemonitor
+  namespace: kserve
+  labels:
+    app.kubernetes.io/instance: vllm
+    app.kubernetes.io/component: serving-engine
+    app.kubernetes.io/part-of: vllm-stack
+spec:
+  endpoints:
+    - port: "service-port"
+      honorLabels: false
+      interval: 30s
+      scrapeTimeout: 25s
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: vllm
+      app.kubernetes.io/component: serving-engine
+      app.kubernetes.io/part-of: vllm-stack

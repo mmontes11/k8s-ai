@@ -1,0 +1,23 @@
+# TODO: wait for a new release of the helm chart
+# see: https://github.com/vllm-project/production-stack/blob/main/helm/templates/servicemonitor-router.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: vllm-router-servicemonitor
+  labels:
+    app.kubernetes.io/name: router
+    app.kubernetes.io/instance: vllm
+    app.kubernetes.io/component: router
+    app.kubernetes.io/part-of: vllm-stack
+spec:
+  endpoints:
+    - port: "router-sport"
+      honorLabels: false
+      interval: 30s
+      scrapeTimeout: 25s
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: router
+      app.kubernetes.io/instance: vllm
+      app.kubernetes.io/name: router
+      app.kubernetes.io/part-of: vllm-stack
