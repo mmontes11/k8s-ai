@@ -86,7 +86,7 @@ spec:
 
           vllmConfig:
             enablePrefixCaching: true
-            enableChunkedPrefill: false
+            enableChunkedPrefill: true
             maxModelLen: 16384
             maxNumSeqs: 4
             gpuMemoryUtilization: 0.9
