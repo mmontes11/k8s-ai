@@ -71,15 +71,16 @@ spec:
             secretKey: HF_TOKEN
 
           vllmConfig:
-            enablePrefixCaching: false
+            enablePrefixCaching: true
             enableChunkedPrefill: false
             maxModelLen: 8192
             gpuMemoryUtilization: 0.90
             extraArgs:
               - --language-model-only
+              - --kv-cache-dtype=fp8
               - --reasoning-parser=qwen3
+              - --tool-call-parser=qwen3_coder
               - --enable-sleep-mode
-
           env:
             - name: VLLM_LOGGING_LEVEL
               value: DEBUG
