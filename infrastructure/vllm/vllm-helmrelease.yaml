@@ -28,8 +28,9 @@ spec:
         - name: opt-125m
           repository: vllm/vllm-openai
           tag: cu130-nightly
+          imagePullPolicy: "IfNotPresent"
+
           modelURL: facebook/opt-125m
-          
           hf_token:
             secretName: hf-token
             secretKey: HF_TOKEN
@@ -67,6 +68,11 @@ spec:
 
     routerSpec:
       enableRouter: true
+
+      repository: "lmcache/lmstack-router"
+      tag: "latest"
+      imagePullPolicy: "IfNotPresent"
+
       resources:
         requests:
           cpu: 500m
