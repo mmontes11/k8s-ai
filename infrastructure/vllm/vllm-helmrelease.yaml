@@ -69,10 +69,25 @@ spec:
           hf_token:
             secretName: hf-token
             secretKey: HF_TOKEN
+      
+          initContainer:
+            name: init
+            image: vllm/vllm-openai:cu130-nightly
+            command:
+              - bash
+              - -c
+            args:
+              - hf download Sehyo/Qwen3.5-35B-A3B-NVFP4 --local-dir /data
+            mountPvcStorage: true
+            resources:
+              requests:
+                cpu: 1
+                memory: 2Gi
+              limits:
+                memory: 4Gi
 
           vllmConfig:
             extraArgs:
-              - --tensor-parallel-size=1
               - --served-model-name=qwen35-35B 
               - --max-model-len=16384
               - --max-num-seqs=4
@@ -87,8 +102,6 @@ spec:
           env:
             - name: VLLM_LOGGING_LEVEL
               value: DEBUG
-            - name: VLLM_NVFP4_GEMM_BACKEND
-              value: marlin
             - name: VLLM_SERVER_DEV_MODE
               value: "1"
 
@@ -101,17 +114,6 @@ spec:
           pvcAccessMode:
             - ReadWriteOnce
           storageClass: topolvm
-
-          initContainer:
-            name: init
-            image: vllm/vllm-openai:cu130-nightly
-            command:
-              - bash
-              - -c
-            args:
-              - |
-                hf download Sehyo/Qwen3.5-35B-A3B-NVFP4 --local-dir /data/model
-            mountPvcStorage: true
 
           affinity:
             nodeAffinity:
