@@ -101,6 +101,17 @@ spec:
             - ReadWriteOnce
           storageClass: topolvm
 
+          initContainer:
+            name: init
+            image: vllm/vllm-openai:cu130-nightly
+            command:
+              - bash
+              - -c
+            args:
+              - |
+                hf download Sehyo/Qwen3.5-35B-A3B-NVFP4 --local-dir /data/model --token $HF_TOKEN
+            mountPvcStorage: true
+
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
