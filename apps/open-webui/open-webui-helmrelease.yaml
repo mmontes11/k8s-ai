@@ -16,6 +16,7 @@ spec:
       enabled: false
     ollamaUrls:
       - http://ollama:11434
+      - http://vllm-router-service
     pipelines:
       enabled: false
     persistence:
