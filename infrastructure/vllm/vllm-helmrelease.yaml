@@ -71,15 +71,16 @@ spec:
             secretKey: HF_TOKEN
 
           vllmConfig:
-            enablePrefixCaching: true
-            enableChunkedPrefill: true
-            maxModelLen: 8192
-            gpuMemoryUtilization: 0.9
             extraArgs:
+              - --tensor-parallel-size 1
+              - --served-model-name qwen35-35B 
+              - --max-model-len 16384
+              - --max-num-seqs 4
+              - --max-num-batched-tokens 1024 
               - --language-model-only
-              - --kv-cache-dtype=fp8
-              - --max-num-seqs=4
+              - --kv-cache-dtype auto
               - --reasoning-parser=qwen3
+              - --enable-auto-tool-choice 
               - --tool-call-parser=qwen3_coder
               - --enable-sleep-mode
           env:
