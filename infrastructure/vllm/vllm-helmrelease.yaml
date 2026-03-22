@@ -109,7 +109,7 @@ spec:
           requestCPU: 4
           requestMemory: 16Gi
 
-          pvcStorage: 50Gi
+          pvcStorage: 100Gi
           pvcAccessMode:
             - ReadWriteOnce
           storageClass: topolvm
