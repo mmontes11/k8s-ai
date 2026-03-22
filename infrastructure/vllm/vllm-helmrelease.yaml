@@ -17,13 +17,6 @@ spec:
       strategy:
         type: Recreate
       runtimeClassName: nvidia
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: nvidia.com/gpu.present
-                operator: Exists
       tolerations:
       - effect: NoSchedule
         key: node.mmontes.io/type
@@ -62,6 +55,16 @@ spec:
             - ReadWriteOnce
           storageClass: topolvm
 
+          # strangely, affinity is defined at the modelSpec level
+          # see: https://github.com/vllm-project/production-stack/blob/c5eb8dc21c7f81bfc2ee9f7cf74e82f206fe5776/helm/templates/deployment-vllm-multi.yaml#L495
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                - matchExpressions:
+                  - key: nvidia.com/gpu.present
+                    operator: Exists
+
     routerSpec:
       enableRouter: true
       resources:
@@ -70,12 +73,21 @@ spec:
           memory: 500Mi
         limits:
           memory: 1Gi
-      nodeSelector:
-        node.mmontes.io/type: compute-large
-      tolerations:
-      - effect: NoSchedule
-        key: node.mmontes.io/type
-        value: compute-large
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: node.mmontes.io/type
+                operator: In
+                values:
+                - compute-large
+      # tolerations not supported, added via postRenderers
+      # see: https://github.com/vllm-project/production-stack/blob/c5eb8dc21c7f81bfc2ee9f7cf74e82f206fe5776/helm/templates/deployment-router.yaml#L36
+      # tolerations:
+      # - effect: NoSchedule
+      #   key: node.mmontes.io/type
+      #   value: compute-large
       serviceMonitor:
         enabled: true
       route:
@@ -86,3 +98,19 @@ spec:
               namespace: networking
           hostnames:
             - vllm.mmontes-internal.duckdns.org
+
+  # tolerations not supported
+  # see: https://github.com/vllm-project/production-stack/blob/c5eb8dc21c7f81bfc2ee9f7cf74e82f206fe5776/helm/templates/deployment-router.yaml#L36
+  postRenderers:
+      - kustomize:
+          patches:
+            - target:
+                kind: Deployment
+                name: vllm-deployment-router
+              patch: |
+                - op: add
+                  path: /spec/template/spec/tolerations
+                  value:
+                    - effect: NoSchedule
+                      key: node.mmontes.io/type
+                      value: compute-large
