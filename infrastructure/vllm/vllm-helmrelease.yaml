@@ -74,16 +74,20 @@ spec:
             enablePrefixCaching: true
             enableChunkedPrefill: false
             maxModelLen: 8192
-            gpuMemoryUtilization: 0.90
+            gpuMemoryUtilization: 0.9
             extraArgs:
               - --language-model-only
               - --kv-cache-dtype=fp8
+              - --max-num-seqs=4
+              - --max-num-batched-tokens=4096
               - --reasoning-parser=qwen3
               - --tool-call-parser=qwen3_coder
               - --enable-sleep-mode
           env:
             - name: VLLM_LOGGING_LEVEL
               value: DEBUG
+            - name: VLLM_NVFP4_GEMM_BACKEND
+              value: marlin
             - name: VLLM_SERVER_DEV_MODE
               value: "1"
 
