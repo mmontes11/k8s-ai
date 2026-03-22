@@ -103,6 +103,8 @@ spec:
               value: DEBUG
             - name: VLLM_SERVER_DEV_MODE
               value: "1"
+            - name: PYTORCH_ALLOC_CONF
+              value: "expandable_segments:True"
 
           replicaCount: 1
           requestGPU: 1
