@@ -65,7 +65,7 @@ spec:
           repository: vllm/vllm-openai
           tag: cu130-nightly
 
-          modelURL: Sehyo/Qwen3.5-35B-A3B-NVFP4
+          modelURL: /data
           hf_token:
             secretName: hf-token
             secretKey: HF_TOKEN
