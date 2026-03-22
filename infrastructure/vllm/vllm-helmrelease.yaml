@@ -23,12 +23,12 @@ spec:
         value: compute-xlarge
       serviceMonitor:
         enabled: true
+      imagePullPolicy: "IfNotPresent"
 
       modelSpec:
         - name: opt-125m
           repository: vllm/vllm-openai
           tag: cu130-nightly
-          imagePullPolicy: "IfNotPresent"
 
           modelURL: facebook/opt-125m
           hf_token:
