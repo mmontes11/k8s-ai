@@ -81,13 +81,15 @@ spec:
               - --enable-sleep-mode
 
           env:
+            - name: VLLM_LOGGING_LEVEL
+              value: DEBUG
             - name: VLLM_SERVER_DEV_MODE
               value: "1"
 
           replicaCount: 1
           requestGPU: 1
-          requestCPU: 1
-          requestMemory: 4Gi
+          requestCPU: 4
+          requestMemory: 16Gi
 
           pvcStorage: 50Gi
           pvcAccessMode:
