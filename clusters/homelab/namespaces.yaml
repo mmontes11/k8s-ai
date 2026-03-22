@@ -4,6 +4,10 @@ metadata:
   name: ai
   annotations:
     volsync.backube/privileged-movers: "true"
+# TODO: LLMInferenceServices to use models cached using LocalModelCache
+# See:
+# https://kserve.github.io/website/docs/install/localmodel-install#prerequisites
+# https://github.com/kserve/kserve/issues/5116
 # ---
 # apiVersion: v1
 # kind: Namespace
