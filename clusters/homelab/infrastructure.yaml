@@ -96,6 +96,21 @@ spec:
   path: ./infrastructure/workspace
   prune: true
   timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: vllm
+  namespace: ai
+spec:
+  interval: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-tenant-ai
+    namespace: flux-system
+  path: ./infrastructure/vllm
+  prune: true
+  timeout: 5m
 # TODO: LLMInferenceServices to use models cached using LocalModelCache
 # See:
 # https://kserve.github.io/website/docs/install/localmodel-install#prerequisites

@@ -1,0 +1,88 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: vllm
+spec:
+  chart:
+    spec:
+      chart: vllm-stack
+      sourceRef:
+        kind: HelmRepository
+        name: vllm
+      version: "0.1.10"
+  interval: 1h0m0s
+  values:
+    servingEngineSpec:
+      enableEngine: true
+      strategy:
+        type: Recreate
+      runtimeClassName: nvidia
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: nvidia.com/gpu.present
+                operator: Exists
+      tolerations:
+      - effect: NoSchedule
+        key: node.mmontes.io/type
+        value: compute-xlarge
+      serviceMonitor:
+        enabled: true
+
+      modelSpec:
+        - name: opt-125m
+          repository: vllm/vllm-openai
+          tag: cu130-nightly
+          modelURL: facebook/opt-125m
+          
+          hf_token:
+            secretName: hf-token
+            secretKey: HF_TOKEN
+
+          vllmConfig:
+            enablePrefixCaching: false
+            enableChunkedPrefill: false
+            gpuMemoryUtilization: 0.95
+            extraArgs:
+              - --enable-sleep-mode
+
+          env:
+            - name: VLLM_SERVER_DEV_MODE
+              value: "1"
+
+          replicaCount: 1
+          requestGPU: 1
+          requestCPU: 1
+          requestMemory: 4Gi
+
+          pvcStorage: 50Gi
+          pvcAccessMode:
+            - ReadWriteOnce
+          storageClass: topolvm
+
+    routerSpec:
+      enableRouter: true
+      resources:
+        requests:
+          cpu: 500m
+          memory: 500Mi
+        limits:
+          memory: 1Gi
+      nodeSelector:
+        node.mmontes.io/type: compute-large
+      tolerations:
+      - effect: NoSchedule
+        key: node.mmontes.io/type
+        value: compute-large
+      serviceMonitor:
+        enabled: true
+      route:
+        main:
+          enabled: true
+          parentRefs:
+            - name: traefik-internal
+              namespace: networking
+          hostnames:
+            - vllm.mmontes-internal.duckdns.org
