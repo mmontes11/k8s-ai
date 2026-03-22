@@ -89,7 +89,7 @@ spec:
             enableChunkedPrefill: true
             maxModelLen: 1024
             maxNumSeqs: 1
-            gpuMemoryUtilization: 0.80
+            gpuMemoryUtilization: 0.85
             extraArgs:
               - --served-model-name=qwen35-35B
               - --enforce-eager
