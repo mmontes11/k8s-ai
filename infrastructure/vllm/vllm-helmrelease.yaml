@@ -68,11 +68,9 @@ spec:
 
     routerSpec:
       enableRouter: true
-
       repository: "lmcache/lmstack-router"
       tag: "latest"
       imagePullPolicy: "IfNotPresent"
-
       resources:
         requests:
           cpu: 500m
