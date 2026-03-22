@@ -92,6 +92,7 @@ spec:
             extraArgs:
               - --served-model-name=qwen35-35B 
               - --language-model-only
+              - --kv-cache-dtype=fp8
               - --reasoning-parser=qwen3
               - --enable-auto-tool-choice 
               - --tool-call-parser=qwen3_coder
