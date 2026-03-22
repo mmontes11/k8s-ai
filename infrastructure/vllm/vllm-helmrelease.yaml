@@ -36,10 +36,49 @@ spec:
             secretKey: HF_TOKEN
 
           vllmConfig:
+            extraArgs:
+              - --enable-sleep-mode
+
+          env:
+            - name: VLLM_SERVER_DEV_MODE
+              value: "1"
+
+          replicaCount: 1
+          requestGPU: 1
+          requestCPU: 1
+          requestMemory: 4Gi
+
+          pvcStorage: 5Gi
+          pvcAccessMode:
+            - ReadWriteOnce
+          storageClass: topolvm
+
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                - matchExpressions:
+                  - key: nvidia.com/gpu.present
+                    operator: Exists
+
+        - name: qwen35-35b
+          repository: vllm/vllm-openai
+          tag: cu130-nightly
+
+          modelURL: Sehyo/Qwen3.5-35B-A3B-NVFP4
+          hf_token:
+            secretName: hf-token
+            secretKey: HF_TOKEN
+
+          vllmConfig:
             enablePrefixCaching: false
             enableChunkedPrefill: false
+            maxModelLen: 8192
             gpuMemoryUtilization: 0.95
             extraArgs:
+              - --quantization=NVFP4
+              - --language-model-only
+              - --reasoning-parser=qwen3
               - --enable-sleep-mode
 
           env:
@@ -56,8 +95,6 @@ spec:
             - ReadWriteOnce
           storageClass: topolvm
 
-          # strangely, affinity is defined at the modelSpec level
-          # see: https://github.com/vllm-project/production-stack/blob/c5eb8dc21c7f81bfc2ee9f7cf74e82f206fe5776/helm/templates/deployment-vllm-multi.yaml#L495
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
