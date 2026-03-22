@@ -1,3 +1,7 @@
+# TODO: LLMInferenceServices to use models cached using LocalModelCache
+# See:
+# https://kserve.github.io/website/docs/install/localmodel-install#prerequisites
+# https://github.com/kserve/kserve/issues/5116
 apiVersion: serving.kserve.io/v1alpha2
 kind: LLMInferenceService
 metadata:
