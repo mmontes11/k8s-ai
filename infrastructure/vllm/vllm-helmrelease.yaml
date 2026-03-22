@@ -90,7 +90,8 @@ spec:
             maxModelLen: 4096
             gpuMemoryUtilization: 0.85
             extraArgs:
-              - --served-model-name=qwen35-35B 
+              - --served-model-name=qwen35-35B
+              - --enforce-eager
               - --language-model-only
               - --kv-cache-dtype=fp8
               - --reasoning-parser=qwen3
