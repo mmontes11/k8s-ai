@@ -110,7 +110,7 @@ spec:
               - -c
             args:
               - |
-                hf download Sehyo/Qwen3.5-35B-A3B-NVFP4 --local-dir /data/model --token $HF_TOKEN
+                hf download Sehyo/Qwen3.5-35B-A3B-NVFP4 --local-dir /data/model
             mountPvcStorage: true
 
           affinity:
