@@ -1,0 +1,118 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: vllm
+  namespace: ai
+  labels:
+    app.kubernetes.io/component: serving-engine
+    app.kubernetes.io/instance: vllm
+    app.kubernetes.io/managed-by: helm
+    app.kubernetes.io/name: qwen35-35b
+    app.kubernetes.io/part-of: vllm-stack
+    environment: test
+    release: test
+spec:
+  runtimeClassName: nvidia
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: nvidia.com/gpu.present
+            operator: Exists
+  tolerations:
+  - effect: NoSchedule
+    key: node.mmontes.io/type
+    value: compute-xlarge
+  enableServiceLinks: false
+  
+  initContainers:
+  - name: init
+    image: vllm/vllm-openai:cu130-nightly
+    command: ["bash", "-c"]
+    args:
+      - |
+        hf download unsloth/Qwen3.5-35B-A3B-GGUF --include '*Q3_K_M.gguf'
+        hf download unsloth/Qwen3.5-35B-A3B --include 'tokenizer*' 'config.json'
+    volumeMounts:
+    - name: hf-cache-volume
+      mountPath: /root/.cache/huggingface
+    resources:
+      requests:
+        cpu: "4"
+        memory: 2Gi
+
+  containers:
+  - name: vllm
+    image: vllm/vllm-openai:cu130-nightly
+    imagePullPolicy: IfNotPresent
+    # see: https://github.com/vllm-project/vllm/issues/36456
+    command:
+      - vllm
+      - serve
+      - Qwen/Qwen3.5-35B-A3B:Q3_K_M
+      - --quantization=gguf
+      - --dtype=float16
+      - --tokenizer=unsloth/Qwen3.5-35B-A3B
+      - --trust-remote-code
+      - --hf-config-path=unsloth/Qwen3.5-35B-A3B
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --served-model-name=qwen35-35b
+      - --language-model-only
+      - --gpu_memory_utilization
+      - "0.95"
+      - --max-model-len
+      - "4096"
+      - --max-num-seqs
+      - "1"
+      - --kv-cache-dtype=fp8
+      - --enable-prefix-caching
+      - --reasoning-parser=qwen3
+    env:
+    - name: PYTHONHASHSEED
+      value: "123"
+    - name: HF_HOME
+      value: /data
+    - name: VLLM_LOGGING_LEVEL
+      value: DEBUG
+    - name: PYTORCH_ALLOC_CONF
+      value: "expandable_segments:True"
+    - name: HF_TOKEN
+      valueFrom:
+        secretKeyRef:
+          key: HF_TOKEN
+          name: hf-token
+    ports:
+    - containerPort: 8000
+      name: api-port
+    volumeMounts:
+    - name: hf-cache-volume
+      mountPath: /root/.cache/huggingface # Shared PVC mount
+    resources:
+      limits:
+        nvidia.com/gpu: "1"
+      requests:
+        cpu: "4"
+        memory: 16Gi
+        nvidia.com/gpu: "1"
+    
+    startupProbe:
+      httpGet:
+        path: /health
+        port: 8000
+      initialDelaySeconds: 30
+      failureThreshold: 60
+      periodSeconds: 10
+    readinessProbe:
+      httpGet:
+        path: /health
+        port: 8000
+      periodSeconds: 10
+
+  volumes:
+  - name: hf-cache-volume
+    persistentVolumeClaim:
+      claimName: vllm
