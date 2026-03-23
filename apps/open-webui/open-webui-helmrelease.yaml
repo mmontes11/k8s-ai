@@ -15,8 +15,10 @@ spec:
     ollama:
       enabled: false
     ollamaUrls:
-      # - http://ollama:11434
-      - http://vllm-router-service/v1
+      - http://ollama:11434
+    enableOpenaiApi: true
+    openaiBaseApiUrls:
+      - http://vllm-router-service/v1 
     pipelines:
       enabled: false
     persistence:
