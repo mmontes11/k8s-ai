@@ -38,17 +38,11 @@ spec:
           - qwen3-vl:8b-instruct
           - qwen3:4b-instruct
           - qwen3:8b
-          - qwen3.5:9b
-          - qwen3.5:35b
         create:
         - name: gpt-oss:20b-ctx128k
           template: |
             FROM gpt-oss:20b
             PARAMETER num_ctx 131072
-        - name: qwen3.5:9b-ctx-256K
-          template: |
-            FROM qwen3.5:9b
-            PARAMETER num_ctx 262144
         # llama_model_load: error loading model: error loading model architecture: unknown model architecture: 'qwen35moe'
         # https://huggingface.co/unsloth/Qwen3.5-35B-A3B-GGUF
         # - name: qwen3.5:35b-q4_K_S
@@ -65,10 +59,10 @@ spec:
       port: 11434
     resources:
       requests:
-        cpu: 4
-        memory: 4Gi
+        cpu: "1"
+        memory: 2Gi
       limits:
-        memory: 24Gi
+        memory: 8Gi
         nvidia.com/gpu: "1"
     # See: https://github.com/ollama/ollama/blob/main/envconfig/config.go
     extraEnv:
