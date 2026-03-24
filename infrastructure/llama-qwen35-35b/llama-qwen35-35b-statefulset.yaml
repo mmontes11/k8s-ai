@@ -1,0 +1,127 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: llama-qwen35-35b
+spec:
+  replicas: 1
+  serviceName: llama-qwen35-35b
+  selector:
+    matchLabels:
+      app: llama-qwen35-35b
+  template:
+    metadata:
+      labels:
+        app: llama-qwen35-35b
+    spec:
+      runtimeClassName: nvidia
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: nvidia.com/gpu.present
+                operator: Exists
+      tolerations:
+      - effect: NoSchedule
+        key: node.mmontes.io/type
+        value: compute-xlarge
+
+      initContainers:
+      - name: init
+        image: ghcr.io/ggml-org/llama.cpp:full-cuda13-b8496
+        env:
+        - name: LLAMA_CACHE
+          value: /models
+        - name: HF_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: hf-token
+              key: HF_TOKEN
+        # See:
+        # https://github.com/ggml-org/llama.cpp/tree/master/tools/cli
+        # https://github.com/ggml-org/llama.cpp/blob/master/.devops/tools.sh
+        command: ["/bin/bash", "-c"]
+        args:
+          - |
+            MODEL_PATH="/models/unsloth_Qwen3.5-35B-A3B-GGUF_Qwen3.5-35B-A3B-MXFP4_MOE.gguf"
+            if [ ! -f "$MODEL_PATH" ]; then
+              echo "Model not found. Downloading MXFP4 file..."
+              /app/llama-cli \
+                --hf-repo unsloth/Qwen3.5-35B-A3B-GGUF \
+                --hf-file Qwen3.5-35B-A3B-MXFP4_MOE.gguf
+            else
+              echo "Model already exists. Skipping download."
+            fi
+        volumeMounts:
+        - name: models
+          mountPath: /models
+        resources:
+          requests:
+            cpu: "4"
+            memory: 4Gi
+          limits:
+            memory: 24Gi
+  
+      containers:
+      - name: llama-server
+        image: ghcr.io/ggml-org/llama.cpp:full-cuda13-b8496
+        env:
+        - name: LLAMA_CACHE
+          value: /models
+        # See:
+        # https://github.com/ggml-org/llama.cpp/tree/master/tools/server
+        # https://github.com/ggml-org/llama.cpp/discussions/15396
+        # https://github.com/ggml-org/llama.cpp/blob/master/.devops/tools.sh
+        command: ["/app/llama-server"]
+        args:
+          - --model
+          - /models/unsloth_Qwen3.5-35B-A3B-GGUF_Qwen3.5-35B-A3B-MXFP4_MOE.gguf
+          - --alias
+          - qwen35-35b
+          - --host
+          - 0.0.0.0
+          - --port
+          - "8080"
+          - --n-gpu-layers
+          - "999"
+          - --ctx-size
+          - "32768"
+          - --cache-type-k
+          - q8_0
+          - --cache-type-v
+          - q8_0
+          - --flash-attn
+          - "on"
+          - --batch-size
+          - "2048"
+          - --ubatch-size
+          - "2048"
+          - --no-mmap
+        ports:
+        - containerPort: 8080
+          name: api
+        resources:
+          requests:
+            cpu: "4"
+            memory: 4Gi
+          limits:
+            memory: 24Gi
+            nvidia.com/gpu: "1"
+        volumeMounts:
+        - name: models
+          mountPath: /models
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 45
+          periodSeconds: 10
+
+  volumeClaimTemplates:
+  - metadata:
+      name: models
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 30Gi

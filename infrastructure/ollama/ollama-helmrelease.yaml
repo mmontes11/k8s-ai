@@ -65,7 +65,7 @@ spec:
       port: 11434
     resources:
       requests:
-        cpu: 1
+        cpu: 4
         memory: 4Gi
       limits:
         memory: 24Gi
