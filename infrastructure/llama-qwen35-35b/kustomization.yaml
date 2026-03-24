@@ -4,4 +4,5 @@ namespace: ai
 resources:
   - llama-qwen35-35b-httproute.yaml
   - llama-qwen35-35b-service.yaml
+  - llama-qwen35-35b-servicemonitor.yaml
   - llama-qwen35-35b-statefulset.yaml

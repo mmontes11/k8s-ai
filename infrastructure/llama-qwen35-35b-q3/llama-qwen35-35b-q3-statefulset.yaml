@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: llama-qwen35-35b
+  name: llama-qwen35-35b-q3
 spec:
   replicas: 1
-  serviceName: llama-qwen35-35b
+  serviceName: llama-qwen35-35b-q3
   selector:
     matchLabels:
-      app: llama-qwen35-35b
+      app: llama-qwen35-35b-q3
   template:
     metadata:
       labels:
-        app: llama-qwen35-35b
+        app: llama-qwen35-35b-q3
     spec:
       runtimeClassName: nvidia
       affinity:
@@ -43,12 +43,12 @@ spec:
         command: ["/bin/bash", "-c"]
         args:
           - |
-            MODEL_PATH="/models/unsloth_Qwen3.5-35B-A3B-GGUF_Qwen3.5-35B-A3B-MXFP4_MOE.gguf"
+            MODEL_PATH="/models/unsloth_Qwen3.5-35B-A3B-GGUF_Qwen3.5-35B-A3B-Q3_K_M.gguf"
             if [ ! -f "$MODEL_PATH" ]; then
               echo "Model not found. Downloading MXFP4 file..."
               /app/llama-cli \
                 --hf-repo unsloth/Qwen3.5-35B-A3B-GGUF \
-                --hf-file Qwen3.5-35B-A3B-MXFP4_MOE.gguf
+                --hf-file Qwen3.5-35B-A3B-Q3_K_M.gguf
             else
               echo "Model already exists. Skipping download."
             fi
@@ -75,9 +75,9 @@ spec:
         args:
           - --server
           - --model
-          - /models/unsloth_Qwen3.5-35B-A3B-GGUF_Qwen3.5-35B-A3B-MXFP4_MOE.gguf
+          - /models/unsloth_Qwen3.5-35B-A3B-GGUF_Qwen3.5-35B-A3B-Q3_K_M.gguf
           - --alias
-          - qwen35-35b
+          - qwen35-35b-3q
           - --host
           - 0.0.0.0
           - --port
@@ -85,14 +85,13 @@ spec:
           - --n-gpu-layers
           - "999"
           - --ctx-size
-          - "49152"
+          - "0" # 262144
           - --cache-type-k
           - q8_0
           - --cache-type-v
           - q8_0
           - --flash-attn
           - "on"
-          - "2048"
           - --no-mmap
           - --batch-size
           - "2048"

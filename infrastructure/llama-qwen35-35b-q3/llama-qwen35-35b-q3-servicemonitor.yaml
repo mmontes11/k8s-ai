@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: llama-qwen35-35b-q3
+  labels:
+    app: llama-qwen35-35b-q3
+spec:
+  endpoints:
+    - port: http
+      honorLabels: false
+      interval: 30s
+      scrapeTimeout: 25s
+  selector:
+    matchLabels:
+      app: llama-qwen35-35b-q3
