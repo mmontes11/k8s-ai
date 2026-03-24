@@ -29,5 +29,3 @@ spec:
         value: 草泥马🦙
       - name: BYPASS_MODEL_ACCESS_CONTROL
         value: "true"
-      - name: OPENAI_API_BASE_URL
-        value: "http://vllm-router-service/v1"
