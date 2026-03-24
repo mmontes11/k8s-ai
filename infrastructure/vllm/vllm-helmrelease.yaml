@@ -14,6 +14,9 @@ spec:
   values:
     servingEngineSpec:
       enableEngine: true
+      labels:
+        environment: "vllm"
+        release: "vllm"
       strategy:
         type: Recreate
       runtimeClassName: nvidia
@@ -89,18 +92,18 @@ spec:
             enableChunkedPrefill: true
             maxModelLen: 4096
             maxNumSeqs: 1
-            gpuMemoryUtilization: 0.82
+            gpuMemoryUtilization: 0.85
             extraArgs:
               - --served-model-name=qwen35-35B
               - --language-model-only
               - --kv-cache-dtype=fp8
               - --reasoning-parser=qwen3
-              # - --enable-sleep-mode
+              - --enable-sleep-mode
           env:
             - name: VLLM_LOGGING_LEVEL
               value: DEBUG
-            # - name: VLLM_SERVER_DEV_MODE
-            #   value: "1"
+            - name: VLLM_SERVER_DEV_MODE
+              value: "1"
             - name: PYTORCH_ALLOC_CONF
               value: "expandable_segments:True"
 

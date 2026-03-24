@@ -3,7 +3,6 @@ kind: Kustomization
 namespace: kserve
 resources:
   - hf-storage-clusterstoragecontainer.yaml
-  - hf-token-sealedsecret.yaml
   - kserve-runtime-configs-helmrelease.yaml
   - kserve-runtime-configs-ocirepository.yaml
   - nvidia-template-llminferenceserviceconfig.yaml

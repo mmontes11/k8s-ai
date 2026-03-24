@@ -100,7 +100,7 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: vllm
+  name: huggingface
   namespace: ai
 spec:
   interval: 5m
@@ -108,14 +108,32 @@ spec:
     kind: GitRepository
     name: flux-tenant-ai
     namespace: flux-system
-  path: ./infrastructure/vllm
+  path: ./infrastructure/huggingface
   prune: true
   timeout: 5m
+---
+# CUDA Out of Memory when deploying Qwen3.5-35B-A3B-NVFP4 
+# apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+# kind: Kustomization
+# metadata:
+#   name: vllm
+#   namespace: ai
+# spec:
+#   dependsOn:
+#     - name: huggingface
+#   interval: 5m
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-tenant-ai
+#     namespace: flux-system
+#   path: ./infrastructure/vllm
+#   prune: true
+#   timeout: 5m
+# ---
 # TODO: LLMInferenceServices to use models cached using LocalModelCache
 # See:
 # https://kserve.github.io/website/docs/install/localmodel-install#prerequisites
 # https://github.com/kserve/kserve/issues/5116
-# ---
 # apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 # kind: Kustomization
 # metadata:
@@ -138,6 +156,7 @@ spec:
 #   namespace: kserve
 # spec:
 #   dependsOn:
+#     - name: huggingface
 #     - name: kserve-crds
 #   interval: 5m
 #   sourceRef:
