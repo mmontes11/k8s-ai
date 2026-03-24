@@ -142,7 +142,7 @@ spec:
     kind: GitRepository
     name: flux-tenant-ai
     namespace: flux-system
-  path: ./infrastructure/llama-qwen35-35b-3q
+  path: ./infrastructure/llama-qwen35-35b-q3
   prune: true
   timeout: 5m
 ---
