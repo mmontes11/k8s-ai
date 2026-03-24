@@ -92,7 +92,6 @@ spec:
           - q8_0
           - --flash-attn
           - "on"
-          - "2048"
           - --no-mmap
           - --batch-size
           - "2048"
