@@ -93,6 +93,10 @@ spec:
           - --flash-attn
           - "on"
           - --no-mmap
+          - --batch-size
+          - "2048"
+          - --ubatch-size
+          - "2048"
           - --metrics
         ports:
         - containerPort: 8080
