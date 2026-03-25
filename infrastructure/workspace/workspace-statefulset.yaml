@@ -40,7 +40,7 @@ spec:
                 rsync -rlptDq /opt/template/ /home/mmontes/
               else
                 echo "PVC exists. Syncing..."
-                for dir in .opencode/bin .local/bin usr/local/go go/bin; do
+                for dir in .opencode/bin usr/local/go go/bin; do
                   if [ -d "/opt/template/$dir" ]; then
                     echo "Updating $dir..."
                     mkdir -p "/home/mmontes/$dir"
