@@ -48,6 +48,8 @@ spec:
                   fi
                 done
               fi
+              chmod 700 /home/mmontes/.ssh
+              chmod 600 /home/mmontes/.ssh/*
               echo "Sync complete."
           volumeMounts:
             - name: home-storage
