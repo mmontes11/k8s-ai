@@ -30,7 +30,7 @@ spec:
     
       initContainers:
         - name: sync
-          image: ghcr.io/mmontes11/ai-workspace:0.7.0
+          image: ghcr.io/mmontes11/ai-workspace:0.8.0
           command: ["/bin/bash", "-c"]
           args:
             - |
@@ -54,7 +54,13 @@ spec:
               mountPath: /home/mmontes
       containers:
         - name: workspace
-          image: ghcr.io/mmontes11/ai-workspace:0.7.0
+          image: ghcr.io/mmontes11/ai-workspace:0.8.0
+          env:
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: github-token
+                  key: GITHUB_TOKEN
           resources:
             requests:
               cpu: "1"
