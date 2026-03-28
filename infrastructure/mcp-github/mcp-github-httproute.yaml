@@ -8,6 +8,7 @@ spec:
       namespace: networking
   hostnames:
     - "mcp-github.mmontes-internal.duckdns.org"
-  backendRefs:
-    - name: mcp-github
-      port: 8080 
+  rules:
+    - backendRefs:
+      - name: mcp-github
+        port: 8080 
