@@ -31,7 +31,7 @@ spec:
       initContainers:
         - name: sync
           image: alpine:3.23.3
-          command: ["/bin/bash", "-c"]
+          command: ["/bin/sh", "-c"]
           args:
             - |
               set -e
