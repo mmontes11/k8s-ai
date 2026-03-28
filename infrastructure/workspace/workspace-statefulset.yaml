@@ -30,33 +30,19 @@ spec:
     
       initContainers:
         - name: sync
-          image: ghcr.io/mmontes11/ai-workspace:0.8.0
+          image: alpine:3.23.3
           command: ["/bin/bash", "-c"]
           args:
             - |
               set -e
-              if [ $(ls -A /home/mmontes | grep -v "lost+found" | wc -l) -eq 0 ]; then
-                echo "PVC is empty. Initializing..."
-                rsync -rlptDq /opt/template/ /home/mmontes/
-              else
-                echo "PVC exists. Syncing..."
-                for dir in .opencode/bin usr/local/go go/bin; do
-                  if [ -d "/opt/template/$dir" ]; then
-                    echo "Updating $dir..."
-                    mkdir -p "/home/mmontes/$dir"
-                    rsync -rlptDq --no-perms --delete "/opt/template/$dir/" "/home/mmontes/$dir/" || true
-                  fi
-                done
-              fi
               chmod 700 /home/mmontes/.ssh
               chmod 600 /home/mmontes/.ssh/*
-              echo "Sync complete."
           volumeMounts:
             - name: home-storage
               mountPath: /home/mmontes
       containers:
         - name: workspace
-          image: ghcr.io/mmontes11/ai-workspace:0.8.0
+          image: ghcr.io/mmontes11/ai-workspace:0.9.0
           env:
             - name: GITHUB_TOKEN
               valueFrom:
