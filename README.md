@@ -86,9 +86,18 @@ This repository manages AI workloads on Kubernetes using GitOps with Flux CD. It
     ├── vllm/               # vLLM serving engine
     ├── ollama/             # Ollama LLM backend
     ├── llama-qwen35-35b/   # Model deployments
+    ├── workspace/          # OpenCode AI development workspace
     ├── huggingface/        # HF integration
     └── mcp-*/             # MCP server integrations
 ```
+
+## AI Workspace
+
+Development environment for AI workloads based on [docker-ai-workspace](https://github.com/mmontes11/docker-ai-workspace):
+
+- **OpenCode instance** for interactive AI development
+- **NVIDIA GPU support** for accelerated model training and inference
+- Pre-configured for AI/ML development
 
 ## License
 
