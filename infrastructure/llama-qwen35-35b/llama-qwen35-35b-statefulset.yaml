@@ -77,7 +77,7 @@ spec:
           - --model
           - /models/unsloth_Qwen3.5-35B-A3B-GGUF_Qwen3.5-35B-A3B-MXFP4_MOE.gguf
           - --alias
-          - qwen35-35b
+          - qwen35:35b
           - --host
           - 0.0.0.0
           - --port
