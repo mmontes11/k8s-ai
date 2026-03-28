@@ -6,12 +6,8 @@ spec:
   parentRefs:
     - name: traefik-internal
       namespace: networking
-  rules:
-      parentRefs:
-        - name: traefik-internal
-          namespace: networking
-      hostnames:
-        - "mcp-github.mmontes-internal.duckdns.org"
-      backendRefs:
-        - name: mcp-github
-          port: 8080
+  hostnames:
+    - "mcp-github.mmontes-internal.duckdns.org"
+  backendRefs:
+    - name: mcp-github
+      port: 8080 
