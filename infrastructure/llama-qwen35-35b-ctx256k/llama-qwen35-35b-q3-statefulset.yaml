@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: llama-qwen35-35b-q3
+  name: llama-qwen35-35b-ctx256k
 spec:
   replicas: 1
-  serviceName: llama-qwen35-35b-q3
+  serviceName: llama-qwen35-35b-ctx256k
   selector:
     matchLabels:
-      app: llama-qwen35-35b-q3
+      app: llama-qwen35-35b-ctx256k
   template:
     metadata:
       labels:
-        app: llama-qwen35-35b-q3
+        app: llama-qwen35-35b-ctx256k
     spec:
       runtimeClassName: nvidia
       affinity:
@@ -77,7 +77,7 @@ spec:
           - --model
           - /models/unsloth_Qwen3.5-35B-A3B-GGUF_Qwen3.5-35B-A3B-Q3_K_M.gguf
           - --alias
-          - qwen35-35b-3q
+          - qwen35:35b-ctx256k
           - --host
           - 0.0.0.0
           - --port

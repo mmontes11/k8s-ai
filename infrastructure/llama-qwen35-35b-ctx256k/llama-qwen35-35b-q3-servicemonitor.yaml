@@ -1,9 +1,9 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: llama-qwen35-35b-q3
+  name: llama-qwen35-35b-ctx256k
   labels:
-    app: llama-qwen35-35b-q3
+    app: llama-qwen35-35b-ctx256k
 spec:
   endpoints:
     - port: http
@@ -12,4 +12,4 @@ spec:
       scrapeTimeout: 25s
   selector:
     matchLabels:
-      app: llama-qwen35-35b-q3
+      app: llama-qwen35-35b-ctx256k
