@@ -72,10 +72,13 @@ spec:
           - --models-max
           - "1"
           - --models-autoload
-          - --fit
-          - "off"
           - --sleep-idle-seconds
           - "600"
+          - --fit
+          - "off"
+          - --flash-attn
+          - "on"
+          - --no-mmap
           - --host
           - 0.0.0.0
           - --port

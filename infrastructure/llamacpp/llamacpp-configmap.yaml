@@ -47,8 +47,6 @@ data:
     cache-type-v=q8_0
     batch-size=2048
     ubatch-size=2048
-    flash-attn=on
-    no-mmap
 
     [qwen35:35b-ctx256k]
     model=/models/unsloth_Qwen3.5-35B-A3B-GGUF_Qwen3.5-35B-A3B-Q3_K_M.gguf
@@ -59,5 +57,3 @@ data:
     cache-type-v=q8_0
     batch-size=2048
     ubatch-size=2048
-    flash-attn=on
-    no-mmap
