@@ -109,7 +109,7 @@ spec:
               --flash-attn on \
               --batch-size 2048 \
               --ubatch-size 2048 \
-              --n-prompt 2048,8192 \
+              --n-prompt 2048,8192,16384,32768 \
               --progress || true
             echo "Benchmark finished"
             sleep infinity
