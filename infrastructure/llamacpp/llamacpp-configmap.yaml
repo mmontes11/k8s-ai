@@ -12,6 +12,7 @@ data:
     MODELS=(
       "unsloth|Qwen3.5-35B-A3B-GGUF|Qwen3.5-35B-A3B-MXFP4_MOE.gguf"
       "unsloth|Qwen3.5-35B-A3B-GGUF|Qwen3.5-35B-A3B-Q3_K_M.gguf"
+      "ggml-org|gpt-oss-20b-GGUF|gpt-oss-20b-mxfp4.gguf"
       # Add new models below:
       # "<hf-account>|<model-name>|<model-file>.gguf"
     )
@@ -50,6 +51,15 @@ data:
     model=/models/unsloth_Qwen3.5-35B-A3B-GGUF_Qwen3.5-35B-A3B-Q3_K_M.gguf
     alias=qwen35:35b-ctx256k
     ctx-size=262144
+    cache-type-k=q8_0
+    cache-type-v=q8_0
+    batch-size=2048
+    ubatch-size=2048
+
+    [gpt-oss:20b]
+    model=/models/ggml-org_gpt-oss-20b-GGUF_gpt-oss-20b-mxfp4.gguf
+    alias=gpt-oss:20b
+    ctx-size=131072
     cache-type-k=q8_0
     cache-type-v=q8_0
     batch-size=2048
