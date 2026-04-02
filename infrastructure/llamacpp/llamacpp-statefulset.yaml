@@ -60,32 +60,53 @@ spec:
         env:
         - name: LLAMA_CACHE
           value: /models
+
+        # SERVER:
         # See:
         # https://github.com/ggml-org/llama.cpp/tree/master/tools/server
         # https://github.com/ggml-org/llama.cpp/blob/master/.devops/tools.sh
-        args:
-          - --server
-          - --models-dir
-          - /models
-          - --models-preset
-          - /config/models.ini
-          - --models-max
-          - "1"
-          - --models-autoload
-          - --sleep-idle-seconds
-          - "600"
-          - --fit
-          - "off"
-          - --flash-attn
-          - "on"
-          - --no-mmap
-          - --host
-          - 0.0.0.0
-          - --port
-          - "8080"
+        # args:
+        #   - --server
+        #   - --models-dir
+        #   - /models
+        #   - --models-preset
+        #   - /config/models.ini
+        #   - --models-max
+        #   - "1"
+        #   - --models-autoload
+        #   - --sleep-idle-seconds
+        #   - "600"
+        #   - --fit
+        #   - "off"
+        #   - --flash-attn
+        #   - "on"
+        #   - --no-mmap
+        #   - --host
+        #   - 0.0.0.0
+        #   - --port
+        #   - "8080"
           # TODO: Metrics disabled, as Prometheus scrapes will awake the models
           # See: https://github.com/ggml-org/llama.cpp/issues/20227
           # - --metrics
+
+        # BENCHMARK:
+        # See:
+        # https://github.com/ggml-org/llama.cpp/tree/master/tools/llama-bench
+        # https://github.com/ggml-org/llama.cpp/blob/master/.devops/tools.sh
+        args:
+          - --bench 
+          - --model
+          - "/models/unsloth_Qwen3.5-35B-A3B-GGUF_Qwen3.5-35B-A3B-MXFP4_MOE.gguf"
+          - --theads
+          - "1"
+          - --batch-size
+          - "2048"
+          - --ubatch-size
+          - "2048"
+          - --n-prompt
+          - "10"
+          - --progress
+
         ports:
         - containerPort: 8080
           name: api
