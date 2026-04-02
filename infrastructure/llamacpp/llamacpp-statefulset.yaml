@@ -99,7 +99,7 @@ spec:
         args:
           - |
             echo "Starting llama-bench..."
-            /app/llama-bench \
+            /app/tools.sh \
               --bench \
               --model "/models/unsloth_Qwen3.5-35B-A3B-GGUF_Qwen3.5-35B-A3B-MXFP4_MOE.gguf" \
               --threads 1 \
