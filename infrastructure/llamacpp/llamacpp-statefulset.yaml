@@ -52,7 +52,7 @@ spec:
             cpu: "1"
             memory: 2Gi
           limits:
-            memory: 8Gi
+            memory: 4Gi
   
       containers:
       - name: llama-server
@@ -80,7 +80,9 @@ spec:
           - 0.0.0.0
           - --port
           - "8080"
-          - --metrics
+          # TODO: Metrics disabled, as Prometheus scrapes will awake the models
+          # See: https://github.com/ggml-org/llama.cpp/issues/20227
+          # - --metrics
         ports:
         - containerPort: 8080
           name: api
