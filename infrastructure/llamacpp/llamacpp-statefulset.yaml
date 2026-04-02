@@ -107,7 +107,6 @@ spec:
               --model "/models/unsloth_Qwen3.5-35B-A3B-GGUF_Qwen3.5-35B-A3B-MXFP4_MOE.gguf" \
               --threads 1 \
               --n-gpu-layers 999 \
-              --fit off \
               --flash-attn on \
               --ctx-size 49152 \
               --cache-type-k q8_0 \
