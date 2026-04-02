@@ -27,7 +27,7 @@ data:
         /app/llama-cli \
           --hf-repo "${hf_account}/${model_name}" \
           --hf-file "$model_file"
-        echo "Successfully downloaded $model_file"
+        echo "Successfully downloaded $MODEL_PATH"
       else
         echo "Model $MODEL_PATH already exists. Skipping download."
       fi
