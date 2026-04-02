@@ -13,6 +13,7 @@ data:
       "unsloth|Qwen3.5-35B-A3B-GGUF|Qwen3.5-35B-A3B-MXFP4_MOE.gguf"
       "unsloth|Qwen3.5-35B-A3B-GGUF|Qwen3.5-35B-A3B-Q3_K_M.gguf"
       "ggml-org|gpt-oss-20b-GGUF|gpt-oss-20b-mxfp4.gguf"
+      "unsloth|gpt-oss-20b-GGUF|gpt-oss-20b-F16.gguf"
       # Add new models below:
       # "<hf-account>|<model-name>|<model-file>.gguf"
     )
@@ -44,7 +45,7 @@ data:
     echo "Starting llama-bench..."
     /app/tools.sh \
       --bench \
-      --model "/models/ggml-org_gpt-oss-20b-GGUF_gpt-oss-20b-mxfp4.gguf" \
+      --model "/models/unsloth_gpt-oss-20b-GGUF_gpt-oss-20b-F16.gguf" \
       --threads 1 \
       --flash-attn on \
       --batch-size 2048 \
