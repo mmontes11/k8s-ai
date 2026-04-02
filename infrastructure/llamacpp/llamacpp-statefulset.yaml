@@ -93,6 +93,7 @@ spec:
         # See:
         # https://github.com/ggml-org/llama.cpp/tree/master/tools/llama-bench
         # https://github.com/ggml-org/llama.cpp/blob/master/.devops/tools.sh
+        # https://github.com/ggml-org/llama.cpp/discussions/15396
         command:
           - /bin/sh
           - -c
@@ -105,7 +106,7 @@ spec:
               --threads 1 \
               --batch-size 2048 \
               --ubatch-size 2048 \
-              --n-prompt 100 \
+              --n-prompt 2048,8192,16384,32768 \
               --progress || true
             echo "Benchmark finished"
             sleep infinity

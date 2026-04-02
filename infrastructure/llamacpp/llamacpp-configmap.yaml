@@ -34,7 +34,6 @@ data:
 
   # See:
   # https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md
-  # https://github.com/ggml-org/llama.cpp/discussions/15396
   # https://github.com/ggml-org/llama.cpp/discussions/18939
   # https://huggingface.co/blog/ggml-org/model-management-in-llamacpp
   models.ini: |
