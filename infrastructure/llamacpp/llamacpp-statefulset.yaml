@@ -92,48 +92,10 @@ spec:
           # - --metrics
 
         # BENCHMARK:
-        # See:
-        # https://github.com/ggml-org/llama.cpp/tree/master/tools/llama-bench
-        # https://github.com/ggml-org/llama.cpp/blob/master/.devops/tools.sh
-        # https://github.com/ggml-org/llama.cpp/discussions/15396
-
-        # qwen35:35b
-        # command:
-        #   - /bin/bash
-        #   - -c
-        # args:
-        #   - |
-        #     echo "Starting llama-bench..."
-        #     /app/tools.sh \
-        #       --bench \
-        #       --model "/models/unsloth_Qwen3.5-35B-A3B-GGUF_Qwen3.5-35B-A3B-MXFP4_MOE.gguf" \
-        #       --threads 1 \
-        #       --flash-attn on \
-        #       --batch-size 2048 \
-        #       --ubatch-size 2048 \
-        #       --n-prompt 2048,8192 \
-        #       --progress || true
-        #     echo "Benchmark finished"
-        #     sleep infinity
-
-        # gpt-oss:20b
         command:
           - /bin/bash
-          - -c
         args:
-          - |
-            echo "Starting llama-bench..."
-            /app/tools.sh \
-              --bench \
-              --model "/models/ggml-org_gpt-oss-20b-GGUF_gpt-oss-20b-mxfp4.gguf" \
-              --threads 1 \
-              --flash-attn on \
-              --batch-size 2048 \
-              --ubatch-size 2048 \
-              --n-prompt 2048,8192 \
-              --progress || true
-            echo "Benchmark finished"
-            sleep infinity
+          - /config/bench.sh
 
         ports:
         - containerPort: 8080
