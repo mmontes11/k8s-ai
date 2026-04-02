@@ -98,6 +98,14 @@ Development environment for AI workloads based on [docker-ai-workspace](https://
 - **NVIDIA GPU support** for accelerated model training and inference
 - Pre-configured for AI/ML development
 
+## AI Benchmarks
+
+LLM benchmarks using llama.cpp on Kubernetes: [mmontes11/llm-bench](https://github.com/mmontes11/llm-bench)
+
+Key benchmarks (NVIDIA RTX PRO 4000 Blackwell, 23.5 GiB VRAM):
+- **Qwen3.5-35B-A3B** (Q4_K_Medium): 2995 t/s @ 2048 prompts, 84.87 t/s token generation
+- **GPT-OSS 20B** (MXFP4 MoE): 2704 t/s @ 2048 prompts, 109.68 t/s token generation
+
 ## License
 
 [MIT](./LICENSE)
