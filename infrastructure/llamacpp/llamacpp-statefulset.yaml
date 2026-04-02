@@ -122,5 +122,5 @@ spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 30Gi
+          storage: 300Gi
       storageClassName: topolvm
