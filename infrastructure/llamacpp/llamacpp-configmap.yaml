@@ -79,7 +79,7 @@ data:
     ubatch-size=2048
 
     [gpt-oss:20b-ctx128k]
-    model=/unsloth_gpt-oss-20b-GGUF_gpt-oss-20b-F16.gguf
+    model=/models/unsloth_gpt-oss-20b-GGUF_gpt-oss-20b-F16.gguf
     alias=gpt-oss:20b-ctx128k
     ctx-size=131072
     cache-type-k=q8_0
