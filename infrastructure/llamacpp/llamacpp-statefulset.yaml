@@ -93,19 +93,22 @@ spec:
         # See:
         # https://github.com/ggml-org/llama.cpp/tree/master/tools/llama-bench
         # https://github.com/ggml-org/llama.cpp/blob/master/.devops/tools.sh
+        command:
+          - /bin/sh
+          - -c
         args:
-          - --bench 
-          - --model
-          - "/models/unsloth_Qwen3.5-35B-A3B-GGUF_Qwen3.5-35B-A3B-MXFP4_MOE.gguf"
-          - --threads
-          - "1"
-          - --batch-size
-          - "2048"
-          - --ubatch-size
-          - "2048"
-          - --n-prompt
-          - "10"
-          - --progress
+          - |
+            echo "Starting llama-bench..."
+            /app/llama-bench \
+              --bench \
+              --model "/models/unsloth_Qwen3.5-35B-A3B-GGUF_Qwen3.5-35B-A3B-MXFP4_MOE.gguf" \
+              --threads 1 \
+              --batch-size 2048 \
+              --ubatch-size 2048 \
+              --n-prompt 100 \
+              --progress || true
+            echo "Benchmark finished"
+            sleep infinity
 
         ports:
         - containerPort: 8080
