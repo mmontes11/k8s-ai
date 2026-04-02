@@ -107,6 +107,8 @@ spec:
               --model "/models/unsloth_Qwen3.5-35B-A3B-GGUF_Qwen3.5-35B-A3B-MXFP4_MOE.gguf" \
               --threads 1 \
               --flash-attn on \
+              --cache-type-k q8_0 \
+              --cache-type-v q8_0 \
               --batch-size 2048 \
               --ubatch-size 2048 \
               --n-prompt 2048,8192,16384,32768 \
