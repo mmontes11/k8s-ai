@@ -77,9 +77,9 @@ data:
     batch-size=2048
     ubatch-size=2048
 
-    [gpt-oss:20b]
+    [gpt-oss:20b-ctx128k]
     model=/models/ggml-org_gpt-oss-20b-GGUF_gpt-oss-20b-mxfp4.gguf
-    alias=gpt-oss:20b
+    alias=gpt-oss:20b-ctx128k
     ctx-size=131072
     cache-type-k=q8_0
     cache-type-v=q8_0
