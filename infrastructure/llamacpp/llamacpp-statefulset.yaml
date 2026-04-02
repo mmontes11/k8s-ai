@@ -56,7 +56,7 @@ spec:
   
       containers:
       - name: llama-server
-        image: ghcr.io/ggml-org/llama.cpp:full-cuda13-b8635
+        image: ghcr.io/ggml-org/llama.cpp:full-cuda13-b8628
         env:
         - name: LLAMA_CACHE
           value: /models
