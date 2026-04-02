@@ -85,5 +85,3 @@ data:
     cache-type-v=q8_0
     batch-size=2048
     ubatch-size=2048
-    jinja=1
-    chat-template-file=/models/templates/openai-gpt-oss-120b.jinja
