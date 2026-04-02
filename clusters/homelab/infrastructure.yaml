@@ -162,40 +162,6 @@ spec:
   prune: true
   timeout: 5m
 ---
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
-kind: Kustomization
-metadata:
-  name: llama-qwen35-35b
-  namespace: ai
-spec:
-  dependsOn:
-    - name: huggingface
-  interval: 5m
-  sourceRef:
-    kind: GitRepository
-    name: flux-tenant-ai
-    namespace: flux-system
-  path: ./infrastructure/llama-qwen35-35b
-  prune: true
-  timeout: 5m
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
-kind: Kustomization
-metadata:
-  name: llama-qwen35-35b-ctx256k
-  namespace: ai
-spec:
-  dependsOn:
-    - name: huggingface
-  interval: 5m
-  sourceRef:
-    kind: GitRepository
-    name: flux-tenant-ai
-    namespace: flux-system
-  path: ./infrastructure/llama-qwen35-35b-ctx256k
-  prune: true
-  timeout: 5m
----
 # CUDA Out of Memory when deploying Qwen3.5-35B-A3B-NVFP4 
 # apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 # kind: Kustomization

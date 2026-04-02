@@ -39,15 +39,14 @@ This repository manages AI workloads on Kubernetes using GitOps with Flux CD. It
   - Model caching
 
 #### llama.cpp
-- **Path**: `./infrastructure/llama-qwen35-35b`
-- **Quantized**: `./infrastructure/llama-qwen35-35b-q3`
-- **Description**: High-performance C/C++ inference engine
+- **Path**: `./infrastructure/llamacpp`
+- **Description**: High-performance C/C++ inference engine optimized for CPU and GPU
 - **Features**:
-  - Full precision (llama-qwen35-35b)
-  - Quantized variant (llama-qwen35-35b-q3) for reduced memory footprint
+  - Qwen3.5-35B model support with full precision
   - 256k context window for agentic AI workflows
   - StatefulSet deployment with persistent storage
   - Prometheus ServiceMonitor integration
+  - Ingress routing via HTTPRoute
 
 #### vLLM
 - **Path**: `./infrastructure/vllm`
@@ -85,7 +84,7 @@ This repository manages AI workloads on Kubernetes using GitOps with Flux CD. It
     ├── kserve/             # KServe ML serving
     ├── vllm/               # vLLM serving engine
     ├── ollama/             # Ollama LLM backend
-    ├── llama-qwen35-35b/   # Model deployments
+    ├── llamacpp/           # llama.cpp inference engine
     ├── workspace/          # OpenCode AI development workspace
     ├── huggingface/        # HF integration
     └── mcp-*/             # MCP server integrations
