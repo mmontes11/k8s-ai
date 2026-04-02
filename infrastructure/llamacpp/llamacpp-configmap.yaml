@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: llamacpp
+data:
+  # See:
+  # https://github.com/ggml-org/llama.cpp/tree/master/tools/cli
+  init.sh: |
+    #!/bin/bash
+    set -e
+
+    MODELS=(
+      "unsloth|Qwen3.5-35B-A3B-GGUF|Qwen3.5-35B-A3B-MXFP4_MOE.gguf"
+      "unsloth|Qwen3.5-35B-A3B-GGUF|Qwen3.5-35B-A3B-Q3_K_M.gguf"
+      # Add new models below:
+      # "<hf-account>|<model-name>|<model-file>.gguf"
+    )
+
+    for model in "${MODELS[@]}"; do
+      IFS='|' read -r hf_account model_name model_file <<< "$model"
+
+      MODEL_PATH="/models/${hf_account}_${model_name}_${model_file}"
+
+      if [ ! -f "$MODEL_PATH" ]; then
+        echo "Model $MODEL_PATH not found. Downloading..."
+        /app/llama-cli \
+          --hf-repo "${hf_account}/${model_name}" \
+          --hf-file "$model_file"
+        echo "Successfully downloaded $model_file"
+      else
+        echo "Model $MODEL_PATH already exists. Skipping download."
+      fi
+    done
+
+  # See:
+  # https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md
+  # https://github.com/ggml-org/llama.cpp/discussions/15396
+  # https://github.com/ggml-org/llama.cpp/discussions/18939
+  # https://huggingface.co/blog/ggml-org/model-management-in-llamacpp
+  models.ini: |
+    [qwen35:35b]
+    model=/models/unsloth_Qwen3.5-35B-A3B-GGUF_Qwen3.5-35B-A3B-MXFP4_MOE.gguf
+    alias=qwen35:35b
+    n-gpu-layers=999
+    ctx-size=49152
+    cache-type-k=q8_0
+    cache-type-v=q8_0
+    batch-size=2048
+    ubatch-size=2048
+    flash-attn=on
+
+    [qwen35:35b-ctx256k]
+    model=/models/unsloth_Qwen3.5-35B-A3B-GGUF_Qwen3.5-35B-A3B-Q3_K_M.gguf
+    alias=qwen35:35b-ctx256k
+    n-gpu-layers=999
+    ctx-size=0
+    cache-type-k=q8_0
+    cache-type-v=q8_0
+    batch-size=2048
+    ubatch-size=2048
+    flash-attn=on

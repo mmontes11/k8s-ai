@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: llamacpp
+  labels:
+    app: llamacpp
+spec:
+  endpoints:
+    - port: http
+      honorLabels: false
+      interval: 30s
+      scrapeTimeout: 25s
+  selector:
+    matchLabels:
+      app: llamacpp

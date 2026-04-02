@@ -1,0 +1,121 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: llamacpp
+spec:
+  replicas: 1
+  serviceName: llamacpp
+  selector:
+    matchLabels:
+      app: llamacpp
+  template:
+    metadata:
+      labels:
+        app: llamacpp
+    spec:
+      runtimeClassName: nvidia
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: nvidia.com/gpu.present
+                operator: Exists
+      tolerations:
+      - effect: NoSchedule
+        key: node.mmontes.io/type
+        value: compute-xlarge
+
+      initContainers:
+      - name: init
+        image: ghcr.io/ggml-org/llama.cpp:full-cuda13-b8496
+        env:
+        - name: LLAMA_CACHE
+          value: /models
+        - name: HF_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: hf-token
+              key: HF_TOKEN
+        command:
+          - /bin/bash
+        args:
+          - /config/init.sh
+        volumeMounts:
+        - name: config
+          mountPath: /config
+          readOnly: true
+        - name: models
+          mountPath: /models
+        resources:
+          requests:
+            cpu: "1"
+            memory: 2Gi
+          limits:
+            memory: 8Gi
+  
+      containers:
+      - name: llama-server
+        image: ghcr.io/ggml-org/llama.cpp:full-cuda13-b8496
+        env:
+        - name: LLAMA_CACHE
+          value: /models
+        # See:
+        # https://github.com/ggml-org/llama.cpp/tree/master/tools/server
+        # https://github.com/ggml-org/llama.cpp/blob/master/.devops/tools.sh
+        args:
+          - --server
+          - --models-dir
+          - /models
+          - --models-preset
+          - /config/models.ini
+          - --models-max
+          - "1"
+          - --models-autoload
+          - --fit
+          - "off"
+          - --sleep-idle-seconds
+          - "600"
+          - --host
+          - 0.0.0.0
+          - --port
+          - "8080"
+          - --metrics
+        ports:
+        - containerPort: 8080
+          name: api
+        resources:
+          requests:
+            cpu: "1"
+            memory: 2Gi
+          limits:
+            memory: 16Gi
+            nvidia.com/gpu: "1"
+        volumeMounts:
+        - name: config
+          mountPath: /config
+          readOnly: true
+        - name: models
+          mountPath: /models
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 45
+          periodSeconds: 10
+
+      volumes:
+      - name: config
+        configMap:
+          name: llamacpp
+          defaultMode: 0777
+
+  volumeClaimTemplates:
+  - metadata:
+      name: models
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 30Gi
+      storageClassName: topolvm
