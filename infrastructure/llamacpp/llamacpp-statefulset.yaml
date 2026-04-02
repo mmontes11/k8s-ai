@@ -108,7 +108,6 @@ spec:
               --threads 1 \
               --n-gpu-layers 999 \
               --flash-attn on \
-              --ctx-size 49152 \
               --cache-type-k q8_0 \
               --cache-type-v q8_0 \
               --batch-size 2048 \
