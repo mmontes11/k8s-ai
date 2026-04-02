@@ -85,3 +85,4 @@ data:
     cache-type-v=q8_0
     batch-size=2048
     ubatch-size=2048
+    jinja=1
