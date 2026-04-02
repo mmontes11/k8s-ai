@@ -97,7 +97,7 @@ spec:
         # https://github.com/ggml-org/llama.cpp/blob/master/.devops/tools.sh
         # https://github.com/ggml-org/llama.cpp/discussions/15396
         command:
-          - /bin/sh
+          - /bin/bash
           - -c
         args:
           - |
