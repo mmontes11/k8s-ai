@@ -13,8 +13,9 @@ data:
       "unsloth|Qwen3.5-35B-A3B-GGUF|Qwen3.5-35B-A3B-MXFP4_MOE.gguf"
       "unsloth|Qwen3.5-35B-A3B-GGUF|Qwen3.5-35B-A3B-Q3_K_M.gguf"
       "ggml-org|gpt-oss-20b-GGUF|gpt-oss-20b-mxfp4.gguf"
+      "ggml-org|Qwen2.5-Coder-7B-Instruct-Q8_0-GGUF|qwen2.5-coder-7b-instruct-q8_0.gguf"
       # Add new models below:
-      # "<hf-account>|<model-name>|<model-file>.gguf"
+      # "<hf-account>|<model-name>|<model-file.gguf>"
     )
 
     for model in "${MODELS[@]}"; do
@@ -85,3 +86,7 @@ data:
     cache-type-v=q8_0
     batch-size=2048
     ubatch-size=2048
+
+    [qwen25-coder:7b-instruct]
+    model=/models/ggml-org_Qwen2.5-Coder-7B-Instruct-Q8_0-GGUF_qwen2.5-coder-7b-instruct-q8_0.gguf
+    alias=qwen25-coder:7b-instruct
