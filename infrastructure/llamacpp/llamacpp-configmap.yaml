@@ -87,7 +87,7 @@ data:
     ctx-size=131072
     cache-type-k=q8_0
     cache-type-v=q8_0
-    batch-size=2048
+    batch-size=32768
     ubatch-size=2048
 
     [qwen25-coder:7b-instruct]
