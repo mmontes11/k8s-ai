@@ -61,6 +61,7 @@ data:
   # https://github.com/ggml-org/llama.cpp/blob/master/tools/server
   # https://github.com/ggml-org/llama.cpp/discussions/18939
   # https://huggingface.co/blog/ggml-org/model-management-in-llamacpp
+  # https://github.com/ggml-org/llama.cpp/blob/d3416a4aa9a37d9a0ca547e18c0e126bfe8a07ea/common/arg.cpp#L3757
   models.ini: |
     [qwen35:35b]
     model=/models/unsloth_Qwen3.5-35B-A3B-GGUF_Qwen3.5-35B-A3B-MXFP4_MOE.gguf
@@ -92,4 +93,7 @@ data:
     [qwen25-coder:7b-instruct]
     model=/models/ggml-org_Qwen2.5-Coder-7B-Instruct-Q8_0-GGUF_qwen2.5-coder-7b-instruct-q8_0.gguf
     alias=qwen25-coder:7b-instruct
-    fim-qwen-7b-default=1
+    ctx-size=0
+    batch-size=1024
+    ubatch-size=1024
+    cache-reuse=256
