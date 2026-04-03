@@ -12,6 +12,7 @@ data:
     MODELS=(
       "ggml-org|gpt-oss-20b-GGUF|gpt-oss-20b-mxfp4.gguf"
       "ggml-org|Qwen2.5-Coder-7B-Instruct-Q8_0-GGUF|qwen2.5-coder-7b-instruct-q8_0.gguf"
+      "unsloth|gemma-4-26B-A4B-it-GGUF|gemma-4-26B-A4B-it-MXFP4_MOE.gguf"
       "unsloth|Qwen3-Coder-30B-A3B-Instruct-GGUF|Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf"
       "unsloth|Qwen3.5-35B-A3B-GGUF|Qwen3.5-35B-A3B-MXFP4_MOE.gguf"
       "unsloth|Qwen3.5-35B-A3B-GGUF|Qwen3.5-35B-A3B-Q3_K_M.gguf"
@@ -25,10 +26,9 @@ data:
       if [ ! -f "$MODEL_PATH" ]; then
         echo "Model $MODEL_PATH not found. Downloading..."
 
-        curl -f -L \
+        curl -fLo "$MODEL_PATH" \
           -H "Authorization: Bearer ${HF_TOKEN}" \
-          "https://huggingface.co/${hf_account}/${model_name}/resolve/main/${model_file}" \
-          -o "$MODEL_PATH"
+          "https://huggingface.co/${hf_account}/${model_name}/resolve/main/${model_file}"
          
         echo "Successfully downloaded $MODEL_PATH"
       else
@@ -47,13 +47,14 @@ data:
     echo "Starting llama-bench..."
     /app/tools.sh \
       --bench \
-      --model "/models/ggml-org_gpt-oss-20b-GGUF_gpt-oss-20b-mxfp4.gguf" \
+      --model "${LLAMA_CACHE}/gemma-4-26B-A4B-it-MXFP4_MOE.gguf" \
       --threads 1 \
       --flash-attn on \
       --batch-size 2048 \
       --ubatch-size 2048 \
       --n-prompt 2048,8192 \
       --progress || true
+
     echo "Benchmark finished"
     sleep infinity
 
@@ -79,6 +80,15 @@ data:
     batch-size=1024
     ubatch-size=1024
     cache-reuse=256
+
+    [gemma4:26b-ctx256k]
+    model=/models/unsloth_gemma-4-26B-A4B-it-GGUF_gemma-4-26B-A4B-it-MXFP4_MOE.gguf
+    alias=gemma4:26b-ctx256k
+    ctx-size=262144
+    cache-type-k=q8_0
+    cache-type-v=q8_0
+    batch-size=2048
+    ubatch-size=2048
 
     [qwen30-coder:30b-instruct]
     model=/models/unsloth_Qwen3-Coder-30B-A3B-Instruct-GGUF_Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf
