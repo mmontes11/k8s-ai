@@ -82,8 +82,8 @@ data:
 
     [qwen30-coder:30b-instruct]
     model=/models/unsloth_Qwen3-Coder-30B-A3B-Instruct-GGUF_Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf
-    alias=qwen30-coder:3b-instruct
-    ctx-size=16384
+    alias=qwen30-coder:30b-instruct
+    ctx-size=32768
     cache-type-k=q8_0
     cache-type-v=q8_0
     batch-size=1024
