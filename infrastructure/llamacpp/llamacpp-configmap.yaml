@@ -80,7 +80,6 @@ data:
     batch-size=1024
     ubatch-size=1024
     cache-reuse=256
-    parallel=2
 
     [gemma4:26b-ctx256k]
     model=/models/unsloth_gemma-4-26B-A4B-it-GGUF_gemma-4-26B-A4B-it-MXFP4_MOE.gguf
@@ -100,7 +99,6 @@ data:
     batch-size=1024
     ubatch-size=1024
     cache-reuse=256
-    parallel=2
 
     [qwen35:35b]
     model=/models/unsloth_Qwen3.5-35B-A3B-GGUF_Qwen3.5-35B-A3B-MXFP4_MOE.gguf
