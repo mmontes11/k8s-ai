@@ -85,4 +85,3 @@ data:
     cache-type-v=q8_0
     batch-size=2048
     ubatch-size=2048
-    gpt-oss-20b-default=1
