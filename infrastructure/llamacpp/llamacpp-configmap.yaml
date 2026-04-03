@@ -90,3 +90,4 @@ data:
     [qwen25-coder:7b-instruct]
     model=/models/ggml-org_Qwen2.5-Coder-7B-Instruct-Q8_0-GGUF_qwen2.5-coder-7b-instruct-q8_0.gguf
     alias=qwen25-coder:7b-instruct
+    fim-qwen-7b-default=1
