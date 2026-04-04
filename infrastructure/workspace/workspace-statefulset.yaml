@@ -42,7 +42,7 @@ spec:
               mountPath: /home/mmontes
       containers:
         - name: workspace
-          image: ghcr.io/mmontes11/ai-workspace:0.11.0
+          image: ghcr.io/mmontes11/ai-workspace:ee46d1d
           env:
             - name: GITHUB_TOKEN
               valueFrom:
