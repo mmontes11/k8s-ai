@@ -1,0 +1,26 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: n8n
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: n8n
+  interval: 10m
+  values:
+    queueMode:
+      enabled: false
+    database:
+      type: sqlite
+      useExternal: false
+    redis:
+      enabled: false
+    persistence:
+      enabled: true
+      size: 5Gi
+      storageClass: rook-ceph
+    secretRefs:
+      existingSecret: "n8n-secrets"
+    service:
+      type: ClusterIP
+      port: 5678
