@@ -10,5 +10,5 @@ spec:
     - "n8n.mmontes-internal.duckdns.org"
   rules:
     - backendRefs:
-        - name: n8n
+        - name: n8n-main
           port: 5678

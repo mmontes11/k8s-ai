@@ -19,8 +19,12 @@ spec:
       enabled: true
       size: 5Gi
       storageClass: rook-ceph
+    config:
+      extraEnv:
+        - name: N8N_EDITOR_BASE_URL
+          value: "https://n8n.mmontes-internal.duckdns.org"
     secretRefs:
-      existingSecret: "n8n-secrets"
+      existingSecret: n8n
     service:
       type: ClusterIP
       port: 5678
