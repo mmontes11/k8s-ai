@@ -65,37 +65,37 @@ spec:
         # See:
         # https://github.com/ggml-org/llama.cpp/tree/master/tools/server
         # https://github.com/ggml-org/llama.cpp/blob/master/.devops/tools.sh
-        # args:
-        #   - --server
-        #   - --models-dir
-        #   - /models
-        #   - --models-preset
-        #   - /config/models.ini
-        #   - --models-max
-        #   - "1"
-        #   - --models-autoload
-        #   - --sleep-idle-seconds
-        #   - "600"
-        #   - --n-gpu-layers
-        #   - "999"
-        #   - --fit
-        #   - "off"
-        #   - --flash-attn
-        #   - "on"
-        #   - --no-mmap
-        #   - --host
-        #   - 0.0.0.0
-        #   - --port
-        #   - "8080"
-        #   # TODO: Metrics disabled, as Prometheus scrapes will awake the models
-        #   # See: https://github.com/ggml-org/llama.cpp/issues/20227
-        #   # - --metrics
+        args:
+          - --server
+          - --models-dir
+          - /models
+          - --models-preset
+          - /config/models.ini
+          - --models-max
+          - "1"
+          - --models-autoload
+          - --sleep-idle-seconds
+          - "600"
+          - --n-gpu-layers
+          - "999"
+          - --fit
+          - "off"
+          - --flash-attn
+          - "on"
+          - --no-mmap
+          - --host
+          - 0.0.0.0
+          - --port
+          - "8080"
+          # TODO: Metrics disabled, as Prometheus scrapes will awake the models
+          # See: https://github.com/ggml-org/llama.cpp/issues/20227
+          # - --metrics
 
         # BENCHMARK:
-        command:
-          - /bin/bash
-        args:
-          - /config/bench.sh
+        # command:
+        #   - /bin/bash
+        # args:
+        #   - /config/bench.sh
 
         ports:
         - containerPort: 8080
