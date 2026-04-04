@@ -101,10 +101,10 @@ data:
     ubatch-size=1024
     cache-reuse=256
 
-    [qwen35:27b-ctx256k]
+    [qwen35:27b-ctx160k]
     model=/models/unsloth_Qwen3.5-27B-GGUF_Qwen3.5-27B-Q4_K_M.gguf
     alias=qwen35:27b-ctx256k
-    ctx-size=262144
+    ctx-size=163840
     cache-type-k=q8_0
     cache-type-v=q8_0
     batch-size=2048
