@@ -1,7 +1,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: huggingface
+  name: secrets
   namespace: ai
 spec:
   interval: 5m
@@ -9,37 +9,7 @@ spec:
     kind: GitRepository
     name: flux-tenant-ai
     namespace: flux-system
-  path: ./infrastructure/huggingface
-  prune: true
-  timeout: 5m
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
-kind: Kustomization
-metadata:
-  name: github
-  namespace: ai
-spec:
-  interval: 5m
-  sourceRef:
-    kind: GitRepository
-    name: flux-tenant-ai
-    namespace: flux-system
-  path: ./infrastructure/github
-  prune: true
-  timeout: 5m
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
-kind: Kustomization
-metadata:
-  name: n8n
-  namespace: ai
-spec:
-  interval: 5m
-  sourceRef:
-    kind: GitRepository
-    name: flux-tenant-ai
-    namespace: flux-system
-  path: ./infrastructure/n8n
+  path: ./infrastructure/secrets
   prune: true
   timeout: 5m
 ---
@@ -65,7 +35,7 @@ metadata:
   namespace: ai
 spec:
   dependsOn:
-    - name: github
+    - name: secrets
   interval: 5m
   sourceRef:
     kind: GitRepository
@@ -115,6 +85,7 @@ metadata:
 spec:
   dependsOn:
     - name: n8n
+    - name: secrets
   interval: 5m
   sourceRef:
     kind: GitRepository
@@ -167,8 +138,7 @@ metadata:
   namespace: ai
 spec:
   dependsOn:
-    - name: github
-    - name: n8n
+    - name: secrets
   interval: 5m
   sourceRef:
     kind: GitRepository
@@ -185,7 +155,7 @@ metadata:
   namespace: ai
 spec:
   dependsOn:
-    - name: huggingface
+    - name: secrets
   interval: 5m
   sourceRef:
     kind: GitRepository
@@ -203,7 +173,7 @@ spec:
 #   namespace: ai
 # spec:
 #   dependsOn:
-#     - name: huggingface
+#     - name: secrets
 #   interval: 5m
 #   sourceRef:
 #     kind: GitRepository
@@ -239,7 +209,7 @@ spec:
 #   namespace: kserve
 # spec:
 #   dependsOn:
-#     - name: huggingface
+#     - name: secrets
 #     - name: kserve-crds
 #   interval: 5m
 #   sourceRef:
