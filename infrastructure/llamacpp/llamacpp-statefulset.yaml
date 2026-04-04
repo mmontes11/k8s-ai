@@ -103,9 +103,8 @@ spec:
         resources:
           requests:
             cpu: "1"
-            memory: 2Gi
+            memory: 4Gi
           limits:
-            memory: 16Gi
             nvidia.com/gpu: "1"
         volumeMounts:
         - name: config
