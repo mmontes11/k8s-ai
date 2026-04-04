@@ -47,7 +47,7 @@ data:
     echo "Starting llama-bench..."
     /app/tools.sh \
       --bench \
-      --model "${LLAMA_CACHE}/gemma-4-26B-A4B-it-MXFP4_MOE.gguf" \
+      --model "${LLAMA_CACHE}/unsloth_gemma-4-26B-A4B-it-GGUF_gemma-4-26B-A4B-it-MXFP4_MOE.gguf" \
       --threads 1 \
       --flash-attn on \
       --batch-size 2048 \
