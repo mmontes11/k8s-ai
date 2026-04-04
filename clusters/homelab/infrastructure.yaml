@@ -31,6 +31,21 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
+  name: n8n
+  namespace: ai
+spec:
+  interval: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-tenant-ai
+    namespace: flux-system
+  path: ./infrastructure/n8n
+  prune: true
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
   name: ollama
   namespace: ai
 spec:
@@ -98,6 +113,8 @@ metadata:
   name: mcp-n8n
   namespace: ai
 spec:
+  dependsOn:
+    - name: n8n
   interval: 5m
   sourceRef:
     kind: GitRepository
@@ -151,6 +168,7 @@ metadata:
 spec:
   dependsOn:
     - name: github
+    - name: n8n
   interval: 5m
   sourceRef:
     kind: GitRepository

@@ -49,6 +49,11 @@ spec:
                 secretKeyRef:
                   name: gh-token
                   key: GITHUB_TOKEN
+            - name: N8N_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: n8n-token
+                  key: N8N_TOKEN
           resources:
             requests:
               cpu: "1"
