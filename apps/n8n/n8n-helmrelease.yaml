@@ -23,6 +23,10 @@ spec:
       extraEnv:
         - name: N8N_EDITOR_BASE_URL
           value: "https://n8n.mmontes-internal.duckdns.org"
+        - name: N8N_TRUST_PROXY
+          value: "1"
+        - name: N8N_PROXY_HOPS
+          value: "1"
     secretRefs:
       existingSecret: n8n
     service:
