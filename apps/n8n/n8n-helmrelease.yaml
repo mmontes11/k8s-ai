@@ -23,6 +23,7 @@ spec:
       size: 5Gi
       storageClass: rook-ceph
     config:
+      timezone: UTC
       # See:
       # https://docs.n8n.io/hosting/configuration/environment-variables/deployment/
       # https://docs.n8n.io/hosting/configuration/environment-variables/endpoints/
