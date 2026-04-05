@@ -39,3 +39,14 @@ spec:
     service:
       type: ClusterIP
       port: 5678
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Deployment
+              name: n8n-main
+            patch: |
+              - op: replace
+                path: /spec/strategy
+                value:
+                  type: Recreate
