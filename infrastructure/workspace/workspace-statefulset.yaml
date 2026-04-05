@@ -49,6 +49,11 @@ spec:
                 secretKeyRef:
                   name: gh-token
                   key: GITHUB_TOKEN
+            - name: HF_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: hf-token
+                  key: HF_TOKEN
             - name: N8N_TOKEN
               valueFrom:
                 secretKeyRef:
