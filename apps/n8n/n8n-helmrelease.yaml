@@ -20,13 +20,20 @@ spec:
       size: 5Gi
       storageClass: rook-ceph
     config:
+      # See:
+      # https://docs.n8n.io/hosting/configuration/environment-variables/deployment/
+      # https://docs.n8n.io/hosting/configuration/environment-variables/endpoints/
       extraEnv:
+        - name: N8N_LISTEN_ADDRESS
+          value: "0.0.0.0"
+        - name: N8N_PROXY_HOPS
+          value: "10"
+        - name: N8N_SECURE_COOKIE
+          value: "false"
         - name: N8N_EDITOR_BASE_URL
           value: "https://n8n.mmontes-internal.duckdns.org"
-        - name: N8N_TRUST_PROXY
-          value: "1"
-        - name: N8N_PROXY_HOPS
-          value: "1"
+        - name: WEBHOOK_URL
+          value: "https://n8n.mmontes-internal.duckdns.org"
     secretRefs:
       existingSecret: n8n
     service:
