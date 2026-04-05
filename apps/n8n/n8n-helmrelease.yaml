@@ -8,6 +8,9 @@ spec:
     name: n8n
   interval: 10m
   values:
+    image:
+      repository: docker.n8n.io/n8nio/n8n
+      tag: "2.14.2"
     queueMode:
       enabled: false
     database:
