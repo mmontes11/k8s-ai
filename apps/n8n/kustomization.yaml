@@ -9,4 +9,4 @@ resources:
   - n8n-replicationdestination.yaml
   # - n8n-replicationsource.yaml
   - n8n-sealedsecret.yaml
-  # - restic-n8n-sealedsecret.yaml
+  - restic-n8n-sealedsecret.yaml
