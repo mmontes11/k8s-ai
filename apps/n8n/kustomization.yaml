@@ -6,6 +6,7 @@ resources:
   - n8n-httproute.yaml
   - n8n-ocirepository.yaml
   - n8n-pvc.yaml
-  # - n8n-replicationdestination.yaml
-  # - n8n-replicationsource.yaml
+  - n8n-replicationsource.yaml
   - n8n-sealedsecret.yaml
+  - restic-n8n-sealedsecret.yaml
+  # - n8n-replicationdestination.yaml
