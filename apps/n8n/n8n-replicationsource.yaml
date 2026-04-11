@@ -5,8 +5,8 @@ metadata:
 spec:
   sourcePVC: n8n
   trigger:
-    # schedule: "0 1 * * *"
-    manual: n8n-2
+    schedule: "0 1 * * *"
+    # manual: n8n-2
   restic:
     repository: restic-n8n
     retain:
