@@ -77,6 +77,7 @@ spec:
               mountPath: /home/mmontes
             - name: opencode
               mountPath: /home/mmontes/.config/opencode/opencode.json
+              subPath: opencode.json
   volumeClaimTemplates:
     - metadata:
         name: home-storage
