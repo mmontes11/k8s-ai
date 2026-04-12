@@ -4,5 +4,7 @@ namespace: ai
 resources:
   - opencode-configmap.yaml
   - opencode-httproute.yaml
+  - opencode-replicationsource.yaml
   - opencode-service.yaml
   - opencode-statefulset.yaml
+  - restic-opencode-sealedsecret.yaml
