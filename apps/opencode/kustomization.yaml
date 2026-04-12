@@ -2,4 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: ai
 resources:
+  - opencode-configmap.yaml
+  - opencode-httproute.yaml
+  - opencode-service.yaml
   - opencode-statefulset.yaml
