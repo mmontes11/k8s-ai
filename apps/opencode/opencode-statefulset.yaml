@@ -33,7 +33,7 @@ spec:
             name: opencode
 
       initContainers:
-        - name: sync
+        - name: init
           image: alpine:3.23.3
           command: ["/bin/sh", "-c"]
           args:
@@ -41,7 +41,7 @@ spec:
               set -e
               mkdir -p /home/mmontes/.ssh
               chmod 700 /home/mmontes/.ssh
-              chmod 600 /home/mmontes/.ssh/*
+              chmod 600 /home/mmontes/.ssh/ || true
           volumeMounts:
             - name: home
               mountPath: /home/mmontes
