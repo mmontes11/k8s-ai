@@ -5,10 +5,10 @@ metadata:
 spec:
   trigger:
     # schedule: "0 4 * * *"
-    manual: workspace-6
+    manual: workspace-7
   restic:
     repository: restic-workspace
-    destinationPVC: home-storage-workspace-0
+    destinationPVC: home-opencode-0
     # Direct method is required to inherit tolerations from Pod.
     copyMethod: Direct
     moverResources:
