@@ -33,22 +33,36 @@ spec:
             name: opencode
 
       initContainers:
-        - name: init
-          image: alpine:3.23.3
+        - name: sync
+          image: ghcr.io/mmontes11/opencode:b7c8e31
           command: ["/bin/sh", "-c"]
           args:
             - |
               set -e
+              if [ $(ls -A /home/mmontes | grep -v "lost+found" | wc -l) -eq 0 ]; then
+                echo "PVC is empty. Initializing..."
+                rsync -rlptDq /opt/template/ /home/mmontes/
+              else
+                echo "PVC exists. Syncing..."
+                for dir in .opencode/bin usr/local/go go/bin; do
+                  if [ -d "/opt/template/$dir" ]; then
+                    echo "Updating $dir..."
+                    mkdir -p "/home/mmontes/$dir"
+                    rsync -rlptDq --no-perms --delete "/opt/template/$dir/" "/home/mmontes/$dir/" || true
+                  fi
+                done
+              fi
               mkdir -p /home/mmontes/.ssh
               chmod 700 /home/mmontes/.ssh
               chmod 600 /home/mmontes/.ssh/ || true
+              echo "Sync complete."
           volumeMounts:
             - name: home
               mountPath: /home/mmontes
 
       containers:
         - name: opencode
-          image: ghcr.io/mmontes11/opencode:24c2117
+          image: ghcr.io/mmontes11/opencode:b7c8e31
           env:
             - name: GITHUB_TOKEN
               valueFrom:
