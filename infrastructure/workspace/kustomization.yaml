@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: ai
 resources:
   - opencode-httproute.yaml
+  - opencode-configmap.yaml
   - restic-workspace-sealedsecret.yaml
   - workspace-replicationdestination.yaml
   - workspace-replicationsource.yaml
