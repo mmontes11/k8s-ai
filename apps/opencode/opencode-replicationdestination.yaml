@@ -1,18 +1,14 @@
 apiVersion: volsync.backube/v1alpha1
-kind: ReplicationSource
+kind: ReplicationDestination
 metadata:
   name: opencode
 spec:
-  sourcePVC: home-opencode-0
   trigger:
-    schedule: "0 1 * * *"
-    # manual: opencode-1
+    # schedule: "0 4 * * *"
+    manual: opencode-7
   restic:
     repository: restic-opencode
-    retain:
-      daily: 7
-    pruneIntervalDays: 14
-    unlock: opencode-1
+    destinationPVC: home-opencode-0
     # Direct method is required to inherit tolerations from Pod.
     copyMethod: Direct
     moverResources:
