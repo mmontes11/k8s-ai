@@ -26,6 +26,18 @@ This repository manages AI workloads on Kubernetes using GitOps with Flux CD. It
   - Replication source/destination for data synchronization
   - RESTic backup support
 
+### opencode
+- **Path**: `./apps/opencode`
+- **Type**: Native Kubernetes resources
+- **Description**: Coding agent and AI workspace for interactive development
+- **Features**:
+  - NVIDIA GPU support for accelerated model training and inference
+  - Persistent storage (100Gi PVC)
+  - Pre-configured development environment with tools
+  - RESTic backup support
+  - Replication source/destination for data synchronization
+  - Integration with GitHub, HuggingFace, and n8n via tokens
+
 ## Infrastructure
 
 ### Model Serving
@@ -72,6 +84,8 @@ This repository manages AI workloads on Kubernetes using GitOps with Flux CD. It
 ```
 ├── apps/                    # Application deployments
 │   ├── comfyui/            # ComfyUI deployment
+│   ├── n8n/                # n8n workflow automation
+│   ├── opencode/           # opencode AI development workspace
 │   └── open-webui/         # Open WebUI deployment
 ├── clusters/               # Cluster-specific configurations
 │   └── homelab/
@@ -83,20 +97,11 @@ This repository manages AI workloads on Kubernetes using GitOps with Flux CD. It
 └── infrastructure/         # Shared infrastructure
     ├── kserve/             # KServe ML serving
     ├── vllm/               # vLLM serving engine
-    ├── ollama/             # Ollama LLM backend
     ├── llamacpp/           # llama.cpp inference engine
-    ├── workspace/          # OpenCode AI development workspace
-    ├── huggingface/        # HF integration
+    ├── lws/                # LeaderWorkerSet
+    ├── ollama/             # Ollama LLM backend
     └── mcp-*/             # MCP server integrations
 ```
-
-## AI Workspace
-
-Development environment for AI workloads based on [docker-ai-workspace](https://github.com/mmontes11/docker-ai-workspace):
-
-- **OpenCode instance** for interactive AI development
-- **NVIDIA GPU support** for accelerated model training and inference
-- Pre-configured for AI/ML development
 
 ## AI Benchmarks
 
