@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: opencode
+spec:
+  serviceName: opencode
+  replicas: 1
+  selector:
+    matchLabels:
+      app: opencode
+  template:
+    metadata:
+      labels:
+        app: opencode
+    spec:
+      securityContext:
+        fsGroup: 1111
+      runtimeClassName: nvidia
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: nvidia.com/gpu.present
+                operator: Exists
+      tolerations:
+      - effect: NoSchedule
+        key: node.mmontes.io/type
+        value: compute-xlarge
+      volumes:
+        - name: opencode
+          configMap:
+            name: opencode
+
+      initContainers:
+        - name: sync
+          image: alpine:3.23.3
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -e
+              mkdir -p /home/mmontes/.ssh
+              chmod 700 /home/mmontes/.ssh
+              chmod 600 /home/mmontes/.ssh/*
+          volumeMounts:
+            - name: home
+              mountPath: /home/mmontes
+
+      containers:
+        - name: opencode
+          image: ghcr.io/mmontes11/opencode:24c2117
+          env:
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: gh-token
+                  key: GITHUB_TOKEN
+            - name: HF_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: hf-token
+                  key: HF_TOKEN
+            - name: N8N_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: n8n-token
+                  key: N8N_TOKEN
+          resources:
+            requests:
+              cpu: "1"
+              memory: "2Gi"
+            limits:
+              nvidia.com/gpu: "1"
+          ports:
+            - containerPort: 4096
+          volumeMounts:
+            - name: home
+              mountPath: /home/mmontes
+            - name: opencode
+              mountPath: /home/mmontes/.config/opencode/opencode.json
+              subPath: opencode.json
+  volumeClaimTemplates:
+    - metadata:
+        name: home
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "topolvm"
+        resources:
+          requests:
+            storage: 100Gi

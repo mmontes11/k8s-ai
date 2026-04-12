@@ -44,3 +44,20 @@ spec:
   path: ./apps/n8n
   prune: true
   timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: opencode
+  namespace: ai
+spec:
+  dependsOn:
+    - name: secrets
+  interval: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-tenant-ai
+    namespace: flux-system
+  path: ./apps/opencode
+  prune: true
+  timeout: 5m
