@@ -27,7 +27,11 @@ spec:
       - effect: NoSchedule
         key: node.mmontes.io/type
         value: compute-xlarge
-    
+      volumes:
+        - name: opencode
+          configMap:
+            name: opencode
+
       initContainers:
         - name: sync
           image: alpine:3.23.3
@@ -40,6 +44,7 @@ spec:
           volumeMounts:
             - name: home-storage
               mountPath: /home/mmontes
+
       containers:
         - name: workspace
           image: ghcr.io/mmontes11/ai-workspace:ee46d1d
@@ -70,6 +75,8 @@ spec:
           volumeMounts:
             - name: home-storage
               mountPath: /home/mmontes
+            - name: opencode
+              mountPath: /home/mmontes/.config/opencode.json
   volumeClaimTemplates:
     - metadata:
         name: home-storage

@@ -1,0 +1,111 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: opencode
+data:
+  opencode.json: |
+    {
+      "$schema": "https://opencode.ai/config.json",
+      "autoupdate": false,
+      "model": "llama.cpp/qwen35:35b-ctx256k",
+      "permission": {
+        "bash": {
+          "*": "ask",
+          "cat *": "allow",
+          "grep *": "allow",
+          "git *": "allow",
+          "git commit *": "ask",
+          "git push *": "ask",
+          "rm *": "deny",
+          ":(){:|:&};:": "deny"
+        },
+        "edit": "ask",
+        "write": "ask",
+        "read": "allow",
+        "skill": "allow",
+        "webfetch": "allow",
+        "websearch": "allow"
+      },
+      "agent": {
+        "kubernetes": {
+          "model": "llama.cpp/qwen35:35b-ctx256k",
+          "temperature": 0.1,
+          "description": "Expert SRE focused on diagnosing complex Kubernetes issues: compute, storage, databases, and infrastructure failures.",
+          "prompt": "You are a Senior Kubernetes Site Reliability Engineer (SRE). Your expertise lies in the intersection Kubernetes infrastructure and stateful workloads (databases). When troubleshooting, perform a root-cause analysis and make suggestions to resolve the problem.",
+          "permission": {
+            "write": "deny",
+            "edit": "deny"
+          }
+        }
+      },
+      "provider": {
+        "llama.cpp": {
+          "npm": "@ai-sdk/openai-compatible",
+          "name": "Llama.cpp",
+          "options": {
+            "baseURL": "http://llamacpp.ai.svc.cluster.local:8080/v1"
+          },
+          "models": {
+            "qwen35:35b-ctx256k": {
+              "name": "qwen35:35b-ctx256k",
+              "limit": {
+                "context": 262144,
+                "output": 65536
+              }
+            },
+            "qwen35:27b-ctx128k": {
+              "name": "qwen35:27b-ctx128k",
+              "limit": {
+                "context": 131072,
+                "output": 65536
+              }
+            },
+            "gemma4:26b-ctx256k": {
+              "name": "gemma4:26b-ctx256k",
+              "limit": {
+                "context": 262144,
+                "output": 65536
+              }
+            }
+          }
+        }
+      },
+      "mcp": {
+        "github": {
+          "enabled": true,
+          "type": "remote",
+          "url": "http://mcp-github.ai.svc.cluster.local:8080/mcp",
+          "headers": {
+            "Authorization": "Bearer {env:GITHUB_TOKEN}"
+          }
+        },
+        "grafana": {
+          "enabled": true,
+          "type": "remote",
+          "url": "http://mcp-grafana.ai.svc.cluster.local:8000/mcp"
+        },
+        "kubernetes": {
+          "enabled": true,
+          "type": "remote",
+          "url": "http://mcp-kubernetes.ai.svc.cluster.local:8080/mcp"
+        },
+        "n8n": {
+          "enabled": true,
+          "type": "remote",
+          "url": "http://n8n-main.ai.svc.cluster.local:5678/mcp-server/http",
+          "headers": {
+            "Authorization": "Bearer {env:N8N_TOKEN}"
+          }
+        },
+        "photprism-mmontes": {
+          "enabled": true,
+          "type": "remote",
+          "url": "http://mcp-photoprism-mmontes.ai.svc.cluster.local:9001/mcp"
+        },
+        "photprism-xiaowen": {
+          "enabled": true,
+          "type": "remote",
+          "url": "http://mcp-photoprism-xiaowen.ai.svc.cluster.local:9001/mcp"
+        }
+      }
+    }
