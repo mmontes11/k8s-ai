@@ -67,6 +67,15 @@ data:
   # https://huggingface.co/blog/ggml-org/model-management-in-llamacpp
   # https://github.com/ggml-org/llama.cpp/blob/d3416a4aa9a37d9a0ca547e18c0e126bfe8a07ea/common/arg.cpp#L3757
   models.ini: |
+    [gemma4:26b-ctx256k]
+    model=/models/unsloth_gemma-4-26B-A4B-it-GGUF_gemma-4-26B-A4B-it-MXFP4_MOE.gguf
+    alias=gemma4:26b-ctx256k
+    ctx-size=262144
+    cache-type-k=q8_0
+    cache-type-v=q8_0
+    batch-size=2048
+    ubatch-size=2048
+
     [gpt-oss:20b-ctx128k]
     model=/models/ggml-org_gpt-oss-20b-GGUF_gpt-oss-20b-mxfp4.gguf
     alias=gpt-oss:20b-ctx128k
@@ -83,15 +92,6 @@ data:
     batch-size=1024
     ubatch-size=1024
     cache-reuse=256
-
-    [gemma4:26b-ctx256k]
-    model=/models/unsloth_gemma-4-26B-A4B-it-GGUF_gemma-4-26B-A4B-it-MXFP4_MOE.gguf
-    alias=gemma4:26b-ctx256k
-    ctx-size=262144
-    cache-type-k=q8_0
-    cache-type-v=q8_0
-    batch-size=2048
-    ubatch-size=2048
 
     [qwen30-coder:30b-instruct]
     model=/models/unsloth_Qwen3-Coder-30B-A3B-Instruct-GGUF_Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf
@@ -130,19 +130,19 @@ data:
     batch-size=2048
     ubatch-size=2048
 
-    [qwen36:35b-ctx256k]
-    model=/models/unsloth_Qwen3.6-35B-A3B-GGUF_Qwen3.6-35B-A3B-UD-IQ4_NL.gguf
-    alias=qwen36:35b-ctx256k
-    ctx-size=262144
+    [qwen36:35b]
+    model=/models/unsloth_Qwen3.6-35B-A3B-GGUF_Qwen3.6-35B-A3B-MXFP4_MOE.gguf
+    alias=qwen36:35b
+    ctx-size=49152
     cache-type-k=q8_0
     cache-type-v=q8_0
     batch-size=2048
     ubatch-size=2048
 
-    [qwen36:35b]
-    model=/models/unsloth_Qwen3.6-35B-A3B-GGUF_Qwen3.6-35B-A3B-MXFP4_MOE.gguf
-    alias=qwen36:35b
-    ctx-size=49152
+    [qwen36:35b-ctx256k]
+    model=/models/unsloth_Qwen3.6-35B-A3B-GGUF_Qwen3.6-35B-A3B-UD-IQ4_NL.gguf
+    alias=qwen36:35b-ctx256k
+    ctx-size=262144
     cache-type-k=q8_0
     cache-type-v=q8_0
     batch-size=2048
