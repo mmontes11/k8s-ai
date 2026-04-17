@@ -17,7 +17,7 @@ data:
       "unsloth|Qwen3.5-27B-GGUF|Qwen3.5-27B-Q4_K_M.gguf"
       "unsloth|Qwen3.5-35B-A3B-GGUF|Qwen3.5-35B-A3B-MXFP4_MOE.gguf"
       "unsloth|Qwen3.5-35B-A3B-GGUF|Qwen3.5-35B-A3B-Q3_K_M.gguf"
-      "unsloth|Qwen3.6-35B-A3B-GGUF|Qwen3.6-35B-A3B-UD-Q3_K_M.gguf"
+      "unsloth|Qwen3.6-35B-A3B-GGUF|Qwen3.6-35B-A3B-UD-IQ4_NL.gguf"
       "unsloth|Qwen3.6-35B-A3B-GGUF|Qwen3.6-35B-A3B-MXFP4_MOE.gguf"
       # "<hf-account>|<model-name>|<model-file.gguf>"
     )
@@ -131,11 +131,11 @@ data:
     ubatch-size=2048
 
     [qwen36:35b-ctx256k]
-    model=/models/unsloth_Qwen3.6-35B-A3B-GGUF_Qwen3.6-35B-A3B-UD-Q3_K_M.gguf
+    model=/models/unsloth_Qwen3.6-35B-A3B-GGUF_Qwen3.6-35B-A3B-UD-IQ4_NL.gguf
     alias=qwen36:35b-ctx256k
     ctx-size=262144
-    cache-type-k=q8_0
-    cache-type-v=q8_0
+    cache-type-k=fp16
+    cache-type-v=fp16
     batch-size=2048
     ubatch-size=2048
 
