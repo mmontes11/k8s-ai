@@ -134,8 +134,8 @@ data:
     model=/models/unsloth_Qwen3.6-35B-A3B-GGUF_Qwen3.6-35B-A3B-UD-IQ4_NL.gguf
     alias=qwen36:35b-ctx256k
     ctx-size=262144
-    cache-type-k=fp16
-    cache-type-v=fp16
+    cache-type-k=q8_0
+    cache-type-v=q8_0
     batch-size=2048
     ubatch-size=2048
 
