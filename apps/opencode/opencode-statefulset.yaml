@@ -35,6 +35,10 @@ spec:
       initContainers:
         - name: sync
           image: ghcr.io/mmontes11/opencode:b7c8e31
+          # explicitly run as root to allow chown/chmod
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
           command: ["/bin/sh", "-c"]
           args:
             - |
@@ -52,10 +56,11 @@ spec:
                   fi
                 done
               fi
+              # optional: Remove if fsGroup: 1000 is used, as it handles ownership
+              chown -R 1000:1000 /home/mmontes/
               mkdir -p /home/mmontes/.ssh
               chmod 700 /home/mmontes/.ssh
               chmod -R 600 /home/mmontes/.ssh || true
-              chown -R 1000:1000 /home/mmontes/
               echo "Sync complete."
           volumeMounts:
             - name: home
@@ -64,6 +69,9 @@ spec:
       containers:
         - name: opencode
           image: ghcr.io/mmontes11/opencode:b7c8e31
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
           env:
             - name: GITHUB_TOKEN
               valueFrom:
