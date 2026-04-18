@@ -46,8 +46,6 @@ spec:
               if [ $(ls -A /home/mmontes | grep -v "lost+found" | wc -l) -eq 0 ]; then
                 echo "PVC is empty. Initializing..."
                 rsync -rlptDq /opt/template/ /home/mmontes/
-              else
-                echo "PVC exists."
               fi              
               chown -R 1111:1111 /home/mmontes/
               mkdir -p /home/mmontes/.ssh
