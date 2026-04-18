@@ -57,6 +57,9 @@ spec:
                 done
               fi
               chown -R 1111:1111 /home/mmontes/
+              mkdir -p /home/mmontes/.ssh
+              chmod 700 /home/mmontes/.ssh || true
+              chmod 644 /home/mmontes/.ssh/* 2>/dev/null || true
               echo "Sync complete."
           volumeMounts:
             - name: home
@@ -65,6 +68,9 @@ spec:
       containers:
         - name: opencode
           image: ghcr.io/mmontes11/opencode:b7c8e31
+          securityContext:
+            runAsUser: 1111
+            runAsGroup: 1111
           env:
             - name: GITHUB_TOKEN
               valueFrom:
