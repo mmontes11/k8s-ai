@@ -55,11 +55,14 @@ spec:
                     rsync -rlptDq --no-perms --delete "/opt/template/$dir/" "/home/mmontes/$dir/" || true
                   fi
                 done
-              fi
+              fi              
               chown -R 1111:1111 /home/mmontes/
               mkdir -p /home/mmontes/.ssh
-              chmod 700 /home/mmontes/.ssh || true
-              chmod 644 /home/mmontes/.ssh/* 2>/dev/null || true
+              chmod 700 /home/mmontes/.ssh
+              chmod 600 /home/mmontes/.ssh/* || true
+              chmod 644 /home/mmontes/.ssh/*.pub  || true
+              chmod 644 /home/mmontes/.ssh/known_hosts|| true
+              chmod 644 /home/mmontes/.ssh/config || true 
               echo "Sync complete."
           volumeMounts:
             - name: home
