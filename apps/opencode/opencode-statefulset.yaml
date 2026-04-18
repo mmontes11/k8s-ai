@@ -57,9 +57,6 @@ spec:
                 done
               fi
               chown -R 1111:1111 /home/mmontes/
-              mkdir -p /home/mmontes/.ssh
-              chmod 700 /home/mmontes/.ssh
-              chmod -R 600 /home/mmontes/.ssh || true
               echo "Sync complete."
           volumeMounts:
             - name: home
