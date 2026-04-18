@@ -7,7 +7,7 @@ data:
     {
       "$schema": "https://opencode.ai/config.json",
       "autoupdate": false,
-      "model": "llama.cpp/qwen35:35b-ctx256k",
+      "model": "llama.cpp/qwen36:35b-ctx256k",
       "permission": {
         "bash": {
           "*": "ask",
@@ -46,6 +46,20 @@ data:
             "baseURL": "http://llamacpp.ai.svc.cluster.local:8080/v1"
           },
           "models": {
+            "gemma4:26b-ctx256k": {
+              "name": "gemma4:26b-ctx256k",
+              "limit": {
+                "context": 262144,
+                "output": 65536
+              }
+            },
+            "qwen35:27b-ctx128k": {
+              "name": "qwen35:27b-ctx128k",
+              "limit": {
+                "context": 131072,
+                "output": 65536
+              }
+            }
             "qwen35:35b-ctx256k": {
                "name": "qwen35:35b-ctx256k",
                "limit": {
@@ -60,20 +74,6 @@ data:
                  "output": 65536
                }
              },
-            "qwen35:27b-ctx128k": {
-              "name": "qwen35:27b-ctx128k",
-              "limit": {
-                "context": 131072,
-                "output": 65536
-              }
-            },
-            "gemma4:26b-ctx256k": {
-              "name": "gemma4:26b-ctx256k",
-              "limit": {
-                "context": 262144,
-                "output": 65536
-              }
-            }
           }
         }
       },
