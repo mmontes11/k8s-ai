@@ -47,14 +47,7 @@ spec:
                 echo "PVC is empty. Initializing..."
                 rsync -rlptDq /opt/template/ /home/mmontes/
               else
-                echo "PVC exists. Syncing..."
-                for dir in .opencode/bin usr/local/go go/bin; do
-                  if [ -d "/opt/template/$dir" ]; then
-                    echo "Updating $dir..."
-                    mkdir -p "/home/mmontes/$dir"
-                    rsync -rlptDq --no-perms --delete "/opt/template/$dir/" "/home/mmontes/$dir/" || true
-                  fi
-                done
+                echo "PVC exists."
               fi              
               chown -R 1111:1111 /home/mmontes/
               mkdir -p /home/mmontes/.ssh
