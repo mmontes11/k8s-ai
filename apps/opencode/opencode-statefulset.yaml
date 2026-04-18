@@ -57,7 +57,7 @@ spec:
                 done
               fi
               # optional: Remove if fsGroup: 1000 is used, as it handles ownership
-              chown -R 1000:1000 /home/mmontes/
+              chown -R 1111:1111 /home/mmontes/
               mkdir -p /home/mmontes/.ssh
               chmod 700 /home/mmontes/.ssh
               chmod -R 600 /home/mmontes/.ssh || true
@@ -69,9 +69,6 @@ spec:
       containers:
         - name: opencode
           image: ghcr.io/mmontes11/opencode:b7c8e31
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
           env:
             - name: GITHUB_TOKEN
               valueFrom:
