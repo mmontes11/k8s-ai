@@ -61,7 +61,7 @@ spec:
 
       containers:
         - name: opencode
-          image: ghcr.io/mmontes11/opencode:b7c8e31
+          image: ghcr.io/mmontes11/opencode:1a8c918
           securityContext:
             runAsUser: 1111
             runAsGroup: 1111
