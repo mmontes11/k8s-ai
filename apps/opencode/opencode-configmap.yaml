@@ -59,7 +59,7 @@ data:
                 "context": 131072,
                 "output": 65536
               }
-            }
+            },
             "qwen35:35b-ctx256k": {
                "name": "qwen35:35b-ctx256k",
                "limit": {
@@ -73,7 +73,7 @@ data:
                  "context": 262144,
                  "output": 65536
                }
-             },
+             }
           }
         }
       },

@@ -56,7 +56,6 @@ spec:
                   fi
                 done
               fi
-              # optional: Remove if fsGroup: 1000 is used, as it handles ownership
               chown -R 1111:1111 /home/mmontes/
               mkdir -p /home/mmontes/.ssh
               chmod 700 /home/mmontes/.ssh
