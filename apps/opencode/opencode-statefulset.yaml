@@ -31,11 +31,12 @@ spec:
         - name: opencode
           configMap:
             name: opencode
+        - name: run
+          emptyDir: {}
 
       initContainers:
         - name: sync
           image: ghcr.io/mmontes11/opencode:b7c8e31
-          # explicitly run as root to allow chown/chmod
           securityContext:
             runAsUser: 0
             runAsGroup: 0
@@ -61,7 +62,7 @@ spec:
 
       containers:
         - name: opencode
-          image: ghcr.io/mmontes11/opencode:1a8c918
+          image: ghcr.io/mmontes11/opencode:8964bc3
           securityContext:
             runAsUser: 1111
             runAsGroup: 1111
@@ -81,6 +82,8 @@ spec:
                 secretKeyRef:
                   name: n8n-token
                   key: N8N_TOKEN
+            - name: DOCKER_HOST
+              value: unix:///var/run/docker.sock
           resources:
             requests:
               cpu: "1"
@@ -95,9 +98,30 @@ spec:
             - name: opencode
               mountPath: /home/mmontes/.config/opencode/opencode.json
               subPath: opencode.json
+            - name: run
+              mountPath: /var/run
+        - name: dind
+          image: docker:29.4.0-dind
+          args:
+            - --group=1111
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: run
+              mountPath: /var/run
+            - name: docker
+              mountPath: /var/lib/docker
   volumeClaimTemplates:
     - metadata:
         name: home
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "topolvm"
+        resources:
+          requests:
+            storage: 100Gi
+    - metadata:
+        name: docker
       spec:
         accessModes: ["ReadWriteOnce"]
         storageClassName: "topolvm"
