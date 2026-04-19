@@ -13,6 +13,7 @@ spec:
       labels:
         app: opencode
     spec:
+      enableServiceLinks: false
       securityContext:
         fsGroup: 1111
       runtimeClassName: nvidia
