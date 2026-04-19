@@ -36,7 +36,7 @@ spec:
 
       initContainers:
         - name: sync
-          image: ghcr.io/mmontes11/opencode:b7c8e31
+          image: ghcr.io/mmontes11/opencode:048f51a
           securityContext:
             runAsUser: 0
             runAsGroup: 0
@@ -62,7 +62,7 @@ spec:
 
       containers:
         - name: opencode
-          image: ghcr.io/mmontes11/opencode:8964bc3
+          image: ghcr.io/mmontes11/opencode:048f51a
           securityContext:
             runAsUser: 1111
             runAsGroup: 1111
