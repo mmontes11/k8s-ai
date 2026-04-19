@@ -108,6 +108,10 @@ spec:
             - --group=1111
           securityContext:
             privileged: true
+          resources:
+            requests:
+              cpu: "1"
+              memory: "2Gi"
           volumeMounts:
             - name: run
               mountPath: /var/run
