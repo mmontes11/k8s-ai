@@ -131,6 +131,15 @@ data:
     batch-size=2048
     ubatch-size=2048
 
+    [qwen36:27b-ctx128k]
+    model=/models/unsloth_Qwen3.6-27B-GGUF_Qwen3.6-27B-Q4_K_M.gguf
+    alias=qwen36:27b-ctx128k
+    ctx-size=131072
+    cache-type-k=q8_0
+    cache-type-v=q8_0
+    batch-size=2048
+    ubatch-size=2048
+
     [qwen36:35b]
     model=/models/unsloth_Qwen3.6-35B-A3B-GGUF_Qwen3.6-35B-A3B-MXFP4_MOE.gguf
     alias=qwen36:35b
@@ -144,15 +153,6 @@ data:
     model=/models/unsloth_Qwen3.6-35B-A3B-GGUF_Qwen3.6-35B-A3B-UD-IQ4_NL.gguf
     alias=qwen36:35b-ctx256k
     ctx-size=262144
-    cache-type-k=q8_0
-    cache-type-v=q8_0
-    batch-size=2048
-    ubatch-size=2048
-
-    [qwen36:27b-ctx128k]
-    model=/models/unsloth_Qwen3.6-27B-GGUF_Qwen3.6-27B-Q4_K_M.gguf
-    alias=qwen36:27b-ctx128k
-    ctx-size=131072
     cache-type-k=q8_0
     cache-type-v=q8_0
     batch-size=2048
