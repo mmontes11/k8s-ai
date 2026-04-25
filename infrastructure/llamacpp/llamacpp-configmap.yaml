@@ -42,6 +42,7 @@ data:
   # https://github.com/ggml-org/llama.cpp/blob/master/.devops/tools.sh
   # https://github.com/ggml-org/llama.cpp/discussions/15396
   # https://www.reddit.com/r/LocalLLaMA/comments/1sne4gh/psa_qwen36_ships_with_preserve_thinking_make_sure/
+  # https://unsloth.ai/docs/models/qwen3.6#qwen3.6-inference-tutorials
   bench.sh: |
     #!/bin/bash
     set -e
@@ -98,6 +99,7 @@ data:
     cache-type-k=q8_0
     cache-type-v=q8_0
     chat-template-kwargs={"preserve_thinking": true}
+    repeat-penalty=1.0 
 
     [qwen36:35b]
     model=/models/unsloth_Qwen3.6-35B-A3B-GGUF_Qwen3.6-35B-A3B-MXFP4_MOE.gguf
@@ -106,6 +108,7 @@ data:
     cache-type-k=q8_0
     cache-type-v=q8_0
     chat-template-kwargs={"preserve_thinking": true}
+    repeat-penalty=1.0 
 
     [qwen36:35b-ctx256k]
     model=/models/unsloth_Qwen3.6-35B-A3B-GGUF_Qwen3.6-35B-A3B-UD-IQ4_NL.gguf
@@ -114,3 +117,4 @@ data:
     cache-type-k=q8_0
     cache-type-v=q8_0
     chat-template-kwargs={"preserve_thinking": true}
+    repeat-penalty=1.0 
