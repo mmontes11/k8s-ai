@@ -49,7 +49,7 @@ data:
     echo "Starting llama-bench..."
     /app/tools.sh \
       --bench \
-      --model "${LLAMA_CACHE}/unsloth_Qwen3.6-35B-A3B-GGUF_Qwen3.6-35B-A3B-MXFP4_MOE.gguf" \
+      --model "${LLAMA_CACHE}/unsloth_Qwen3.6-35B-A3B-GGUF_Qwen3.6-35B-A3B-UD-IQ4_NL.gguf" \
       --threads 1 \
       --flash-attn on \
       --n-prompt 2048,8192 \
