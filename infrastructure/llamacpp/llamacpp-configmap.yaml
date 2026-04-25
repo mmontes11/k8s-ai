@@ -41,6 +41,7 @@ data:
   # https://github.com/ggml-org/llama.cpp/tree/master/tools/llama-bench
   # https://github.com/ggml-org/llama.cpp/blob/master/.devops/tools.sh
   # https://github.com/ggml-org/llama.cpp/discussions/15396
+  # https://www.reddit.com/r/LocalLLaMA/comments/1sne4gh/psa_qwen36_ships_with_preserve_thinking_make_sure/
   bench.sh: |
     #!/bin/bash
     set -e
@@ -51,8 +52,6 @@ data:
       --model "${LLAMA_CACHE}/unsloth_Qwen3.5-27B-GGUF_Qwen3.5-27B-Q4_K_M.gguf" \
       --threads 1 \
       --flash-attn on \
-      --batch-size 2048 \
-      --ubatch-size 2048 \
       --n-prompt 2048,8192 \
       --progress || true
 
@@ -63,7 +62,6 @@ data:
   # https://github.com/ggml-org/llama.cpp/blob/master/tools/server
   # https://github.com/ggml-org/llama.cpp/discussions/18939
   # https://huggingface.co/blog/ggml-org/model-management-in-llamacpp
-  # https://github.com/ggml-org/llama.cpp/blob/d3416a4aa9a37d9a0ca547e18c0e126bfe8a07ea/common/arg.cpp#L3757
   models.ini: |
     [gemma4:26b-ctx256k]
     model=/models/unsloth_gemma-4-26B-A4B-it-GGUF_gemma-4-26B-A4B-it-MXFP4_MOE.gguf
@@ -71,8 +69,6 @@ data:
     ctx-size=262144
     cache-type-k=q8_0
     cache-type-v=q8_0
-    batch-size=2048
-    ubatch-size=2048
 
     [gpt-oss:20b-ctx128k]
     model=/models/ggml-org_gpt-oss-20b-GGUF_gpt-oss-20b-mxfp4.gguf
@@ -80,15 +76,11 @@ data:
     ctx-size=131072
     cache-type-k=q8_0
     cache-type-v=q8_0
-    batch-size=32768
-    ubatch-size=2048
 
     [qwen25-coder:7b-instruct]
     model=/models/ggml-org_Qwen2.5-Coder-7B-Instruct-Q8_0-GGUF_qwen2.5-coder-7b-instruct-q8_0.gguf
     alias=qwen25-coder:7b-instruct
     ctx-size=0
-    batch-size=1024
-    ubatch-size=1024
     cache-reuse=256
 
     [qwen30-coder:30b-instruct]
@@ -97,8 +89,6 @@ data:
     ctx-size=32768
     cache-type-k=q8_0
     cache-type-v=q8_0
-    batch-size=1024
-    ubatch-size=1024
     cache-reuse=256
 
     [qwen36:27b-ctx128k]
@@ -107,8 +97,7 @@ data:
     ctx-size=131072
     cache-type-k=q8_0
     cache-type-v=q8_0
-    batch-size=2048
-    ubatch-size=2048
+    chat-template-kwargs='{"preserve_thinking": true}'
 
     [qwen36:35b]
     model=/models/unsloth_Qwen3.6-35B-A3B-GGUF_Qwen3.6-35B-A3B-MXFP4_MOE.gguf
@@ -116,8 +105,7 @@ data:
     ctx-size=49152
     cache-type-k=q8_0
     cache-type-v=q8_0
-    batch-size=2048
-    ubatch-size=2048
+    chat-template-kwargs='{"preserve_thinking": true}'
 
     [qwen36:35b-ctx256k]
     model=/models/unsloth_Qwen3.6-35B-A3B-GGUF_Qwen3.6-35B-A3B-UD-IQ4_NL.gguf
@@ -125,5 +113,4 @@ data:
     ctx-size=262144
     cache-type-k=q8_0
     cache-type-v=q8_0
-    batch-size=2048
-    ubatch-size=2048
+    chat-template-kwargs='{"preserve_thinking": true}'
