@@ -21,6 +21,18 @@ spec:
     persistence:
       enabled: true
       existingClaim: n8n
+    resources:
+      main:
+        requests:
+          cpu: 200m
+          memory: 512Mi
+        limits:
+          memory: 1Gi
+    strategy:
+      type: Recreate
+    service:
+      type: ClusterIP
+      port: 5678
     config:
       timezone: UTC
       # See:
@@ -39,17 +51,3 @@ spec:
           value: "https://n8n.mmontes-internal.duckdns.org"
     secretRefs:
       existingSecret: n8n
-    service:
-      type: ClusterIP
-      port: 5678
-  postRenderers:
-    - kustomize:
-        patches:
-          - target:
-              kind: Deployment
-              name: n8n-main
-            patch: |
-              - op: replace
-                path: /spec/strategy
-                value:
-                  type: Recreate

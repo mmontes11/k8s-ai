@@ -6,4 +6,4 @@ spec:
   interval: 5m
   url: oci://ghcr.io/n8n-io/n8n-helm-chart/n8n
   ref:
-    tag: "1.3.0"
+    tag: "1.4.2"
