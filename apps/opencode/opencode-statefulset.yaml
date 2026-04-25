@@ -56,7 +56,8 @@ spec:
               chmod 600 /home/mmontes/.ssh/* || true
               chmod 644 /home/mmontes/.ssh/*.pub  || true
               chmod 644 /home/mmontes/.ssh/known_hosts|| true
-              chmod 644 /home/mmontes/.ssh/config || true 
+              chmod 644 /home/mmontes/.ssh/config || true
+              cp /opt/template/.opencode/bin/opencode /home/mmontes/.opencode/bin
               echo "Sync complete."
           volumeMounts:
             - name: home
