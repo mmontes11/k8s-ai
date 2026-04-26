@@ -7,7 +7,7 @@ data:
     {
       "$schema": "https://opencode.ai/config.json",
       "autoupdate": false,
-      "model": "llama.cpp/qwen36:35b-ctx256k",
+      "model": "llama.cpp/qwen35:35b-ctx256k",
       "permission": {
         "bash": {
           "*": "ask",
@@ -28,7 +28,7 @@ data:
       },
       "agent": {
         "kubernetes": {
-           "model": "llama.cpp/qwen36:35b-ctx256k",
+           "model": "llama.cpp/qwen35:35b-ctx256k",
            "temperature": 0.1,
           "description": "Expert SRE focused on diagnosing complex Kubernetes issues: compute, storage, databases, and infrastructure failures.",
           "prompt": "You are a Senior Kubernetes Site Reliability Engineer (SRE). Your expertise lies in the intersection Kubernetes infrastructure and stateful workloads (databases). When troubleshooting, perform a root-cause analysis and make suggestions to resolve the problem.",
@@ -53,6 +53,20 @@ data:
                 "output": 65536
               }
             },
+            "qwen35:27b-ctx128k": {
+              "name": "qwen35:27b-ctx128k",
+              "limit": {
+                "context": 131072,
+                "output": 65536
+              }
+            },
+            "qwen35:35b-ctx256k": {
+              "name": "qwen35:35b-ctx256k",
+              "limit": {
+                "context": 262144,
+                "output": 65536
+              }
+            }
             "qwen36:27b-ctx128k": {
               "name": "qwen36:27b-ctx128k",
               "limit": {

@@ -14,6 +14,9 @@ data:
       "ggml-org|Qwen2.5-Coder-7B-Instruct-Q8_0-GGUF|qwen2.5-coder-7b-instruct-q8_0.gguf"
       "unsloth|gemma-4-26B-A4B-it-GGUF|gemma-4-26B-A4B-it-MXFP4_MOE.gguf"
       "unsloth|Qwen3-Coder-30B-A3B-Instruct-GGUF|Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf"
+      "unsloth|Qwen3.5-27B-GGUF|Qwen3.5-27B-Q4_K_M.gguf"
+      "unsloth|Qwen3.5-35B-A3B-GGUF|Qwen3.5-35B-A3B-UD-IQ4_NL.gguf"
+      "unsloth|Qwen3.5-35B-A3B-GGUF|Qwen3.5-35B-A3B-MXFP4_MOE.gguf"
       "unsloth|Qwen3.6-27B-GGUF|Qwen3.6-27B-Q4_K_M.gguf"
       "unsloth|Qwen3.6-35B-A3B-GGUF|Qwen3.6-35B-A3B-UD-IQ4_NL.gguf"
       "unsloth|Qwen3.6-35B-A3B-GGUF|Qwen3.6-35B-A3B-MXFP4_MOE.gguf"
@@ -94,6 +97,28 @@ data:
     cache-type-v=q8_0
     cache-reuse=256
 
+    [qwen35:27b-ctx128k]
+    model=/models/unsloth_Qwen3.5-27B-GGUF_Qwen3.5-27B-Q4_K_M.gguf
+    alias=qwen35:27b-ctx128k
+    ctx-size=131072
+    cache-type-k=q8_0
+    cache-type-v=q8_0
+
+    [qwen35:35b]
+    model=/models/unsloth_Qwen3.5-35B-A3B-GGUF_Qwen3.5-35B-A3B-MXFP4_MOE.gguf
+    alias=qwen35:35b
+    ctx-size=49152
+    cache-type-k=q8_0
+    cache-type-v=q8_0
+    temperature=1.0
+
+    [qwen35:35b-ctx256k]
+    model=/models/unsloth_Qwen3.5-35B-A3B-GGUF_Qwen3.5-35B-A3B-UD-IQ4_NL.gguf
+    alias=qwen35:35b-ctx256k
+    ctx-size=262144
+    cache-type-k=q8_0
+    cache-type-v=q8_0
+
     [qwen36:27b-ctx128k]
     model=/models/unsloth_Qwen3.6-27B-GGUF_Qwen3.6-27B-Q4_K_M.gguf
     alias=qwen36:27b-ctx128k
@@ -115,12 +140,6 @@ data:
     cache-type-k=q8_0
     cache-type-v=q8_0
     temperature=1.0
-    top-p=0.95
-    top-k=20
-    min-p=0.0
-    presence-penalty=0.0
-    repeat-penalty=1.0
-    chat-template-kwargs={"preserve_thinking": true}
 
     [qwen36:35b-ctx256k]
     model=/models/unsloth_Qwen3.6-35B-A3B-GGUF_Qwen3.6-35B-A3B-UD-IQ4_NL.gguf
