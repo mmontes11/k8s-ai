@@ -49,5 +49,7 @@ spec:
           value: "https://n8n.mmontes-internal.duckdns.org"
         - name: WEBHOOK_URL
           value: "https://n8n.mmontes-internal.duckdns.org"
+        - name: N8N_LOG_LEVEL
+          value: "debug"
     secretRefs:
       existingSecret: n8n
