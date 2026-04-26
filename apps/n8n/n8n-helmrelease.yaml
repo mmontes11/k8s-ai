@@ -24,10 +24,10 @@ spec:
     resources:
       main:
         requests:
-          cpu: 200m
+          cpu: 1
           memory: 512Mi
         limits:
-          memory: 1Gi
+          memory: 2Gi
     strategy:
       type: Recreate
     service:
