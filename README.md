@@ -30,6 +30,7 @@ This repository manages AI workloads on Kubernetes using GitOps with Flux CD. It
 - **Path**: `./apps/opencode`
 - **Type**: Native Kubernetes resources
 - **Description**: Coding agent and AI workspace for interactive development
+- **Image**: [mmontes11/docker-opencode](https://github.com/mmontes11/docker-opencode)
 - **Features**:
   - NVIDIA GPU support for accelerated model training and inference
   - Persistent storage (100Gi PVC)
