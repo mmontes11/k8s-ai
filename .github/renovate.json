@@ -15,6 +15,18 @@
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "mmontes11/docker-opencode",
       "packageNameTemplate": "mmontes11/docker-opencode"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "(^|/)apps/open-webui/.*\\.yaml$"
+      ],
+      "matchStrings": [
+        "repository:\\s+ghcr\\.io/open-webui/open-webui\\s*\\n\\s+tag:\\s+(?<currentValue>.+)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "open-webui/open-webui",
+      "packageNameTemplate": "open-webui/open-webui"
     }
   ]
 }
