@@ -31,7 +31,6 @@ This repository manages AI workloads on Kubernetes using GitOps with Flux CD. It
 - **Path**: `./apps/n8n`
 - **Type**: HelmRelease (n8n helm chart)
 - **Description**: Workflow automation and integration platform
-- **Image**: [n8n-io/n8n-hosting](https://github.com/n8n-io/n8n-hosting)
 - **Features**:
   - Persistent storage via PVC
   - RESTic backup support
