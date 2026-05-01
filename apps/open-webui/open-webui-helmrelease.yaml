@@ -24,6 +24,8 @@ spec:
       enabled: true
       manager: redis
       url: redis://redis.database.svc.cluster.local:6379/2
+      redis:
+        enabled: false
     persistence:
       enabled: true
       existingClaim: open-webui
