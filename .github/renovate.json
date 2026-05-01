@@ -27,6 +27,17 @@
       "datasourceTemplate": "helm",
       "packageNameTemplate": "open-webui",
       "registryUrlTemplate": "https://helm.openwebui.com/"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "(^|/)apps/n8n/.*\\.yaml$"
+      ],
+      "matchStrings": [
+        "ref:\\s*\\n\\s+tag:\\s+\"?(?<currentValue>[^\"]+)\"?"
+      ],
+      "datasourceTemplate": "github-releases",
+      "packageNameTemplate": "n8n-io/n8n-hosting"
     }
   ]
 }
