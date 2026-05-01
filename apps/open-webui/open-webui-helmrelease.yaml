@@ -24,7 +24,10 @@ spec:
     pipelines:
       enabled: false
     websocket:
-      manager: server-sent-events
+      enabled: true
+      manager: ""
+      redis:
+        enabled: false
     persistence:
       enabled: true
       existingClaim: open-webui
