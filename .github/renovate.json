@@ -1,0 +1,20 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "(^|/)apps/opencode/.*\\.yaml$"
+      ],
+      "matchStrings": [
+        "image:\\s+ghcr\\.io/mmontes11/opencode:(?<currentValue>.+)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "mmontes11/docker-opencode",
+      "packageNameTemplate": "mmontes11/docker-opencode"
+    }
+  ]
+}
