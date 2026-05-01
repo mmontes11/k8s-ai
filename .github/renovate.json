@@ -38,6 +38,18 @@
       ],
       "datasourceTemplate": "github-releases",
       "packageNameTemplate": "n8n-io/n8n-hosting"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "(^|/)apps/comfyui/.*\\.yaml$"
+      ],
+      "matchStrings": [
+        "image:\\s+ghcr\\.io/mmontes11/comfyui:(?<currentValue>.+)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "mmontes11/docker-comfyui",
+      "packageNameTemplate": "mmontes11/docker-comfyui"
     }
   ]
 }
