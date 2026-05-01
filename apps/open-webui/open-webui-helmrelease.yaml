@@ -23,6 +23,8 @@ spec:
       - http://ollama:11434
     pipelines:
       enabled: false
+    websocket:
+      manager: server-sent-events
     persistence:
       enabled: true
       existingClaim: open-webui
