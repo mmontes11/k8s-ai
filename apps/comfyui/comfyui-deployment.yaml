@@ -28,7 +28,7 @@ spec:
         value: compute-xlarge
       containers:
       - name: comfyui
-        image: ghcr.io/mmontes11/comfyui:0.1.0
+        image: ghcr.io/mmontes11/comfyui:v0.20.1
         imagePullPolicy: IfNotPresent
         ports:
         - name: http
