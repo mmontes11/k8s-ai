@@ -12,6 +12,9 @@ spec:
       version: "8.19.0"
   interval: 1h0m0s
   values:
+    image:
+      repository: ghcr.io/open-webui/open-webui
+      tag: 0.7.2
     ollama:
       enabled: false
     ollamaUrls:
