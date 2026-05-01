@@ -12,9 +12,6 @@ spec:
       version: "14.2.0"
   interval: 1h0m0s
   values:
-    image:
-      repository: ghcr.io/open-webui/open-webui
-      tag: 0.9.2
     workload:
       kind: StatefulSet
     ollama:
