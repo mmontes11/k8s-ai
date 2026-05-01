@@ -21,6 +21,7 @@ This repository manages AI workloads on Kubernetes using GitOps with Flux CD. It
 - **Path**: `./apps/comfyui`
 - **Type**: Native Kubernetes resources
 - **Description**: Graph-based interface for Stable Diffusion
+- **Image**: [mmontes11/docker-comfyui](https://github.com/mmontes11/docker-comfyui)
 - **Features**:
   - Persistent volume for model caching
   - Replication source/destination for data synchronization
