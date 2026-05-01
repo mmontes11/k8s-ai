@@ -27,6 +27,18 @@
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "open-webui/open-webui",
       "packageNameTemplate": "open-webui/open-webui"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "(^|/)apps/open-webui/.*\\.yaml$"
+      ],
+      "matchStrings": [
+        "chart:\\s+open-webui\\s*\\n\\s+sourceRef:\\s*\\n\\s+kind:\\s+HelmRepository\\s*\\n\\s+name:\\s+open-webui\\s*\\n\\s+version:\\s+\"?(?<currentValue>[^\"]+)\"?"
+      ],
+      "datasourceTemplate": "helm",
+      "packageNameTemplate": "open-webui",
+      "registryUrlTemplate": "https://helm.openwebui.com/"
     }
   ]
 }
