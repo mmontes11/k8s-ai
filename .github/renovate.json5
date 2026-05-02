@@ -1,55 +1,55 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  extends: [
+    'config:recommended',
   ],
-  "customManagers": [
+  customManagers: [
     {
-      "customType": "regex",
-      "fileMatch": [
-        "(^|/)apps/opencode/.*\\.yaml$"
+      customType: 'regex',
+      managerFilePatterns: [
+        '/(^|/)apps/opencode/.*\\.yaml$/',
       ],
-      "matchStrings": [
-        "image:\\s+ghcr\\.io/mmontes11/opencode:(?<currentValue>.+)"
+      matchStrings: [
+        'image:\\s+ghcr\\.io/mmontes11/opencode:(?<currentValue>.+)',
       ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "mmontes11/docker-opencode",
-      "packageNameTemplate": "mmontes11/docker-opencode"
+      datasourceTemplate: 'github-releases',
+      depNameTemplate: 'mmontes11/docker-opencode',
+      packageNameTemplate: 'mmontes11/docker-opencode',
     },
     {
-      "customType": "regex",
-      "fileMatch": [
-        "(^|/)apps/open-webui/.*\\.yaml$"
+      customType: 'regex',
+      managerFilePatterns: [
+        '/(^|/)apps/open-webui/.*\\.yaml$/',
       ],
-      "matchStrings": [
-        "chart:\\s+open-webui\\s*\\n\\s+sourceRef:\\s*\\n\\s+kind:\\s+HelmRepository\\s*\\n\\s+name:\\s+open-webui\\s*\\n\\s+version:\\s+\"?(?<currentValue>[^\"]+)\"?"
+      matchStrings: [
+        'chart:\\s+open-webui\\s*\\n\\s+sourceRef:\\s*\\n\\s+kind:\\s+HelmRepository\\s*\\n\\s+name:\\s+open-webui\\s*\\n\\s+version:\\s+"?(?<currentValue>[^"]+)"?',
       ],
-      "datasourceTemplate": "helm",
-      "packageNameTemplate": "open-webui",
-      "registryUrlTemplate": "https://helm.openwebui.com/"
+      datasourceTemplate: 'helm',
+      packageNameTemplate: 'open-webui',
+      registryUrlTemplate: 'https://helm.openwebui.com/',
     },
     {
-      "customType": "regex",
-      "fileMatch": [
-        "(^|/)apps/n8n/.*\\.yaml$"
+      customType: 'regex',
+      managerFilePatterns: [
+        '/(^|/)apps/n8n/.*\\.yaml$/',
       ],
-      "matchStrings": [
-        "ref:\\s*\\n\\s+tag:\\s+\"?(?<currentValue>[^\"]+)\"?"
+      matchStrings: [
+        'ref:\\s*\\n\\s+tag:\\s+"?(?<currentValue>[^"]+)"?',
       ],
-      "datasourceTemplate": "github-releases",
-      "packageNameTemplate": "n8n-io/n8n-hosting"
+      datasourceTemplate: 'github-releases',
+      packageNameTemplate: 'n8n-io/n8n-hosting',
     },
     {
-      "customType": "regex",
-      "fileMatch": [
-        "(^|/)apps/comfyui/.*\\.yaml$"
+      customType: 'regex',
+      managerFilePatterns: [
+        '/(^|/)apps/comfyui/.*\\.yaml$/',
       ],
-      "matchStrings": [
-        "image:\\s+ghcr\\.io/mmontes11/comfyui:(?<currentValue>.+)"
+      matchStrings: [
+        'image:\\s+ghcr\\.io/mmontes11/comfyui:(?<currentValue>.+)',
       ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "mmontes11/docker-comfyui",
-      "packageNameTemplate": "mmontes11/docker-comfyui"
-    }
-  ]
+      datasourceTemplate: 'github-releases',
+      depNameTemplate: 'mmontes11/docker-comfyui',
+      packageNameTemplate: 'mmontes11/docker-comfyui',
+    },
+  ],
 }
