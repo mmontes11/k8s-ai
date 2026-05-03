@@ -12,9 +12,6 @@ spec:
       version: "1.46.0"
   interval: 1h0m0s
   values:
-    image:
-      repository: ollama/ollama
-      tag: "0.18.0"
     ollama:
       port: 11434
       gpu:
