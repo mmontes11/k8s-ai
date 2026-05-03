@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: mcp-photoprism-xiaowen
-          image: mmontes11/mcp-mariadb:0.4.0
+          image: mmontes11/mcp-mariadb:0.3.0
           imagePullPolicy: IfNotPresent
           command:
             - "python"
