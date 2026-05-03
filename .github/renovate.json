@@ -50,6 +50,19 @@
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "mmontes11/docker-comfyui",
       "packageNameTemplate": "mmontes11/docker-comfyui"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)infrastructure/llamacpp/.*\\.yaml$/"
+      ],
+      "matchStrings": [
+        "image:\\s+ghcr\\.io/ggml-org/llama\\.cpp:(?<currentValue>full-cuda13-b[0-9]+)"
+      ],
+      "datasourceTemplate": "docker",
+      "packageNameTemplate": "ggml-org/llama.cpp",
+      "registryUrlTemplate": "https://ghcr.io",
+      "versioningTemplate": "regex:^(?<major>full-cuda13-b)?(?<patch>[0-9]+)$"
     }
   ]
 }
