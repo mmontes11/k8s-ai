@@ -63,6 +63,17 @@
       "packageNameTemplate": "ggml-org/llama.cpp",
       "registryUrlTemplate": "https://ghcr.io",
       "versioningTemplate": "regex:^full-cuda13-b(?<major>\\d+)$"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)infrastructure/mcp-github/.*\\.yaml$/"
+      ],
+      "matchStrings": [
+        "image:\\s+ghcr\\.io/github/github-mcp-server:(?<currentValue>.+)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "packageNameTemplate": "github/github-mcp-server"
     }
   ]
 }
