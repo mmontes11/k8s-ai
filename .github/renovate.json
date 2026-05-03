@@ -62,7 +62,7 @@
       "datasourceTemplate": "docker",
       "packageNameTemplate": "ggml-org/llama.cpp",
       "registryUrlTemplate": "https://ghcr.io",
-      "versioningTemplate": "regex:^(?<major>full-cuda13-b)?(?<patch>[0-9]+)$"
+      "versioningTemplate": "regex:^full-cuda13-b(?<major>\\d+)$"
     }
   ]
 }
