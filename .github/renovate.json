@@ -74,6 +74,18 @@
       ],
       "datasourceTemplate": "github-releases",
       "packageNameTemplate": "github/github-mcp-server"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)infrastructure/ollama/.*\\.yaml$/"
+      ],
+      "matchStrings": [
+        "chart:\\s+ollama\\s*\\n\\s+sourceRef:\\s*\\n\\s+kind:\\s+HelmRepository\\s*\\n\\s+name:\\s+ollama\\s*\\n\\s+version:\\s+\"?(?<currentValue>[^\"]+)\"?"
+      ],
+      "datasourceTemplate": "helm",
+      "packageNameTemplate": "ollama",
+      "registryUrlTemplate": "https://helm.otwld.com/"
     }
   ]
 }
