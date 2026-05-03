@@ -86,6 +86,30 @@
       "datasourceTemplate": "helm",
       "packageNameTemplate": "ollama",
       "registryUrlTemplate": "https://helm.otwld.com/"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)infrastructure/mcp-kubernetes/.*\\.yaml$/"
+      ],
+      "matchStrings": [
+        "tag:\\s+\"?(?<currentValue>[^\"]+)\"?"
+      ],
+      "datasourceTemplate": "docker",
+      "packageNameTemplate": "ghcr.io/containers/charts/kubernetes-mcp-server",
+      "registryUrlTemplate": "https://ghcr.io"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)infrastructure/mcp-grafana/.*\\.yaml$/"
+      ],
+      "matchStrings": [
+        "chart:\\s+grafana-mcp\\s*\\n\\s+sourceRef:\\s*\\n\\s+kind:\\s+HelmRepository\\s*\\n\\s+name:\\s+grafana\\s*\\n\\s+version:\\s+\"?(?<currentValue>[^\"]+)\"?"
+      ],
+      "datasourceTemplate": "helm",
+      "packageNameTemplate": "grafana-mcp",
+      "registryUrlTemplate": "https://grafana.github.io/helm-charts/"
     }
   ]
 }
