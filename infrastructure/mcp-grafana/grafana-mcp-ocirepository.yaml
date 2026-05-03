@@ -1,0 +1,9 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: OCIRepository
+metadata:
+  name: grafana-mcp
+spec:
+  interval: 5m
+  url: oci://ghcr.io/grafana-community/helm-charts/grafana-mcp
+  ref:
+    tag: "0.13.1"

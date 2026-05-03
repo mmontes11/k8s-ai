@@ -1,16 +1,12 @@
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: mcp-grafana
 spec:
-  chart:
-    spec:
-      chart: grafana-mcp
-      sourceRef:
-        kind: HelmRepository
-        name: grafana
-      version: "0.2.2"
-  interval: 1h0m0s
+  chartRef:
+    kind: OCIRepository
+    name: grafana-mcp
+  interval: 10m
   values:
     fullnameOverride: mcp-grafana
     grafana:
@@ -22,7 +18,7 @@ spec:
       - --address
       - 0.0.0.0:8000
       - -t
-      -  streamable-http
+      - streamable-http
       - --disable-write
       - --debug
       - --log-level

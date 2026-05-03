@@ -93,7 +93,7 @@
         "/(^|/)infrastructure/mcp-kubernetes/.*\\.yaml$/"
       ],
       "matchStrings": [
-        "tag:\\s+\"?(?<currentValue>[^\"]+)\"?"
+        "ref:\\s*\\n\\s+tag:\\s+\"?(?<currentValue>[^\"]+)\"?"
       ],
       "datasourceTemplate": "docker",
       "packageNameTemplate": "ghcr.io/containers/charts/kubernetes-mcp-server",
@@ -105,11 +105,11 @@
         "/(^|/)infrastructure/mcp-grafana/.*\\.yaml$/"
       ],
       "matchStrings": [
-        "chart:\\s+grafana-mcp\\s*\\n\\s+sourceRef:\\s*\\n\\s+kind:\\s+HelmRepository\\s*\\n\\s+name:\\s+grafana\\s*\\n\\s+version:\\s+\"?(?<currentValue>[^\"]+)\"?"
+        "ref:\\s*\\n\\s+tag:\\s+\"?(?<currentValue>[^\"]+)\"?"
       ],
-      "datasourceTemplate": "helm",
-      "packageNameTemplate": "grafana-mcp",
-      "registryUrlTemplate": "https://grafana.github.io/helm-charts/"
+      "datasourceTemplate": "docker",
+      "packageNameTemplate": "ghcr.io/grafana-community/helm-charts/grafana-mcp",
+      "registryUrlTemplate": "https://ghcr.io"
     }
   ]
 }
