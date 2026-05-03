@@ -110,6 +110,17 @@
       "datasourceTemplate": "docker",
       "packageNameTemplate": "ghcr.io/grafana-community/helm-charts/grafana-mcp",
       "registryUrlTemplate": "https://ghcr.io"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)infrastructure/mcp-photoprism-.*\\/.*\\.yaml$/"
+      ],
+      "matchStrings": [
+        "image:\\s+mmontes11/mcp-mariadb:(?<currentValue>.+)"
+      ],
+      "datasourceTemplate": "docker",
+      "packageNameTemplate": "mmontes11/mcp-mariadb"
     }
   ]
 }
