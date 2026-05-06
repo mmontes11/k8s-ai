@@ -88,8 +88,6 @@ spec:
           - "on"
           - --parallel
           - "1"
-          - --timeout
-          - "900"
           # TODO: Metrics disabled, as Prometheus scrapes will awake the models
           # See: https://github.com/ggml-org/llama.cpp/issues/20227
           # - --metrics
