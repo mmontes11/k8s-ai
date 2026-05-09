@@ -4,6 +4,9 @@ metadata:
   name: kserve-resources
 spec:
   interval: 5m
-  url: oci://ghcr.io/kserve/charts/kserve-resources 
+  url: oci://ghcr.io/kserve/charts/kserve-resources
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
   ref:
     tag: "v0.17.0"

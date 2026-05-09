@@ -5,5 +5,8 @@ metadata:
 spec:
   interval: 5m
   url: oci://ghcr.io/n8n-io/n8n-helm-chart/n8n
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
   ref:
     tag: "1.5.0"
