@@ -104,7 +104,7 @@ spec:
             - name: run
               mountPath: /var/run
         - name: dind
-          image: docker:29.4.0-dind
+          image: docker:dind
           args:
             - --group=1111
           securityContext:
