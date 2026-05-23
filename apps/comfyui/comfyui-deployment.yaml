@@ -55,6 +55,9 @@ spec:
         - name: nas
           mountPath: /app/output
           subPath: output
+        - name: nas
+          mountPath: /app/custom_nodes
+          subPath: custom_nodes
         resources:
           requests:
             cpu: 1
