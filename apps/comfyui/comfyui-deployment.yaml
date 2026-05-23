@@ -47,6 +47,8 @@ spec:
         volumeMounts:
         - name: models
           mountPath: /app/models
+        - name: nodes
+          mountPath: /app/custom_nodes
         - name: user
           mountPath: /app/user
         - name: nas
@@ -55,9 +57,6 @@ spec:
         - name: nas
           mountPath: /app/output
           subPath: output
-        - name: nas
-          mountPath: /app/custom_nodes
-          subPath: custom_nodes
         resources:
           requests:
             cpu: 1
@@ -83,6 +82,9 @@ spec:
       - name: models
         persistentVolumeClaim:
           claimName: comfyui-models
+      - name: nodes
+        persistentVolumeClaim:
+          claimName: comfyui-nodes
       - name: user
         persistentVolumeClaim:
           claimName: comfyui-user

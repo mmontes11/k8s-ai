@@ -13,6 +13,18 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  name: comfyui-nodes
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 30Gi
+  storageClassName: topolvm
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
   name: comfyui-user
 spec:
   accessModes:
