@@ -87,12 +87,14 @@ data:
     model=/models/ggml-org_Qwen2.5-Coder-7B-Instruct-Q8_0-GGUF_qwen2.5-coder-7b-instruct-q8_0.gguf
     alias=qwen25-coder:7b-instruct
     ctx-size=0
+    kv-unified=1
     cache-reuse=256
 
     [qwen30-coder:30b-instruct]
     model=/models/unsloth_Qwen3-Coder-30B-A3B-Instruct-GGUF_Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf
     alias=qwen30-coder:30b-instruct
     ctx-size=32768
+    kv-unified=1
     cache-type-k=q8_0
     cache-type-v=q8_0
     cache-reuse=256
