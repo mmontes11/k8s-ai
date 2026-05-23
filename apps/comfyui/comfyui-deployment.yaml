@@ -43,7 +43,7 @@ spec:
         - /bin/bash
         - -c
         - |
-          python3 main.py --listen 0.0.0.0 --reserve-vram 1 --async-offload --use-sage-attention
+          python3 main.py --listen 0.0.0.0 --reserve-vram 1 --async-offload --use-sage-attention --enable-manager
         volumeMounts:
         - name: models
           mountPath: /app/models
