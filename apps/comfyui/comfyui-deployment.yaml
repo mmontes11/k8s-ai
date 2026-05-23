@@ -29,7 +29,7 @@ spec:
       containers:
       - name: comfyui
         image: ghcr.io/mmontes11/comfyui:v0.22.0
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         ports:
         - name: http
           containerPort: 8188
