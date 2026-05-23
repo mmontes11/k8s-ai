@@ -86,8 +86,7 @@ spec:
           - "off"
           - --flash-attn
           - "on"
-          - --parallel
-          - "1"
+          - --log-verbose
           # TODO: Metrics disabled, as Prometheus scrapes will awake the models
           # See: https://github.com/ggml-org/llama.cpp/issues/20227
           # - --metrics
