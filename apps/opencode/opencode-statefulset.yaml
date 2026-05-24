@@ -111,8 +111,8 @@ spec:
             privileged: true
           resources:
             requests:
-              cpu: "1"
-              memory: "2Gi"
+              cpu: "4"
+              memory: "8Gi"
           volumeMounts:
             - name: run
               mountPath: /var/run
