@@ -89,8 +89,8 @@ spec:
               value: unix:///var/run/docker.sock
           resources:
             requests:
-              cpu: "1"
-              memory: "2Gi"
+              cpu: "2"
+              memory: "4Gi"
             limits:
               nvidia.com/gpu: "1"
           ports:
@@ -111,8 +111,8 @@ spec:
             privileged: true
           resources:
             requests:
-              cpu: "4"
-              memory: "8Gi"
+              cpu: "2"
+              memory: "4Gi"
           volumeMounts:
             - name: run
               mountPath: /var/run
