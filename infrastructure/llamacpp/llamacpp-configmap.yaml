@@ -126,9 +126,9 @@ data:
     min-p=0.0
     presence-penalty=0.0
     repeat-penalty=1.0
-    chat-template-kwargs={"preserve_thinking": true}
     spec-type=draft-mtp
     spec-draft-n-max=2
+    chat-template-kwargs={"preserve_thinking": true}
 
     [qwen36:35b]
     model=/models/unsloth_Qwen3.6-35B-A3B-GGUF_Qwen3.6-35B-A3B-MXFP4_MOE.gguf
@@ -166,6 +166,6 @@ data:
     min-p=0.0
     presence-penalty=0.0
     repeat-penalty=1.0
-    chat-template-kwargs={"preserve_thinking": true}
     spec-type=draft-mtp
     spec-draft-n-max=2
+    chat-template-kwargs={"preserve_thinking": true}
