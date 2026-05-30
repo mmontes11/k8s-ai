@@ -46,29 +46,15 @@ data:
             "baseURL": "http://llamacpp.ai.svc.cluster.local:8080/v1"
           },
          "models": {
-            "gemma4:26b-ctx256k": {
-              "name": "gemma4:26b-ctx256k",
-              "limit": {
-                "context": 262144,
-                "output": 65536
-              }
-            },
-            "qwen35:27b-ctx128k": {
-              "name": "qwen35:27b-ctx128k",
+             "qwen36:27b-ctx128k": {
+              "name": "qwen36:27b-ctx128k",
               "limit": {
                 "context": 131072,
                 "output": 65536
               }
             },
-            "qwen35:35b-ctx256k": {
-              "name": "qwen35:35b-ctx256k",
-              "limit": {
-                "context": 262144,
-                "output": 65536
-              }
-            },
-            "qwen36:27b-ctx128k": {
-              "name": "qwen36:27b-ctx128k",
+            "qwen36:27b-mtp-ctx128k": {
+              "name": "qwen36:27b-mtp-ctx128k",
               "limit": {
                 "context": 131072,
                 "output": 65536
@@ -76,6 +62,13 @@ data:
             },
             "qwen36:35b-ctx256k": {
               "name": "qwen36:35b-ctx256k",
+              "limit": {
+                "context": 262144,
+                "output": 65536
+              }
+            },
+            "qwen36:35b-mtp-ctx256k": {
+              "name": "qwen36:35b-mtp-ctx256k",
               "limit": {
                 "context": 262144,
                 "output": 65536

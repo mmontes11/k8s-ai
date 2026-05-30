@@ -65,7 +65,7 @@ This repository manages AI workloads on Kubernetes using GitOps with Flux CD. It
 - **Path**: `./infrastructure/llamacpp`
 - **Description**: High-performance C/C++ inference engine optimized for CPU and GPU
 - **Features**:
-  - Qwen3.5-35B model support with full precision
+  - Qwen3.6 MTP model support with 1.4-2.2x faster inference
   - 256k context window for agentic AI workflows
   - StatefulSet deployment with persistent storage
   - Prometheus ServiceMonitor integration
