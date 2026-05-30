@@ -127,8 +127,8 @@ data:
     presence-penalty=0.0
     repeat-penalty=1.0
     chat-template-kwargs={"preserve_thinking": true}
-    speculative-model=/models/unsloth_Qwen3.6-27B-MTP-GGUF_Qwen3.6-27B-Q4_K_M.gguf
-    speculative-n=2
+    spec-type=draft-mtp
+    spec-draft-n-max=2
 
     [qwen36:35b]
     model=/models/unsloth_Qwen3.6-35B-A3B-GGUF_Qwen3.6-35B-A3B-MXFP4_MOE.gguf
@@ -167,5 +167,5 @@ data:
     presence-penalty=0.0
     repeat-penalty=1.0
     chat-template-kwargs={"preserve_thinking": true}
-    speculative-model=/models/unsloth_Qwen3.6-35B-A3B-MTP-GGUF_Qwen3.6-35B-A3B-UD-IQ4_NL.gguf
-    speculative-n=2
+    spec-type=draft-mtp
+    spec-draft-n-max=2
