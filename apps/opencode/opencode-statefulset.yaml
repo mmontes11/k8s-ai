@@ -126,7 +126,7 @@ spec:
         storageClassName: "topolvm"
         resources:
           requests:
-            storage: 100Gi
+            storage: 200Gi
     - metadata:
         name: docker
       spec:
