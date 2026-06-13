@@ -42,6 +42,19 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
+        "/(^|/)apps/n8n/.*\\.yaml$/"
+      ],
+      "matchStrings": [
+        "repository:\\s+n8nio/n8n\\s*\\n\\s+tag:\\s+\"?(?<currentValue>[^\"]+)\"?"
+      ],
+      "datasourceTemplate": "docker",
+      "packageNameTemplate": "n8nio/n8n",
+      "registryUrlTemplate": "https://hub.docker.com",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
         "/(^|/)apps/comfyui/.*\\.yaml$/"
       ],
       "matchStrings": [
