@@ -62,6 +62,13 @@ spec:
         env:
         - name: LLAMA_CACHE
           value: /models
+        - name: HF_HOME
+          value: /models
+        - name: HF_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: hf-token
+              key: HF_TOKEN
 
         # SERVER:
         # See:
