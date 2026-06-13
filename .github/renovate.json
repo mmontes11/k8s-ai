@@ -49,7 +49,6 @@
       ],
       "datasourceTemplate": "docker",
       "packageNameTemplate": "n8nio/n8n",
-      "registryUrlTemplate": "https://hub.docker.com",
       "versioningTemplate": "semver"
     },
     {
