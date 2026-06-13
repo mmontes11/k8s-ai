@@ -8,6 +8,10 @@ spec:
     name: n8n
   interval: 10m
   values:
+    image:
+      repository: docker.n8n.io/n8nio/n8n
+      tag: "stable"
+      pullPolicy: Always
     queueMode:
       enabled: false
     database:
@@ -30,8 +34,6 @@ spec:
     service:
       type: ClusterIP
       port: 5678
-    executions:
-      timeout: 3600 # 1h   
     config:
       timezone: UTC
       # See:
