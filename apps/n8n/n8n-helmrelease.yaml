@@ -14,7 +14,7 @@ spec:
       pullPolicy: IfNotPresent
     executions:
       timeout: -1
-      timeoutMax: -1
+      timeoutMax: 7200 # 2h
     queueMode:
       enabled: false
     database:
