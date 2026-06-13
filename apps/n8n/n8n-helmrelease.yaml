@@ -9,9 +9,9 @@ spec:
   interval: 10m
   values:
     image:
-      repository: docker.n8n.io/n8nio/n8n
-      tag: "stable"
-      pullPolicy: Always
+      repository: n8nio/n8n
+      tag: "2.26.3"
+      pullPolicy: IfNotPresent
     queueMode:
       enabled: false
     database:
