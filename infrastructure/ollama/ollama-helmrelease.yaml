@@ -26,11 +26,11 @@ spec:
           - qwen3-coder:30b
           - qwen3-embedding:8b
           - qwen3-vl:8b-instruct
-        # create:
-        # - name: gpt-oss:20b-ctx128k
-        #   template: |
-        #     FROM gpt-oss:20b
-        #     PARAMETER num_ctx 131072
+        create:
+          - name: gemma4:26b-256k
+            template: |
+              FROM gemma4:26b
+              PARAMETER num_ctx 262144
         run: []
         clean: true
     service:
