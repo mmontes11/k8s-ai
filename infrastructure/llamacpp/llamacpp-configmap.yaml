@@ -100,6 +100,13 @@ data:
     cache-type-v=q8_0
     cache-reuse=256
 
+    [qwen3-vl:8b-instruct]
+    model=/models/unsloth/Qwen3-VL-8B-Instruct-GGUF/Qwen3-VL-8B-Instruct-UD-Q4_K_XL.gguf
+    mmproj=/models/unsloth/Qwen3-VL-8B-Instruct-GGUF/mmproj-BF16.gguf
+    alias=qwen3-vl:8b-instruct
+    ctx-size=0
+    parallel=1
+
     [qwen36:27b-ctx128k]
     model=/models/unsloth/Qwen3.6-27B-MTP-GGUF/Qwen3.6-27B-UD-Q4_K_XL.gguf
     alias=qwen36:27b-ctx128k
@@ -144,12 +151,3 @@ data:
     spec-type=draft-mtp
     spec-draft-n-max=2
     chat-template-kwargs={"preserve_thinking": true}
-
-    [qwen3-vl:8b-instruct]
-    model=/models/unsloth/Qwen3-VL-8B-Instruct-GGUF/Qwen3-VL-8B-Instruct-UD-Q4_K_XL.gguf
-    mmproj=/models/unsloth/Qwen3-VL-8B-Instruct-GGUF/mmproj-BF16.gguf
-    alias=qwen3-vl:8b-instruct
-    ctx-size=4096
-    parallel=1
-    cache-type-k=f16
-    cache-type-v=f16
