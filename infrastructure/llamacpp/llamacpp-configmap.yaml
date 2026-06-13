@@ -9,6 +9,10 @@ data:
     #!/bin/bash
     set -e
 
+    hf download unsloth/gemma-4-31B-it-qat-GGUF \
+      --local-dir /models/unsloth/gemma-4-31B-it-qat-GGUF \
+      --include "*UD-Q4_K_XL*" "*mtp-*"  "*mmproj-BF16*"
+
     MODELS=(
       "ggml-org|gpt-oss-20b-GGUF|gpt-oss-20b-mxfp4.gguf"
       "ggml-org|Qwen2.5-Coder-7B-Instruct-Q8_0-GGUF|qwen2.5-coder-7b-instruct-q8_0.gguf"
@@ -86,6 +90,18 @@ data:
     spec-type=draft-mtp
     spec-draft-n-max=2
   
+    [gemma4:31b-ctx128k]
+    model=/models/unsloth/gemma-4-31B-it-qat-GGUF/gemma-4-31B-it-qat-UD-Q4_K_XL.gguf
+    model-draft=/models/unsloth/gemma-4-31B-it-qat-GGUF/mtp-gemma-4-31B-it.gguf
+    mmproj=/models/unsloth/gemma-4-31B-it-qat-GGUF/mmproj-BF16.gguf
+    alias=gemma4:31b-ctx128k
+    ctx-size=131072
+    parallel=1
+    cache-type-k=q8_0
+    cache-type-v=q8_0
+    spec-type=draft-mtp
+    spec-draft-n-max=2
+
     [qwen25-coder:7b-instruct]
     model=/models/ggml-org_Qwen2.5-Coder-7B-Instruct-Q8_0-GGUF_qwen2.5-coder-7b-instruct-q8_0.gguf
     alias=qwen25-coder:7b-instruct
