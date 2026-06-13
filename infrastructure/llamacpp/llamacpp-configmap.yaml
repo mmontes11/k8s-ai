@@ -93,7 +93,6 @@ data:
     [gemma4:31b-ctx128k]
     model=/models/unsloth/gemma-4-31B-it-qat-GGUF/gemma-4-31B-it-qat-UD-Q4_K_XL.gguf
     model-draft=/models/unsloth/gemma-4-31B-it-qat-GGUF/mtp-gemma-4-31B-it.gguf
-    mmproj=/models/unsloth/gemma-4-31B-it-qat-GGUF/mmproj-BF16.gguf
     alias=gemma4:31b-ctx128k
     ctx-size=131072
     parallel=1
