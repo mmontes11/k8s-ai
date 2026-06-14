@@ -92,9 +92,9 @@ data:
     ctx-size=0
     cache-reuse=256
 
-    [qwen30-coder:30b-instruct]
+    [qwen3-coder:30b-instruct]
     model=/models/unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF/Qwen3-Coder-30B-A3B-Instruct-UD-Q4_K_XL.gguf
-    alias=qwen30-coder:30b-instruct
+    alias=qwen3-coder:30b-instruct
     ctx-size=32768
     cache-type-k=q8_0
     cache-type-v=q8_0
