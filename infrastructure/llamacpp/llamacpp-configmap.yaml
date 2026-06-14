@@ -3,8 +3,6 @@ kind: ConfigMap
 metadata:
   name: llamacpp
 data:
-  # See:
-  # https://github.com/ggml-org/llama.cpp/tree/master/tools/cli
   init.sh: |
     #!/bin/bash
     set -e
@@ -61,6 +59,7 @@ data:
 
   # See:
   # https://github.com/ggml-org/llama.cpp/blob/master/tools/server
+  # https://unsloth.ai/docs/models
   # https://github.com/ggml-org/llama.cpp/discussions/18939
   # https://huggingface.co/blog/ggml-org/model-management-in-llamacpp
   # https://huggingface.co/Qwen/Qwen3.6-27B#using-qwen36-via-the-chat-completions-api
@@ -104,8 +103,14 @@ data:
     model=/models/unsloth/Qwen3-VL-8B-Instruct-GGUF/Qwen3-VL-8B-Instruct-UD-Q4_K_XL.gguf
     mmproj=/models/unsloth/Qwen3-VL-8B-Instruct-GGUF/mmproj-BF16.gguf
     alias=qwen3-vl:8b-instruct
-    ctx-size=0
-    parallel=1
+    ctx-size=8192
+    temperature=0.7
+    top-p=0.8
+    top-k=20
+    min-p=0.8
+    presence-penalty=1.5
+    cache-type-k=q8_0
+    cache-type-v=q8_0
 
     [qwen36:27b-ctx128k]
     model=/models/unsloth/Qwen3.6-27B-MTP-GGUF/Qwen3.6-27B-UD-Q4_K_XL.gguf
