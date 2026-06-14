@@ -27,6 +27,10 @@ data:
       --local-dir /models/unsloth/Qwen3-VL-8B-Instruct-GGUF \
       --include "*UD-Q4_K_XL*" "*mmproj-BF16*"
 
+    hf download unsloth/Qwen3-VL-30B-A3B-Instruct-GGUF \
+      --local-dir /models/unsloth/Qwen3-VL-30B-A3B-Instruct-GGUF \
+      --include "*UD-Q4_K_XL*" "*mmproj-BF16*"
+
     hf download unsloth/Qwen3.6-27B-MTP-GGUF \
       --local-dir /models/unsloth/Qwen3.6-27B-MTP-GGUF \
       --include "*UD-Q4_K_XL*"
@@ -102,7 +106,20 @@ data:
     [qwen3-vl:8b-instruct]
     model=/models/unsloth/Qwen3-VL-8B-Instruct-GGUF/Qwen3-VL-8B-Instruct-UD-Q4_K_XL.gguf
     mmproj=/models/unsloth/Qwen3-VL-8B-Instruct-GGUF/mmproj-BF16.gguf
-    alias=qwen3-vl:8b-instruct,qwen3-vl
+    alias=qwen3-vl:8b-instruct
+    ctx-size=8192
+    temperature=0.7
+    top-p=0.8
+    top-k=20
+    min-p=0.8
+    presence-penalty=1.5
+    cache-type-k=q8_0
+    cache-type-v=q8_0
+
+    [qwen3-vl:30b-instruct]
+    model=/models/unsloth/Qwen3-VL-30B-A3B-Instruct-GGUF/Qwen3-VL-30B-A3B-Instruct-UD-Q4_K_XL.gguf
+    mmproj=/models/unsloth/Qwen3-VL-30B-A3B-Instruct-GGUF/mmproj-BF16.gguf
+    alias=qwen3-vl:30b-instruct,qwen3-vl
     ctx-size=8192
     temperature=0.7
     top-p=0.8
