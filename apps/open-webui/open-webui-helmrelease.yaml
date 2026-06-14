@@ -16,8 +16,8 @@ spec:
       kind: StatefulSet
     ollama:
       enabled: false
-    ollamaUrls:
-      - http://ollama:11434
+    openaiBaseApiUrls:
+      - http://llamacpp.ai.svc.cluster.local:8080/v1
     pipelines:
       enabled: false
     websocket:
