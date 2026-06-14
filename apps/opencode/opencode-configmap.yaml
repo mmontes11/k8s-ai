@@ -60,6 +60,13 @@ data:
                 "output": 65536
               }
             },
+            "gemma4:26b-ctx256k": {
+              "name": "gemma4:26b-ctx256k",
+              "limit": {
+                "context": 262144,
+                "output": 65536
+              }
+            }
           }
         }
       },
