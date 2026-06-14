@@ -15,17 +15,9 @@ data:
       --local-dir /models/unsloth/gemma-4-26B-A4B-it-GGUF \
       --include "*MXFP4_MOE*" "*mtp-*" "*mmproj-BF16*"
 
-    hf download ggml-org/Qwen2.5-Coder-7B-Instruct-Q8_0-GGUF \
-      --local-dir /models/ggml-org/Qwen2.5-Coder-7B-Instruct-Q8_0-GGUF \
-      --include "*q8_0*"
-
     hf download unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF \
       --local-dir /models/unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF \
       --include "*UD-Q4_K_XL*"
-
-    hf download unsloth/Qwen3-VL-8B-Instruct-GGUF \
-      --local-dir /models/unsloth/Qwen3-VL-8B-Instruct-GGUF \
-      --include "*UD-Q4_K_XL*" "*mmproj-BF16*"
 
     hf download unsloth/Qwen3-VL-30B-A3B-Instruct-GGUF \
       --local-dir /models/unsloth/Qwen3-VL-30B-A3B-Instruct-GGUF \
@@ -89,12 +81,6 @@ data:
     spec-type=draft-mtp
     spec-draft-n-max=2
 
-    [qwen25-coder:7b-instruct]
-    model=/models/ggml-org/Qwen2.5-Coder-7B-Instruct-Q8_0-GGUF/qwen2.5-coder-7b-instruct-q8_0.gguf
-    alias=qwen25-coder:7b-instruct
-    ctx-size=0
-    cache-reuse=256
-
     [qwen3-coder:30b-instruct]
     model=/models/unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF/Qwen3-Coder-30B-A3B-Instruct-UD-Q4_K_XL.gguf
     alias=qwen3-coder:30b-instruct
@@ -103,24 +89,12 @@ data:
     cache-type-v=q8_0
     cache-reuse=256
 
-    [qwen3-vl:8b-instruct]
-    model=/models/unsloth/Qwen3-VL-8B-Instruct-GGUF/Qwen3-VL-8B-Instruct-UD-Q4_K_XL.gguf
-    mmproj=/models/unsloth/Qwen3-VL-8B-Instruct-GGUF/mmproj-BF16.gguf
-    alias=qwen3-vl:8b-instruct
-    ctx-size=8192
-    temperature=0.7
-    top-p=0.8
-    top-k=20
-    min-p=0.8
-    presence-penalty=1.5
-    cache-type-k=q8_0
-    cache-type-v=q8_0
-
     [qwen3-vl:30b-instruct]
     model=/models/unsloth/Qwen3-VL-30B-A3B-Instruct-GGUF/Qwen3-VL-30B-A3B-Instruct-UD-Q4_K_XL.gguf
     mmproj=/models/unsloth/Qwen3-VL-30B-A3B-Instruct-GGUF/mmproj-BF16.gguf
     alias=qwen3-vl:30b-instruct,qwen3-vl
     ctx-size=8192
+    parallel=1
     temperature=0.7
     top-p=0.8
     top-k=20
