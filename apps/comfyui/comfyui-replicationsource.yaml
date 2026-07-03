@@ -6,7 +6,7 @@ spec:
   sourcePVC: comfyui-user
   trigger:
     # schedule: "0 1 * * *"
-    manual: comfyui-3
+    manual: comfyui-4
   restic:
     repository: restic-comfyui
     retain:
