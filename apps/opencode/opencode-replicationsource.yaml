@@ -5,8 +5,8 @@ metadata:
 spec:
   sourcePVC: home-opencode-0
   trigger:
-    schedule: "0 1 * * *"
-    # manual: opencode-1
+    # schedule: "0 1 * * *"
+    manual: opencode-2
   restic:
     repository: restic-opencode
     retain:
@@ -24,6 +24,3 @@ spec:
     cacheCapacity: 5Gi
     cacheAccessModes:
       - ReadWriteOnce
-    customCA:
-      secretName: homelab-bundle
-      key: ca.crt

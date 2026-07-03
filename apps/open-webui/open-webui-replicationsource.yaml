@@ -5,8 +5,8 @@ metadata:
 spec:
   sourcePVC: open-webui
   trigger:
-    schedule: "0 1 * * *"
-    manual: open-webui-3
+    # schedule: "0 1 * * *"
+    manual: open-webui-4
   restic:
     repository: restic-open-webui
     retain:
@@ -23,6 +23,3 @@ spec:
     cacheCapacity: 5Gi
     cacheAccessModes:
       - ReadWriteOnce
-    customCA:
-      secretName: homelab-bundle
-      key: ca.crt
