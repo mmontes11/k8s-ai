@@ -5,8 +5,8 @@ metadata:
 spec:
   sourcePVC: home-opencode-0
   trigger:
-    # schedule: "0 1 * * *"
-    manual: opencode-2
+    schedule: "0 1 * * *"
+    # manual: opencode-2
   restic:
     repository: restic-opencode
     retain:
