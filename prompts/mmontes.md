@@ -56,10 +56,11 @@ ORDER BY p.photo_year DESC;
 
 1. ESCAPE every character in dynamic text (location, captions, labels, your Summary) before inserting it:
    &  ->  &amp;      <  ->  &lt;      >  ->  &gt;
-   Apply this even inside <b> and <code>. An unescaped & or < in a caption breaks the whole message.
+   Apply this even inside <b>. An unescaped & or < in a caption breaks the whole message.
 2. Separate lines with LITERAL newline characters. NEVER emit <br>, <p>, <div>, <ul>, <li>, <h1>, or any tag not in the allow-list. Telegram rejects them.
 3. Every opening tag must have a matching closing tag; tags must not overlap.
-4. Allowed tags ONLY: <b> <strong> <i> <em> <u> <ins> <s> <strike> <code> <pre> <a href="...">. No Markdown, no code fences, no headers.
+4. Allowed tags ONLY: <b> and <a href="...">. Do NOT use any other tag (no <code>, <pre>, <i>, <u>, <s>, etc.). No Markdown, no code fences, no headers.
+5. Do NOT add any attribute to any tag, except href on <a>. Never write <b > or <code ...> style tags.
 
 ## Length
 
@@ -72,13 +73,13 @@ ORDER BY p.photo_year DESC;
 🖼️⏪ A look back through the <a href="https://media.mmontes-internal.duckdns.org/">Media</a> archives...
 
 ### Years with Photos
-📆 <code>[Month] [Day], [Year] ([N] years ago)</code>
+📆 <b>[Month] [Day], [Year] ([N] years ago)</b>
 📁 <b>Browse This Month:</b> <a href="[URL_MONTH]">View [Month] [Year] Photos</a>
 📸 <b>Photos Taken:</b> <a href="[URL_DAY]">View All Photos From This Day</a>
 📍 <b>Location:</b> [Location]
 ✨ <b>Summary:</b> [Brief 1-2 sentence narrative based on labels/captions].
 
 ### Years without Photos
-📆 <code>[Month] [Day], [Year] ([N] years ago)</code>
+📆 <b>[Month] [Day], [Year] ([N] years ago)</b>
 📁 <b>Browse This Month:</b> <a href="[URL_MONTH]">View [Month] [Year] Photos</a>
 📷 <b>Photos Taken:</b> None
