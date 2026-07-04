@@ -10,7 +10,7 @@ Output ONLY the final HTML message — no preamble, no explanation, no reasoning
 
 ## Data Extraction
 
-Run the following MariaDB query EXACTLY ONCE. Do not scan the schema and do not issue any other query.
+Run the following query EXACTLY ONCE on the `photoprism` database using the MariaDB MCP tools. Do not scan the schema and do not issue any other query.
 
 SELECT
   p.photo_year AS yr,
@@ -18,10 +18,10 @@ SELECT
   CAST(MIN(p.photo_country)  AS CHAR) AS country_code,
   SUBSTRING(GROUP_CONCAT(DISTINCT NULLIF(p.photo_caption,'') SEPARATOR ' | '), 1, 600) AS captions,
   SUBSTRING(GROUP_CONCAT(DISTINCT l.label_name SEPARATOR ', '), 1, 300)                AS labels
-FROM photos p
-LEFT JOIN places pl        ON pl.id = p.place_id AND p.place_id <> 'zz'
-LEFT JOIN photos_labels pxl ON pxl.photo_id = p.id AND pxl.uncertainty < 100
-LEFT JOIN labels l          ON l.id = pxl.label_id AND l.deleted_at IS NULL
+FROM photoprism.photos p
+LEFT JOIN photoprism.places pl        ON pl.id = p.place_id AND p.place_id <> 'zz'
+LEFT JOIN photoprism.photos_labels pxl ON pxl.photo_id = p.id AND pxl.uncertainty < 100
+LEFT JOIN photoprism.labels l          ON l.id = pxl.label_id AND l.deleted_at IS NULL
 WHERE p.deleted_at IS NULL
   AND p.photo_month = MONTH(CURDATE())
   AND p.photo_day   = DAY(CURDATE())
