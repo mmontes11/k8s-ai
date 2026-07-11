@@ -79,6 +79,14 @@ data:
             "Authorization": "Bearer {env:GITHUB_TOKEN}"
           }
         },
+        "github-mariadb-operator": {
+          "enabled": true,
+          "type": "remote",
+          "url": "http://mcp-github.ai.svc.cluster.local:8080/mcp",
+          "headers": {
+            "Authorization": "Bearer {env:GITHUB_TOKEN_MARIADB_OPERATOR}"
+          }
+        },
         "grafana": {
           "enabled": true,
           "type": "remote",

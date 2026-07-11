@@ -75,6 +75,11 @@ spec:
                 secretKeyRef:
                   name: gh-token
                   key: GITHUB_TOKEN
+            - name: GITHUB_TOKEN_MARIADB_OPERATOR
+              valueFrom:
+                secretKeyRef:
+                  name: gh-token-mariadb-operator
+                  key: GITHUB_TOKEN
             - name: HF_TOKEN
               valueFrom:
                 secretKeyRef:
