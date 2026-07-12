@@ -37,6 +37,7 @@ data:
   # https://github.com/ggml-org/llama.cpp/discussions/15396
   # https://www.reddit.com/r/LocalLLaMA/comments/1sne4gh/psa_qwen36_ships_with_preserve_thinking_make_sure/
   # https://unsloth.ai/docs/models/qwen3.6#qwen3.6-inference-tutorials
+  # https://unsloth.ai/docs/models/mtp
   bench.sh: |
     #!/bin/bash
     set -e
