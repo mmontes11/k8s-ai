@@ -80,7 +80,7 @@ data:
     cache-type-k=q8_0
     cache-type-v=q8_0
     spec-type=draft-mtp
-    spec-draft-n-max=2
+    spec-draft-n-max=3
 
     [qwen3-coder:30b-instruct]
     model=/models/unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF/Qwen3-Coder-30B-A3B-Instruct-UD-Q4_K_XL.gguf
@@ -118,7 +118,7 @@ data:
     presence-penalty=0.0
     repeat-penalty=1.0
     spec-type=draft-mtp
-    spec-draft-n-max=2
+    spec-draft-n-max=3
     chat-template-kwargs={"preserve_thinking": true}
 
     [qwen36:35b]
@@ -130,7 +130,7 @@ data:
     cache-type-k=q8_0
     cache-type-v=q8_0
     spec-type=draft-mtp
-    spec-draft-n-max=2
+    spec-draft-n-max=3
 
     [qwen36:35b-ctx256k]
     model=/models/unsloth/Qwen3.6-35B-A3B-MTP-GGUF/Qwen3.6-35B-A3B-UD-IQ4_NL.gguf
@@ -146,5 +146,5 @@ data:
     presence-penalty=0.0
     repeat-penalty=1.0
     spec-type=draft-mtp
-    spec-draft-n-max=2
+    spec-draft-n-max=3
     chat-template-kwargs={"preserve_thinking": true}
