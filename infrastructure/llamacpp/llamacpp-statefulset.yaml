@@ -28,7 +28,7 @@ spec:
 
       initContainers:
       - name: init
-        image: ghcr.io/ggml-org/llama.cpp:full-cuda13-b9603
+        image: ghcr.io/ggml-org/llama.cpp:full-cuda13-b9976
         env:
         - name: LLAMA_CACHE
           value: /models
@@ -58,7 +58,7 @@ spec:
   
       containers:
       - name: llama-server
-        image: ghcr.io/ggml-org/llama.cpp:full-cuda13-b9603
+        image: ghcr.io/ggml-org/llama.cpp:full-cuda13-b9976
         env:
         - name: LLAMA_CACHE
           value: /models
