@@ -137,7 +137,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: kserve-crds
-  namespace: kserve
+  namespace: ai
 spec:
   interval: 5m
   sourceRef:
@@ -152,7 +152,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: kserve-config
-  namespace: kserve
+  namespace: ai
 spec:
   dependsOn:
     - name: secrets
@@ -170,7 +170,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: kserve-resources
-  namespace: kserve
+  namespace: ai
 spec:
   dependsOn:
     - name: kserve-config
@@ -189,7 +189,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: kserve-llmisvc-resources
-  namespace: kserve
+  namespace: ai
 spec:
   dependsOn:
     - name: kserve-config
@@ -210,7 +210,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: kserve-models
-  namespace: kserve
+  namespace: ai
 spec:
   dependsOn:
     - name: kserve-resources
