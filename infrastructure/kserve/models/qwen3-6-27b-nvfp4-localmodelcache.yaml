@@ -1,0 +1,13 @@
+apiVersion: serving.kserve.io/v1alpha1
+kind: LocalModelCache
+metadata:
+  name: qwen3-6-27b-nvfp4
+spec:
+  sourceModelUri: hf://nvidia/Qwen3.6-27B-NVFP4
+  modelSize: 20Gi
+  nodeGroups:
+    - gpu-nodegroup
+  serviceAccountName: storage-initializer-sa
+  storage:
+    parameters:
+      storageClass: topolvm

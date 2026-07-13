@@ -1,0 +1,10 @@
+apiVersion: serving.kserve.io/v1alpha1
+kind: LocalModelNodeGroup
+metadata:
+  name: gpu-nodegroup
+spec:
+  diskLimit: 100Gi
+  selector:
+    matchExpressions:
+      - key: nvidia.com/gpu.present
+        operator: Exists
