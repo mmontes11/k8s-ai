@@ -5,7 +5,7 @@ metadata:
 spec:
   container:
     name: storage-initializer
-    image: kserve/storage-initializer:v0.17.0
+    image: kserve/storage-initializer:v0.19.0
     imagePullPolicy: IfNotPresent
     env:
     - name: HF_TOKEN
