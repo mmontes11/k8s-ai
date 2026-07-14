@@ -1,0 +1,12 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: kserve-localmodel-resources
+spec:
+  interval: 5m
+  url: oci://ghcr.io/kserve/charts/kserve-localmodel-resources
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  ref:
+    tag: "v0.19.0"

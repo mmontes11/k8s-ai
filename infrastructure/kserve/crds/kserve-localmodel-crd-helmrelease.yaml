@@ -1,0 +1,9 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kserve-localmodel-crd
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: kserve-localmodel-crd
+  interval: 10m
