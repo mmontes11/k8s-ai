@@ -8,6 +8,3 @@ spec:
   nodeGroups:
     - gpu-nodegroup
   serviceAccountName: storage-initializer-sa
-  storage:
-    parameters:
-      storageClass: topolvm

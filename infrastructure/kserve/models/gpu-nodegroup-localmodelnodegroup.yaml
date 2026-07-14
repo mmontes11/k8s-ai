@@ -3,8 +3,22 @@ kind: LocalModelNodeGroup
 metadata:
   name: gpu-nodegroup
 spec:
-  diskLimit: 100Gi
-  selector:
-    matchExpressions:
-      - key: nvidia.com/gpu.present
-        operator: Exists
+  storageLimit: 100Gi
+  persistentVolumeClaimSpec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 100Gi
+    storageClassName: topolvm
+  persistentVolumeSpec:
+    capacity:
+      storage: 100Gi
+    nodeAffinity:
+      required:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: nvidia.com/gpu.present
+                operator: Exists
+    local:
+      path: /mnt/models

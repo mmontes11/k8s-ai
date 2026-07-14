@@ -6,3 +6,5 @@ resources:
   - kserve-crd-ocirepository.yaml
   - kserve-llmisvc-crd-helmrelease.yaml
   - kserve-llmisvc-crd-ocirepository.yaml
+  - kserve-localmodel-crd-helmrelease.yaml
+  - kserve-localmodel-crd-ocirepository.yaml

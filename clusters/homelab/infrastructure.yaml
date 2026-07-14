@@ -209,12 +209,32 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
+  name: kserve-localmodel-resources
+  namespace: ai
+spec:
+  dependsOn:
+    - name: kserve-crds
+    - name: cert-manager-crds
+      namespace: flux-system
+  interval: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-tenant-ai
+    namespace: flux-system
+  path: ./infrastructure/kserve/kserve-localmodel-resources
+  prune: true
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
   name: kserve-models
   namespace: ai
 spec:
   dependsOn:
     - name: kserve-resources
     - name: kserve-llmisvc-resources
+    - name: kserve-localmodel-resources
   interval: 5m
   sourceRef:
     kind: GitRepository
