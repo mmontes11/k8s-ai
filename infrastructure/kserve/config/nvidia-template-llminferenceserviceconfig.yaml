@@ -19,7 +19,7 @@ spec:
       value: compute-xlarge
     containers:
       - name: main
-        image: vllm/vllm-openai:v0.25.1-cu129
+        image: vllm/vllm-openai:v0.20.0-cu130
         resources:
           requests:
             cpu: "500m"
