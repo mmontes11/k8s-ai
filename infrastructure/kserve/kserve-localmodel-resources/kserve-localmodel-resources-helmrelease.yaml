@@ -21,5 +21,10 @@ spec:
               cpu: 100m
               memory: 300Mi
         agent:
-          nodeSelector:
-            nvidia.com/gpu.present: "true"
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                - matchExpressions:
+                  - key: nvidia.com/gpu.present
+                    operator: Exists
