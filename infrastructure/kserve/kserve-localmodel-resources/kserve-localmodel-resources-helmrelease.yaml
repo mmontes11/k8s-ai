@@ -21,6 +21,5 @@ spec:
               cpu: 100m
               memory: 300Mi
         agent:
-          hostPath: /mnt/models
           nodeSelector:
             nvidia.com/gpu.present: "true"
