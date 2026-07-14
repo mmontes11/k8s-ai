@@ -151,11 +151,11 @@
          "/(^|/)infrastructure/kserve/config/.*\\.yaml$/"
        ],
        "matchStrings": [
-         "image:\\s+vllm/vllm-openai:(?<currentValue>.+)"
+         "image:\\s+vllm/vllm-openai:(?<currentValue>v[0-9.]+-cu[0-9.]+)"
        ],
-       "datasourceTemplate": "docker",
-       "packageNameTemplate": "vllm/vllm-openai",
-       "versioningTemplate": "semver"
+       "datasourceTemplate": "github-releases",
+       "packageNameTemplate": "vllm-project/vllm",
+       "versioningTemplate": "regex:^v(?<major>[0-9]+)\\.(?<minor>[0-9]+)\\.(?<patch>[0-9]+)(?<prerelease>.*)$"
      },
      {
        "customType": "regex",
@@ -165,9 +165,8 @@
        "matchStrings": [
          "image:\\s+kserve/storage-initializer:(?<currentValue>.+)"
        ],
-       "datasourceTemplate": "docker",
-       "packageNameTemplate": "kserve/storage-initializer",
-       "versioningTemplate": "semver"
+       "datasourceTemplate": "github-releases",
+       "packageNameTemplate": "kserve/kserve"
      }
    ]
  }
