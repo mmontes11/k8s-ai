@@ -3,5 +3,5 @@ kind: Kustomization
 namespace: ai
 resources:
   - gpu-nodegroup-localmodelnodegroup.yaml
-  - qwen3-6-27b-nvfp4-localmodelcache.yaml
-  - qwen3-6-27b-nvfp4-llminferenceservice.yaml
+  - qwen36-27b-nvfp4-localmodelcache.yaml
+  - qwen36-27b-nvfp4-llminferenceservice.yaml
