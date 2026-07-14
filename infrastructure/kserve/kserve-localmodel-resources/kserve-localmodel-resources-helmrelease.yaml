@@ -20,8 +20,6 @@ spec:
             limits:
               cpu: 100m
               memory: 300Mi
-        defaultJobImage: kserve/storage-initializer
-        jobNamespace: kserve-localmodel-jobs
         agent:
           hostPath: /mnt/models
           nodeSelector:
