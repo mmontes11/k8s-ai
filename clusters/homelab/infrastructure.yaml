@@ -181,7 +181,7 @@ spec:
     kind: GitRepository
     name: flux-tenant-ai
     namespace: flux-system
-  path: ./infrastructure/kserve/kserve-resources
+  path: ./infrastructure/kserve/resources
   prune: true
   timeout: 5m
 ---
@@ -202,7 +202,7 @@ spec:
     kind: GitRepository
     name: flux-tenant-ai
     namespace: flux-system
-  path: ./infrastructure/kserve/kserve-llmisvc-resources
+  path: ./infrastructure/kserve/llmisvc-resources
   prune: true
   timeout: 5m
 ---
@@ -221,7 +221,7 @@ spec:
     kind: GitRepository
     name: flux-tenant-ai
     namespace: flux-system
-  path: ./infrastructure/kserve/kserve-localmodel-resources
+  path: ./infrastructure/kserve/localmodel-resources
   prune: true
   timeout: 5m
 ---
