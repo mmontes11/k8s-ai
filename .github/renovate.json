@@ -124,15 +124,49 @@
       "registryUrlTemplate": "https://ghcr.io"
     },
     {
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/(^|/)infrastructure/mcp-photoprism-.*\\/.*\\.yaml$/"
-      ],
-      "matchStrings": [
-        "image:\\s+mmontes11/mcp-mariadb:(?<currentValue>.+)"
-      ],
-      "datasourceTemplate": "docker",
-      "packageNameTemplate": "mmontes11/mcp-mariadb"
-    }
-  ]
-}
+       "customType": "regex",
+       "managerFilePatterns": [
+         "/(^|/)infrastructure/mcp-photoprism-.*\\/.*\\.yaml$/"
+       ],
+       "matchStrings": [
+         "image:\\s+mmontes11/mcp-mariadb:(?<currentValue>.+)"
+       ],
+       "datasourceTemplate": "docker",
+       "packageNameTemplate": "mmontes11/mcp-mariadb"
+     },
+     {
+       "customType": "regex",
+       "managerFilePatterns": [
+         "/(^|/)infrastructure/kserve/.*\\/.*-ocirepository\\.yaml$/"
+       ],
+       "matchStrings": [
+         "tag:\\s+\"?(?<currentValue>[^\"]+)\"?"
+       ],
+       "datasourceTemplate": "github-releases",
+       "packageNameTemplate": "kserve/kserve"
+     },
+     {
+       "customType": "regex",
+       "managerFilePatterns": [
+         "/(^|/)infrastructure/kserve/config/.*\\.yaml$/"
+       ],
+       "matchStrings": [
+         "image:\\s+vllm/vllm-openai:(?<currentValue>v[0-9.]+-cu[0-9.]+)"
+       ],
+       "datasourceTemplate": "github-releases",
+       "packageNameTemplate": "vllm-project/vllm",
+       "versioningTemplate": "regex:^v(?<major>[0-9]+)\\.(?<minor>[0-9]+)\\.(?<patch>[0-9]+)(?<prerelease>.*)$"
+     },
+     {
+       "customType": "regex",
+       "managerFilePatterns": [
+         "/(^|/)infrastructure/kserve/config/.*\\.yaml$/"
+       ],
+       "matchStrings": [
+         "image:\\s+kserve/storage-initializer:(?<currentValue>.+)"
+       ],
+       "datasourceTemplate": "github-releases",
+       "packageNameTemplate": "kserve/kserve"
+     }
+   ]
+ }

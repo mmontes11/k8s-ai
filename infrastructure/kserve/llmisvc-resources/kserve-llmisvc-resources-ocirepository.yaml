@@ -1,10 +1,10 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: kserve-llmisvc-crd
+  name: kserve-llmisvc-resources
 spec:
   interval: 5m
-  url: oci://ghcr.io/kserve/charts/kserve-llmisvc-crd
+  url: oci://ghcr.io/kserve/charts/kserve-llmisvc-resources 
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy

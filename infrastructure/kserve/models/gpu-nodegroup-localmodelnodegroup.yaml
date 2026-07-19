@@ -1,0 +1,13 @@
+apiVersion: serving.kserve.io/v1alpha1
+kind: LocalModelNodeGroup
+metadata:
+  name: gpu-nodegroup
+spec:
+  storageLimit: 100Gi
+  persistentVolumeClaimSpec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 100Gi
+    storageClassName: topolvm

@@ -1,0 +1,45 @@
+apiVersion: serving.kserve.io/v1alpha2
+kind: LLMInferenceService
+metadata:
+  name: qwen36-27b-nvfp4
+  labels:
+    serving.kserve.io/local-model-cache: qwen36-27b-nvfp4
+spec:
+  baseRefs:
+    - name: nvidia-template
+    - name: sleep-template
+  model:
+    name: nvidia/Qwen3.6-27B-NVFP4
+    uri: hf://nvidia/Qwen3.6-27B-NVFP4
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: qwen36-27b-nvfp4
+spec:
+  ports:
+    - appProtocol: http
+      name: http
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+  selector:
+    app.kubernetes.io/name: qwen36-27b-nvfp4
+    app.kubernetes.io/part-of: llminferenceservice
+    kserve.io/component: workload
+  type: ClusterIP
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: qwen36-27b-nvfp4
+spec:
+  parentRefs:
+    - name: traefik-internal
+      namespace: networking
+  hostnames:
+    - qwen36-27b-nvfp4.mmontes-internal.duckdns.org
+  rules:
+    - backendRefs:
+        - name: qwen36-27b-nvfp4
+          port: 8000
