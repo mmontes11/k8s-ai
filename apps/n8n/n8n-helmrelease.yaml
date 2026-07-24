@@ -10,7 +10,7 @@ spec:
   values:
     image:
       repository: n8nio/n8n
-      tag: "2.26.3"
+      tag: "2.32.4"
       pullPolicy: IfNotPresent
     executions:
       timeout: -1
