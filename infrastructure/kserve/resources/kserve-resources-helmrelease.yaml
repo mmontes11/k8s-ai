@@ -19,8 +19,6 @@ spec:
       metricsaggregator:
         enableMetricAggregation: 'true'
         enablePrometheusScraping: 'true'
-      localmodel:
-        enabled: true
       controller:
         deploymentMode: Standard
         gateway:
