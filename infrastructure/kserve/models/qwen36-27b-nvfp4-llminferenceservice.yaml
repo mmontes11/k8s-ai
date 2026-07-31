@@ -2,8 +2,6 @@ apiVersion: serving.kserve.io/v1alpha2
 kind: LLMInferenceService
 metadata:
   name: qwen36-27b-nvfp4
-  labels:
-    serving.kserve.io/local-model-cache: qwen36-27b-nvfp4
 spec:
   baseRefs:
     - name: nvidia-template
@@ -11,6 +9,86 @@ spec:
   model:
     name: nvidia/Qwen3.6-27B-NVFP4
     uri: hf://nvidia/Qwen3.6-27B-NVFP4
+  # Sized for a single RTX PRO 4000 SFF Blackwell (24 GiB), tuned to give the
+  # KV cache as much of the card as possible. Text-only: image/video are
+  # deliberately disabled to reclaim the vision tower (see
+  # --language-model-only below).
+  #
+  # Memory budget. The checkpoint is 20.42 GiB, but not all of it is resident:
+  #   -0.79 GiB  MTP head, only loaded with speculative decoding
+  #   -0.86 GiB  vision tower, skipped by --language-model-only
+  #   =18.77 GiB actually loaded (NVFP4 MLP + FP8 linear-attn projections
+  #              + BF16 embeddings/lm_head)
+  # At 0.97 utilization that leaves ~4.5 GiB, or ~3.2 GiB of cache pool once
+  # CUDA context, activations and cudagraphs are paid for -- roughly double
+  # what the previous 0.95 / vision-loaded / 4-slot config had.
+  #
+  # Nothing below sets the KV cache size -- it is not a tunable. vLLM takes
+  # (24 GiB x gpu-memory-utilization) - weights - overhead and turns the
+  # remainder into the cache pool, then reports at startup:
+  #   "GPU KV cache size: N tokens"
+  #   "Maximum concurrency for 32,768 tokens per request: X.XXx"
+  # The second line is the one to read: how many full-length requests fit.
+  #
+  # Qwen3.6 is a hybrid model, so that pool holds two different things:
+  #   - full attention KV, from 16 of the 64 layers: 4 kv heads x 256 head_dim
+  #     => 32 KiB/token at fp8, i.e. 1 GiB for one full 32k sequence
+  #   - gated DeltaNet (linear attention) recurrent + conv state, from the other
+  #     48 layers: ~151 MiB *per sequence slot*, fp32, and length-independent
+  # The DeltaNet state is charged per slot whether or not the slot is busy, so
+  # slots and context are directly exchangeable: one slot costs ~151 MiB, which
+  # is ~4.8k tokens of full-attention KV at fp8.
+  template:
+    containers:
+      - name: main
+        args:
+          # Skip the vision tower entirely: frees 0.86 GiB straight into the
+          # cache pool. This sets every modality limit to 0, and vLLM's
+          # _mark_tower_model wraps the Qwen3_VisionTransformer in
+          # no_init_weights when all of its modalities are 0, so the weights are
+          # never loaded rather than merely unused. Drop this flag to restore
+          # image/video at the cost of ~27k tokens of context.
+          - --language-model-only
+          # Fraction of the 24 GiB the engine may claim. Aggressive on purpose.
+          # Note this is a fraction of TOTAL memory, and vLLM refuses to start if
+          # free < requested ("Free memory on device (X/Y GiB) on startup is less
+          # than desired GPU memory utilization"), so at 0.97 the driver and CUDA
+          # context have only ~0.17 GiB of room. If that check trips, or if ECC
+          # is reserving VRAM on this card, drop to 0.95.
+          - --gpu-memory-utilization=0.97
+          # Longest single request (prompt + output). NOT the cache size -- it
+          # is an admission limit, and the floor vLLM checks the pool against:
+          # if one sequence of this length does not fit it refuses to start with
+          # "To serve at least one request with the model's max seq len ...",
+          # and suggests an estimated maximum. Setting -1 makes vLLM binary
+          # search the largest context that fits, useful to discover the ceiling
+          # on a first boot before pinning a value here.
+          - --max-model-len=32768
+          # Single client, so a single slot: ~151 MiB of DeltaNet state instead
+          # of ~302 MiB at 2 or ~604 MiB at 4, all of which goes back to KV
+          # (~4.8k tokens per slot). The tradeoff is that there is no batching
+          # at all -- a second concurrent request waits for the first to finish
+          # rather than interleaving -- which is the right call for one
+          # interactive user, but raise this if an agent starts firing parallel
+          # requests.
+          - --max-num-seqs=1
+          # Chunked prefill budget per engine step. Lower means a smaller
+          # activation peak reserved during profiling, so more memory lands in
+          # the pool; the cost is more chunks to ingest a long prompt.
+          - --max-num-batched-tokens=2048
+          # Halves full-attention KV to 32 KiB/token (from 64 KiB at bf16),
+          # roughly doubling usable context. Least-proven flag on a hybrid
+          # model -- drop this first if the engine misbehaves, and pair the
+          # rollback with --max-model-len=16384.
+          - --kv-cache-dtype=fp8
+          # --limit-mm-per-prompt, --mm-processor-cache-gb and
+          # --skip-mm-profiling are all subsumed by --language-model-only: with
+          # every modality limit at 0 there is no multimodal input to cap, cache
+          # or profile.
+          #
+          # Own args replace the baseRef args under strategic merge, so
+          # sleep-template's flag has to be repeated here.
+          - --enable-sleep-mode
 ---
 apiVersion: v1
 kind: Service

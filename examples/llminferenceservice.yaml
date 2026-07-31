@@ -1,4 +1,4 @@
-# Example LLMInferenceService with LocalModelCache support
+# Example LLMInferenceService
 # See: infrastructure/kserve/models/ for actual model deployments
 apiVersion: serving.kserve.io/v1alpha2
 kind: LLMInferenceService
