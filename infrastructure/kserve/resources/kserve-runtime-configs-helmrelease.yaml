@@ -38,6 +38,8 @@ spec:
   #   https://github.com/kserve/kserve/blob/v0.19.0/pkg/controller/v1alpha2/llmisvc/config_merge.go#L649
   #
   # ClusterServingRuntimes are cluster-scoped and unaffected.
+  #
+  # TODO: remove when PR is merged and released: https://github.com/kserve/kserve/pull/5946
   postRenderers:
     - kustomize:
         patches:
