@@ -211,7 +211,7 @@ spec:
           # reduces the number of steps and eager mode makes each step dearer, so
           # whether this is net faster than cudagraphs-without-MTP is an empirical
           # question -- benchmark both before settling.
-          - --enforce-eager
+          # - --enforce-eager
           # MTP speculative decoding. Previously removed after it OOM'd:
           #   gpu_model_runner.py:5235  self.drafter.load_model(self.model)
           #   qwen3_5_mtp.py:224        self.lm_head = ParallelLMHead(...)
@@ -226,7 +226,7 @@ spec:
           # Re-enabled with --enforce-eager above paying for it. If this still
           # OOMs, MTP does not fit this checkpoint on 24 GiB and the choice is
           # MTP or context, not both.
-          - --speculative-config='{"method":"mtp","num_speculative_tokens":1}'
+          # - --speculative-config='{"method":"mtp","num_speculative_tokens":1}'
           # 3 follows discussions/6 on the model repo (vLLM permits any multiple
           # of n_predict=1, warning that >1 reuses the same MTP layer and lowers
           # acceptance); llama.cpp uses spec-draft-n-max=2 for this model.
