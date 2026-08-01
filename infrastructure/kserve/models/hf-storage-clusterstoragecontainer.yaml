@@ -1,7 +1,7 @@
 apiVersion: serving.kserve.io/v1alpha1
 kind: ClusterStorageContainer
 metadata:
-  name: hf-hub
+  name: hf-storage
 spec:
   container:
     name: storage-initializer
@@ -15,11 +15,20 @@ spec:
           key: HF_TOKEN
           optional: false
     resources:
-      requests:
-        cpu: 1
-        memory: 2Gi
       limits:
-        memory: 4Gi
+        cpu: "1"
+        memory: 1Gi
+      requests:
+        cpu: 100m
+        memory: 100Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      privileged: false
+      runAsNonRoot: true
   supportedUriFormats:
     - prefix: hf://
+  supportsMultiModelDownload: true
   workloadType: initContainer
