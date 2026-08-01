@@ -85,18 +85,9 @@ spec:
       fsGroupChangePolicy: OnRootMismatch
     containers:
       - name: main
-        # Cross-checked against two references:
-        #   - the model card, which serves this checkpoint with
-        #       vllm serve nvidia/Qwen3.6-27B-NVFP4 --port 8000 \
-        #         --quantization modelopt --max-model-len 262144 \
-        #         --reasoning-parser qwen3
-        #     262144 is the architectural limit on their GB300 test rig, not
-        #     something 24 GiB can hold.
-        #     https://huggingface.co/nvidia/Qwen3.6-27B-NVFP4
-        #   - infrastructure/llamacpp, which already runs Qwen3.6-27B on this
-        #     exact GPU (see the qwen36:27b-ctx128k preset in
-        #     llamacpp-configmap.yaml) and is the best available evidence for
-        #     what actually fits.
+        # See:
+        # https://docs.vllm.ai/en/stable/cli/serve/
+        # https://huggingface.co/nvidia/Qwen3.6-27B-NVFP4
         args:
           # No --served-model-name here on purpose: spec.model.name above is the
           # abstraction for it. The presets expand it in 16 places, including the
