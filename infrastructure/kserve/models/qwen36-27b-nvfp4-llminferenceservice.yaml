@@ -6,7 +6,12 @@ spec:
   baseRefs:
     - name: nvidia-template
   model:
-    name: nvidia/Qwen3.6-27B-NVFP4
+    # The name clients send as "model", and the only place to set it: the presets
+    # expand it into --served-model-name plus a "publishers/ai/models/<name>"
+    # alias. Defaults to the resource name when omitted, which happens to be this
+    # value anyway -- kept explicit so the API contract is visible in git.
+    # uri is what actually resolves the weights.
+    name: qwen36-27b-nvfp4
     uri: hf://nvidia/Qwen3.6-27B-NVFP4
   # Sized for a single RTX PRO 4000 SFF Blackwell (24 GiB), tuned to give the
   # KV cache as much of the card as possible. Text-only: image/video are
@@ -52,6 +57,8 @@ spec:
     # and every restart re-downloads ~20 GiB. Check with
     #   kubectl -n ai get deploy -l app.kubernetes.io/name=qwen36-27b-nvfp4 \
     #     -o jsonpath='{..volumes[?(@.name=="kserve-provision-location")]}'
+    #
+    # See: https://github.com/kserve/kserve/blob/860120c2389e7c85cd7e50cbc6272338d5aa78e6/pkg/constants/constants.go#L210
     volumes:
       - name: kserve-provision-location
         persistentVolumeClaim:
@@ -78,7 +85,43 @@ spec:
       fsGroupChangePolicy: OnRootMismatch
     containers:
       - name: main
+        # Cross-checked against two references:
+        #   - the model card, which serves this checkpoint with
+        #       vllm serve nvidia/Qwen3.6-27B-NVFP4 --port 8000 \
+        #         --quantization modelopt --max-model-len 262144 \
+        #         --reasoning-parser qwen3
+        #     262144 is the architectural limit on their GB300 test rig, not
+        #     something 24 GiB can hold.
+        #     https://huggingface.co/nvidia/Qwen3.6-27B-NVFP4
+        #   - infrastructure/llamacpp, which already runs Qwen3.6-27B on this
+        #     exact GPU (see the qwen36:27b-ctx128k preset in
+        #     llamacpp-configmap.yaml) and is the best available evidence for
+        #     what actually fits.
         args:
+          # No --served-model-name here on purpose: spec.model.name above is the
+          # abstraction for it. The presets expand it in 16 places, including the
+          # model-based routing header that kserve-config-llm-router-route matches
+          # on ("publishers/<ns>/models/<name>"), and scaling.go uses it as the
+          # WVA modelID. Overriding the flag directly would desynchronise vLLM's
+          # accepted names from the router and the autoscaler.
+          # From the model card, and confirmed by the checkpoint itself:
+          # config.json carries quantization_config.quant_method: modelopt, and
+          # hf_quant_config.json is modelopt-produced (producer.name: modelopt,
+          # quant_algo MIXED_PRECISION -> W4A16_NVFP4 for the MLP, FP8 for the
+          # linear-attn projections). This matches what auto-detect would pick,
+          # so it is belt-and-braces rather than an override.
+          #
+          # Note discussions/6 suggests --quantization compressed-tensors. That
+          # is wrong for this checkpoint: quantization_config borrows the
+          # config_groups shape but declares quant_method: modelopt.
+          - --quantization=modelopt
+          # Also from the model card, and the functional counterpart to the
+          # thinking handling in the llama.cpp preset: without it Qwen3.6's
+          # reasoning tokens land in `content` instead of `reasoning_content`.
+          - --reasoning-parser=qwen3
+          # Parity with chat-template-kwargs in the llama.cpp preset. Qwen3.6
+          # ships with preserve_thinking and it has to be opted into.
+          - --default-chat-template-kwargs='{"preserve_thinking":true}'
           # Skip the vision tower entirely: frees 0.86 GiB straight into the
           # cache pool. This sets every modality limit to 0, and vLLM's
           # _mark_tower_model wraps the Qwen3_VisionTransformer in
@@ -98,9 +141,19 @@ spec:
           # if one sequence of this length does not fit it refuses to start with
           # "To serve at least one request with the model's max seq len ...",
           # and suggests an estimated maximum. Setting -1 makes vLLM binary
-          # search the largest context that fits, useful to discover the ceiling
-          # on a first boot before pinning a value here.
-          - --max-model-len=32768
+          # search the largest context that fits, useful to confirm the ceiling.
+          #
+          # llama.cpp runs this same model at ctx-size=131072 on this same card,
+          # which is NOT reachable here. That preset uses a Q4_K_XL GGUF at
+          # ~15.5 GiB, whereas the NVFP4 checkpoint is 18.77 GiB resident: the
+          # quantization only covers the MLP and linear-attn projections, while
+          # embeddings (2.37 GiB) and lm_head (0.67 GiB) stay BF16. That is
+          # ~3.3 GiB less room for cache, i.e. ~100k tokens' worth at 32 KiB.
+          #
+          # Budget with MTP on: ~3.05 GiB pool - 0.79 (MTP) - 0.15 (DeltaNet)
+          # = ~2.1 GiB, or ~65k tokens. 49152 leaves headroom for the estimate
+          # being wrong; dropping --speculative-config below buys ~25k more.
+          - --max-model-len=49152
           # Single client, so a single slot: ~151 MiB of DeltaNet state instead
           # of ~302 MiB at 2 or ~604 MiB at 4, all of which goes back to KV
           # (~4.8k tokens per slot). The tradeoff is that there is no batching
@@ -114,14 +167,42 @@ spec:
           # the pool; the cost is more chunks to ingest a long prompt.
           - --max-num-batched-tokens=2048
           # Halves full-attention KV to 32 KiB/token (from 64 KiB at bf16),
-          # roughly doubling usable context. Least-proven flag on a hybrid
-          # model -- drop this first if the engine misbehaves, and pair the
-          # rollback with --max-model-len=16384.
+          # roughly doubling usable context. Not a gamble: the llama.cpp preset
+          # for this model runs cache-type-k/v=q8_0, and the checkpoint itself
+          # declares kv_cache_quant_algo: FP8 in hf_quant_config.json.
           - --kv-cache-dtype=fp8
-          # --limit-mm-per-prompt, --mm-processor-cache-gb and
-          # --skip-mm-profiling are all subsumed by --language-model-only: with
-          # every modality limit at 0 there is no multimodal input to cap, cache
-          # or profile.
+          # Multi-token prediction. The MTP head ships inside this checkpoint
+          # (mtp_num_hidden_layers: 1), and vLLM rewrites model_type qwen3_5 ->
+          # qwen3_5_mtp and reuses the target checkpoint as its own draft, so no
+          # second model is needed. Worth the 0.79 GiB because decode is
+          # memory-bandwidth-bound: the verify pass reads all ~18.8 GiB of
+          # weights once no matter how many tokens it checks, so proposing more
+          # per step is nearly free on the expensive side.
+          #
+          # On the token count -- vLLM allows num_speculative_tokens > n_predict
+          # as long as it is divisible by it, and n_predict is 1 here, so any
+          # value is legal. It does warn that >1 "will run multiple times of
+          # forward on same MTP layer, which may result in lower acceptance
+          # rate". 3 follows discussions/6 on the model repo; the llama.cpp
+          # preset uses spec-draft-n-max=2, which is the conservative fallback.
+          #   https://huggingface.co/nvidia/Qwen3.6-27B-NVFP4/discussions/6
+          #
+          # This is the most feature-interaction-heavy flag here (MTP + hybrid
+          # attention + fp8 KV + cudagraphs on sm120). Remove it first if startup
+          # breaks, and raise --max-model-len by ~25k when you do.
+          #
+          # Hidden cost: setting this ALSO silently turns off async scheduling,
+          # which is otherwise on by default. VllmConfig disables it for any
+          # speculative method that is not eagle/ngram_gpu/dspark, logging
+          # "Async scheduling not supported with mtp-based speculative decoding
+          # and will be disabled." Async scheduling overlaps CPU scheduling with
+          # GPU execution, so it matters most at max-num-seqs=1 -- exactly here.
+          # MTP therefore trades fewer forward passes against per-step CPU gaps
+          # plus 0.79 GiB; net effect has to be measured, not assumed.
+          #
+          # moe_backend from that thread is deliberately omitted: it is a real
+          # SpeculativeConfig field but inert for Qwen3.6-27B, which is dense.
+          - --speculative-config='{"method":"mtp","num_speculative_tokens":3}'
 ---
 apiVersion: v1
 kind: Service
