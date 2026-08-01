@@ -16,3 +16,34 @@ spec:
         enabled: true
       servingruntime:
         enabled: true
+  # Upstream chart bug (v0.19.0, still present on master): the 8
+  # LLMInferenceServiceConfig presets carry a hardcoded "namespace: kserve".
+  #   https://github.com/kserve/kserve/blob/master/charts/kserve-runtime-configs/files/llmisvcconfigs/resources.yaml#L5
+  #   https://github.com/kserve/kserve/blob/v0.19.0/charts/kserve-runtime-configs/files/llmisvcconfigs/resources.yaml#L5
+  #
+  # Every other kserve chart pipes its manifests through
+  # kserve-common.replaceNamespace to swap that for .Release.Namespace, but
+  # templates/llmisvcconfigs/resources.yaml is a bare .Files.Get with no rewrite
+  # -- even though the helper is vendored in the same chart's _utils.tpl:
+  #   https://github.com/kserve/kserve/blob/v0.19.0/charts/kserve-runtime-configs/templates/llmisvcconfigs/resources.yaml#L2
+  #   https://github.com/kserve/kserve/blob/v0.19.0/charts/kserve-runtime-configs/templates/_utils.tpl#L112
+  # There is no value to override it.
+  #
+  # Without this patch the install fails with 8x 'namespaces "kserve" not found'.
+  # Creating a kserve namespace would fix the install but not the outcome:
+  # LLMISVCReconciler.getConfig only looks in the LLMInferenceService's own
+  # namespace and then constants.KServeNamespace, which is POD_NAMESPACE from a
+  # fieldRef -- both "ai" here -- so presets parked in "kserve" would never be
+  # resolved. They have to land in ai.
+  #   https://github.com/kserve/kserve/blob/v0.19.0/pkg/controller/v1alpha2/llmisvc/config_merge.go#L649
+  #
+  # ClusterServingRuntimes are cluster-scoped and unaffected.
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: LLMInferenceServiceConfig
+            patch: |
+              - op: replace
+                path: /metadata/namespace
+                value: ai
