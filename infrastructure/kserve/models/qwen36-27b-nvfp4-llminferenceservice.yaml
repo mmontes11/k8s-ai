@@ -147,21 +147,34 @@ spec:
           # with "Free memory on device (X/Y GiB) on startup is less than desired
           # GPU memory utilization", back off -- that check compares util against
           # free memory before the model loads.
-          - --gpu-memory-utilization=0.98
-          # -1 makes vLLM binary-search the largest context that fits and log it.
+          # 0.99 rather than 0.98 on vLLM's own advice: with CUDA graph memory
+          # profiling on (default since v0.21.0) the graph reservation comes out
+          # of the KV budget, so it logs "The current --gpu-memory-utilization=
+          # 0.9800 is equivalent to 0.9628 without CUDA graph memory profiling.
+          # To maintain the same effective KV cache size, increase to 0.9972."
+          # 0.9972 would leave ~65 MiB of the card unclaimed, which is too tight;
+          # 0.99 recovers ~0.24 GiB, worth ~23% more context on a 1 GiB pool.
+          - --gpu-memory-utilization=0.99
+          # Pinned from a measured --max-model-len=-1 run, which auto-fit to
+          # 28,224 tokens at util 0.98. Actual accounting from that boot:
+          #   23.42 GiB  visible to CUDA
+          #   x0.98      = 22.95 GiB budget
+          #   -18.92 GiB weights ("Model loading took 18.92 GiB")
+          #   -0.44 GiB  CUDA graphs (0.40 estimated, 0.44 actual)
+          #   -~2.6 GiB  CUDA context, FlashInfer, Triton/FLA, activation peak
+          #   = 1.03 GiB "Available KV cache memory" -> 28,224 tokens
           #
-          # Deliberately not a fixed number yet: measured weights came out far
-          # above the estimate below, so any value picked by hand is a guess. Read
-          # the resulting "GPU KV cache size: N tokens" / "Maximum concurrency"
-          # lines from the startup log, then pin something under it.
+          # 24576 rather than the full 28,224: KV is paged at 1568 tokens here
+          # (the hybrid allocator inflates the attention page to match the mamba
+          # page size, so 28,224 is exactly 18 pages), and pinning the measured
+          # maximum would make any growth in vLLM's runtime overhead a hard
+          # startup failure on the next image bump. This leaves ~2 pages of slack.
+          # Set -1 again after a major vLLM upgrade to re-measure.
           #
-          # For context on why the estimate was wrong: llama.cpp runs this model
-          # at ctx-size=131072 on this same card with a Q4_K_XL GGUF at ~15.5 GiB.
-          # The NVFP4 checkpoint is 20.42 GiB on disk and only ~19.6 GiB of that
-          # is loaded here (vision tower skipped), but the first successful load
-          # showed 22.37 GiB allocated by PyTorch -- roughly 2.8 GiB more than the
-          # weights themselves, which is the Marlin repack described below. So the
-          # gap to llama.cpp is bigger than the raw checkpoint sizes suggest.
+          # For reference, llama.cpp runs this model at ctx-size=131072 on this
+          # same card, 4.6x more. Its Q4_K_XL GGUF is ~15.5 GiB against 18.92 GiB
+          # here, and it does not pay vLLM's ~2.6 GiB of runtime overhead. The
+          # NVFP4 checkpoint buys accuracy and spends it all on context.
           - --max-model-len=-1
           # Single client, so a single slot: ~151 MiB of DeltaNet state instead
           # of ~302 MiB at 2 or ~604 MiB at 4, all of which goes back to KV
@@ -193,7 +206,7 @@ spec:
           #
           # To re-enable, first confirm from the startup log that there is >1 GiB
           # of slack, then add back:
-          #   - --speculative-config='{"method":"mtp","num_speculative_tokens":3}'
+          - --speculative-config='{"method":"mtp","num_speculative_tokens":2}'
           # 3 follows discussions/6 on the model repo (vLLM permits any multiple
           # of n_predict=1, warning that >1 reuses the same MTP layer and lowers
           # acceptance); llama.cpp uses spec-draft-n-max=2 for this model.
