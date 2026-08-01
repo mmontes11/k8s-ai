@@ -1,0 +1,53 @@
+apiVersion: serving.kserve.io/v1alpha2
+kind: LLMInferenceService
+metadata:
+  name: unsloth-qwen36-27b-nvfp4
+spec:
+  baseRefs:
+    - name: nvidia-template
+  model:
+    name: unsloth-qwen36-27b-nvfp4
+    uri: hf://unsloth/Qwen3.6-27B-NVFP4
+  template:
+    volumes:
+      - name: kserve-provision-location
+        persistentVolumeClaim:
+          claimName: kserve-models
+    securityContext:
+      fsGroup: 1000
+      fsGroupChangePolicy: OnRootMismatch
+    containers:
+      - name: main
+        securityContext:
+          runAsNonRoot: false
+        env:
+          - name: PYTORCH_CUDA_ALLOC_CONF
+            value: expandable_segments:True
+        # See:
+        # https://docs.vllm.ai/en/stable/cli/serve/
+        # https://huggingface.co/unsloth/Qwen3.6-27B-NVFP4
+        args:
+          - --reasoning-parser=qwen3
+          - --default-chat-template-kwargs='{"preserve_thinking":true}'
+          - --language-model-only
+          - --gpu-memory-utilization=0.98
+          - --max-model-len=-1
+          - --max-num-seqs=1
+          - --max-num-batched-tokens=2048
+          - --kv-cache-dtype=fp8
+          - --speculative-config='{"method":"mtp","num_speculative_tokens":2}'
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: unsloth-qwen36-27b-nvfp4
+spec:
+  parentRefs:
+    - name: traefik-internal
+      namespace: networking
+  hostnames:
+    - unsloth-qwen36-27b-nvfp4.mmontes-internal.duckdns.org
+  rules:
+    - backendRefs:
+        - name: unsloth-qwen36-27b-nvfp4-kserve-workload-svc
+          port: 8000
