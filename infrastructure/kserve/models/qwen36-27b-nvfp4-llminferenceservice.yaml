@@ -147,14 +147,19 @@ spec:
           # with "Free memory on device (X/Y GiB) on startup is less than desired
           # GPU memory utilization", back off -- that check compares util against
           # free memory before the model loads.
-          # 0.99 rather than 0.98 on vLLM's own advice: with CUDA graph memory
-          # profiling on (default since v0.21.0) the graph reservation comes out
-          # of the KV budget, so it logs "The current --gpu-memory-utilization=
-          # 0.9800 is equivalent to 0.9628 without CUDA graph memory profiling.
-          # To maintain the same effective KV cache size, increase to 0.9972."
-          # 0.9972 would leave ~65 MiB of the card unclaimed, which is too tight;
-          # 0.99 recovers ~0.24 GiB, worth ~23% more context on a 1 GiB pool.
-          - --gpu-memory-utilization=0.99
+          # 0.98 is the measured ceiling, not a preference. The driver holds
+          # 23.42 - 22.98 = 0.44 GiB before vLLM starts, so 22.98/23.42 = 0.981 is
+          # the most that can ever be requested. 0.99 failed the precondition:
+          #   ValueError: Free memory on device cuda:0 (22.98/23.42 GiB) on startup
+          #   is less than desired GPU memory utilization (0.99, 23.19 GiB).
+          # Ignore vLLM's own suggestion to raise this to 0.9972 to offset CUDA
+          # graph profiling -- that value is unreachable on this card.
+          #
+          # Margin at 0.98 is only ~30 MiB. The device plugin advertises
+          # nvidia.com/gpu: 10 (time-slicing), so if another pod ever holds GPU
+          # memory this check will fail rather than degrade. Drop to 0.95 if that
+          # starts happening.
+          - --gpu-memory-utilization=0.98
           # Pinned from a measured --max-model-len=-1 run, which auto-fit to
           # 28,224 tokens at util 0.98. Actual accounting from that boot:
           #   23.42 GiB  visible to CUDA
@@ -193,7 +198,21 @@ spec:
           # for this model runs cache-type-k/v=q8_0, and the checkpoint itself
           # declares kv_cache_quant_algo: FP8 in hf_quant_config.json.
           - --kv-cache-dtype=fp8
-          # MTP speculative decoding is DISABLED because it is what OOM'd the pod:
+          # Disables CUDA graphs. This exists purely to make MTP fit, and it is
+          # the only lever left. The no-MTP boot measured, at util 0.98:
+          #   22.95 budget - 18.92 weights - 0.44 cudagraphs - ~2.56 runtime
+          #   = 1.03 GiB KV pool
+          # The drafter needs ~0.9 GiB on top of that (see below), which leaves
+          # roughly 0.1 GiB of pool -- not enough for a single page. Reclaiming the
+          # 0.44 GiB the graphs occupy is what buys MTP a usable cache.
+          #
+          # The cost is real: no graph replay means per-step CPU launch overhead
+          # returns, at max-num-seqs=1 where it is proportionally largest. MTP
+          # reduces the number of steps and eager mode makes each step dearer, so
+          # whether this is net faster than cudagraphs-without-MTP is an empirical
+          # question -- benchmark both before settling.
+          - --enforce-eager
+          # MTP speculative decoding. Previously removed after it OOM'd:
           #   gpu_model_runner.py:5235  self.drafter.load_model(self.model)
           #   qwen3_5_mtp.py:224        self.lm_head = ParallelLMHead(...)
           #   torch.OutOfMemoryError: Tried to allocate 608.00 MiB. GPU 0 has a
@@ -202,10 +221,11 @@ spec:
           # Note where the 608 MiB goes: Qwen3_5MTP builds its own ParallelLMHead
           # over the full 248320-token vocab rather than sharing the target's, so
           # the drafter costs meaningfully more than the 0.79 GiB the MTP tensors
-          # occupy in the checkpoint. That does not fit alongside the main model.
+          # occupy in the checkpoint.
           #
-          # To re-enable, first confirm from the startup log that there is >1 GiB
-          # of slack, then add back:
+          # Re-enabled with --enforce-eager above paying for it. If this still
+          # OOMs, MTP does not fit this checkpoint on 24 GiB and the choice is
+          # MTP or context, not both.
           - --speculative-config='{"method":"mtp","num_speculative_tokens":2}'
           # 3 follows discussions/6 on the model repo (vLLM permits any multiple
           # of n_predict=1, warning that >1 reuses the same MTP layer and lowers
