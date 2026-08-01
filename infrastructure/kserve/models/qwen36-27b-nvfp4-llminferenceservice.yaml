@@ -94,6 +94,13 @@ spec:
         # lands under /tmp, which the preset mounts as an emptyDir.
         securityContext:
           runAsNonRoot: false
+        env:
+          # Suggested by the OOM message itself. The failing load had 151 MiB
+          # reserved-but-unallocated while needing 608 MiB, so fragmentation was
+          # only a small part of the problem -- but expandable segments cost
+          # nothing and this card has no slack to waste.
+          - name: PYTORCH_CUDA_ALLOC_CONF
+            value: expandable_segments:True
         # See:
         # https://docs.vllm.ai/en/stable/cli/serve/
         # https://huggingface.co/nvidia/Qwen3.6-27B-NVFP4
@@ -129,31 +136,33 @@ spec:
           # never loaded rather than merely unused. Drop this flag to restore
           # image/video at the cost of ~27k tokens of context.
           - --language-model-only
-          # Fraction of the 24 GiB the engine may claim. Aggressive on purpose.
-          # Note this is a fraction of TOTAL memory, and vLLM refuses to start if
-          # free < requested ("Free memory on device (X/Y GiB) on startup is less
-          # than desired GPU memory utilization"), so at 0.97 the driver and CUDA
-          # context have only ~0.17 GiB of room. If that check trips, or if ECC
-          # is reserving VRAM on this card, drop to 0.95.
-          - --gpu-memory-utilization=0.97
-          # Longest single request (prompt + output). NOT the cache size -- it
-          # is an admission limit, and the floor vLLM checks the pool against:
-          # if one sequence of this length does not fit it refuses to start with
-          # "To serve at least one request with the model's max seq len ...",
-          # and suggests an estimated maximum. Setting -1 makes vLLM binary
-          # search the largest context that fits, useful to confirm the ceiling.
+          # Fraction of TOTAL device memory the engine may claim. Note the card
+          # reports 23.42 GiB to CUDA, not 24 -- the driver/ECC reserve the rest,
+          # so every budget here is against 23.42.
           #
-          # llama.cpp runs this same model at ctx-size=131072 on this same card,
-          # which is NOT reachable here. That preset uses a Q4_K_XL GGUF at
-          # ~15.5 GiB, whereas the NVFP4 checkpoint is 18.77 GiB resident: the
-          # quantization only covers the MLP and linear-attn projections, while
-          # embeddings (2.37 GiB) and lm_head (0.67 GiB) stay BF16. That is
-          # ~3.3 GiB less room for cache, i.e. ~100k tokens' worth at 32 KiB.
+          # This does NOT cap weight loading; weights are allocated first and only
+          # then is (total x util) - weights - overhead turned into the KV pool.
+          # With weights this close to capacity the pool is whatever rounding is
+          # left, so util is pushed high deliberately. If startup instead fails
+          # with "Free memory on device (X/Y GiB) on startup is less than desired
+          # GPU memory utilization", back off -- that check compares util against
+          # free memory before the model loads.
+          - --gpu-memory-utilization=0.98
+          # -1 makes vLLM binary-search the largest context that fits and log it.
           #
-          # Budget with MTP on: ~3.05 GiB pool - 0.79 (MTP) - 0.15 (DeltaNet)
-          # = ~2.1 GiB, or ~65k tokens. 49152 leaves headroom for the estimate
-          # being wrong; dropping --speculative-config below buys ~25k more.
-          - --max-model-len=49152
+          # Deliberately not a fixed number yet: measured weights came out far
+          # above the estimate below, so any value picked by hand is a guess. Read
+          # the resulting "GPU KV cache size: N tokens" / "Maximum concurrency"
+          # lines from the startup log, then pin something under it.
+          #
+          # For context on why the estimate was wrong: llama.cpp runs this model
+          # at ctx-size=131072 on this same card with a Q4_K_XL GGUF at ~15.5 GiB.
+          # The NVFP4 checkpoint is 20.42 GiB on disk and only ~19.6 GiB of that
+          # is loaded here (vision tower skipped), but the first successful load
+          # showed 22.37 GiB allocated by PyTorch -- roughly 2.8 GiB more than the
+          # weights themselves, which is the Marlin repack described below. So the
+          # gap to llama.cpp is bigger than the raw checkpoint sizes suggest.
+          - --max-model-len=-1
           # Single client, so a single slot: ~151 MiB of DeltaNet state instead
           # of ~302 MiB at 2 or ~604 MiB at 4, all of which goes back to KV
           # (~4.8k tokens per slot). The tradeoff is that there is no batching
@@ -171,38 +180,32 @@ spec:
           # for this model runs cache-type-k/v=q8_0, and the checkpoint itself
           # declares kv_cache_quant_algo: FP8 in hf_quant_config.json.
           - --kv-cache-dtype=fp8
-          # Multi-token prediction. The MTP head ships inside this checkpoint
-          # (mtp_num_hidden_layers: 1), and vLLM rewrites model_type qwen3_5 ->
-          # qwen3_5_mtp and reuses the target checkpoint as its own draft, so no
-          # second model is needed. Worth the 0.79 GiB because decode is
-          # memory-bandwidth-bound: the verify pass reads all ~18.8 GiB of
-          # weights once no matter how many tokens it checks, so proposing more
-          # per step is nearly free on the expensive side.
+          # MTP speculative decoding is DISABLED because it is what OOM'd the pod:
+          #   gpu_model_runner.py:5235  self.drafter.load_model(self.model)
+          #   qwen3_5_mtp.py:224        self.lm_head = ParallelLMHead(...)
+          #   torch.OutOfMemoryError: Tried to allocate 608.00 MiB. GPU 0 has a
+          #   total capacity of 23.42 GiB of which 363.56 MiB is free.
           #
-          # On the token count -- vLLM allows num_speculative_tokens > n_predict
-          # as long as it is divisible by it, and n_predict is 1 here, so any
-          # value is legal. It does warn that >1 "will run multiple times of
-          # forward on same MTP layer, which may result in lower acceptance
-          # rate". 3 follows discussions/6 on the model repo; the llama.cpp
-          # preset uses spec-draft-n-max=2, which is the conservative fallback.
+          # Note where the 608 MiB goes: Qwen3_5MTP builds its own ParallelLMHead
+          # over the full 248320-token vocab rather than sharing the target's, so
+          # the drafter costs meaningfully more than the 0.79 GiB the MTP tensors
+          # occupy in the checkpoint. That does not fit alongside the main model.
+          #
+          # To re-enable, first confirm from the startup log that there is >1 GiB
+          # of slack, then add back:
+          #   - --speculative-config='{"method":"mtp","num_speculative_tokens":3}'
+          # 3 follows discussions/6 on the model repo (vLLM permits any multiple
+          # of n_predict=1, warning that >1 reuses the same MTP layer and lowers
+          # acceptance); llama.cpp uses spec-draft-n-max=2 for this model.
           #   https://huggingface.co/nvidia/Qwen3.6-27B-NVFP4/discussions/6
           #
-          # This is the most feature-interaction-heavy flag here (MTP + hybrid
-          # attention + fp8 KV + cudagraphs on sm120). Remove it first if startup
-          # breaks, and raise --max-model-len by ~25k when you do.
+          # Correction to an earlier note here: MTP does NOT disable async
+          # scheduling. The run above logged "Asynchronous scheduling is enabled."
+          # with method=mtp active, so mtp is covered by the eagle-family
+          # allowlist in VllmConfig.
           #
-          # Hidden cost: setting this ALSO silently turns off async scheduling,
-          # which is otherwise on by default. VllmConfig disables it for any
-          # speculative method that is not eagle/ngram_gpu/dspark, logging
-          # "Async scheduling not supported with mtp-based speculative decoding
-          # and will be disabled." Async scheduling overlaps CPU scheduling with
-          # GPU execution, so it matters most at max-num-seqs=1 -- exactly here.
-          # MTP therefore trades fewer forward passes against per-step CPU gaps
-          # plus 0.79 GiB; net effect has to be measured, not assumed.
-          #
-          # moe_backend from that thread is deliberately omitted: it is a real
+          # Also from that thread and deliberately omitted: moe_backend, a real
           # SpeculativeConfig field but inert for Qwen3.6-27B, which is dense.
-          - --speculative-config='{"method":"mtp","num_speculative_tokens":3}'
 ---
 # No Service here: the llmisvc controller already creates one, named
 # kmeta.ChildName(<llmisvc name>, "-kserve-workload-svc"), with the same
