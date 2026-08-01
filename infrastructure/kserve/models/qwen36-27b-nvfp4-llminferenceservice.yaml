@@ -226,7 +226,7 @@ spec:
           # Re-enabled with --enforce-eager above paying for it. If this still
           # OOMs, MTP does not fit this checkpoint on 24 GiB and the choice is
           # MTP or context, not both.
-          - --speculative-config='{"method":"mtp","num_speculative_tokens":2}'
+          - --speculative-config='{"method":"mtp","num_speculative_tokens":1}'
           # 3 follows discussions/6 on the model repo (vLLM permits any multiple
           # of n_predict=1, warning that >1 reuses the same MTP layer and lowers
           # acceptance); llama.cpp uses spec-draft-n-max=2 for this model.
