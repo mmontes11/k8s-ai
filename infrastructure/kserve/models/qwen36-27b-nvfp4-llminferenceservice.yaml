@@ -5,7 +5,6 @@ metadata:
 spec:
   baseRefs:
     - name: nvidia-template
-    - name: sleep-template
   model:
     name: nvidia/Qwen3.6-27B-NVFP4
     uri: hf://nvidia/Qwen3.6-27B-NVFP4
@@ -39,6 +38,44 @@ spec:
   # slots and context are directly exchangeable: one slot costs ~151 MiB, which
   # is ~4.8k tokens of full-attention KV at fp8.
   template:
+    # Persist the model instead of re-downloading it into an emptyDir on every
+    # pod start. For hf:// URIs the controller mounts the model under a volume
+    # named "kserve-provision-location" (constants.StorageInitializerVolumeName)
+    # -- once at /mnt/models read-write for the storage-initializer init
+    # container, then read-only for main -- and AddModelMount only creates its
+    # own emptyDir when no volume of that name is already present. Declaring it
+    # here therefore redirects the existing storage-initializer into the PVC;
+    # the hf-hub ClusterStorageContainer and its HF_TOKEN keep working unchanged.
+    #
+    # This leans on an internal volume name rather than a documented API, so if
+    # a KServe upgrade renames it the symptom is silent: an emptyDir reappears
+    # and every restart re-downloads ~20 GiB. Check with
+    #   kubectl -n ai get deploy -l app.kubernetes.io/name=qwen36-27b-nvfp4 \
+    #     -o jsonpath='{..volumes[?(@.name=="kserve-provision-location")]}'
+    volumes:
+      - name: kserve-provision-location
+        persistentVolumeClaim:
+          claimName: kserve-models
+    # The preset defines no pod-level securityContext, which breaks two things
+    # here:
+    #
+    # 1. fsGroup. A freshly provisioned topolvm volume is root:root, but
+    #    CreateInitContainerWithConfig sets no securityContext on the
+    #    storage-initializer, so it runs as the image's USER (1000) and cannot
+    #    write to the PVC. fsGroup makes kubelet chown the mount to GID 1000.
+    #    OnRootMismatch avoids re-chowning ~20 GiB on every restart.
+    # 2. runAsUser. The preset sets runAsNonRoot: true on main, but
+    #    nvidia-template swaps the image to vllm/vllm-openai, whose config has
+    #    no USER (i.e. root). kubelet then refuses the container with "container
+    #    has runAsNonRoot and image will run as root". Pinning uid/gid 1000
+    #    satisfies the check and matches fsGroup. Every path vLLM writes to
+    #    (/home, /tmp, /dev/shm, /models, /mnt/models) is a mounted volume, so
+    #    readOnlyRootFilesystem stays satisfiable.
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      fsGroupChangePolicy: OnRootMismatch
     containers:
       - name: main
         args:
@@ -85,10 +122,6 @@ spec:
           # --skip-mm-profiling are all subsumed by --language-model-only: with
           # every modality limit at 0 there is no multimodal input to cap, cache
           # or profile.
-          #
-          # Own args replace the baseRef args under strategic merge, so
-          # sleep-template's flag has to be repeated here.
-          - --enable-sleep-mode
 ---
 apiVersion: v1
 kind: Service
