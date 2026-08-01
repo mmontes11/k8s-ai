@@ -151,29 +151,11 @@ spec:
 # apiVersion: kustomize.toolkit.fluxcd.io/v1
 # kind: Kustomization
 # metadata:
-#   name: kserve-config
-#   namespace: ai
-# spec:
-#   dependsOn:
-#     - name: secrets
-#     - name: kserve-crds
-#   interval: 5m
-#   sourceRef:
-#     kind: GitRepository
-#     name: flux-tenant-ai
-#     namespace: flux-system
-#   path: ./infrastructure/kserve/config
-#   prune: true
-#   timeout: 5m
-# ---
-# apiVersion: kustomize.toolkit.fluxcd.io/v1
-# kind: Kustomization
-# metadata:
 #   name: kserve-resources
 #   namespace: ai
 # spec:
 #   dependsOn:
-#     - name: kserve-config
+#     - name: kserve-crds
 #     - name: cert-manager-crds
 #       namespace: flux-system
 #   interval: 5m
@@ -192,6 +174,7 @@ spec:
 #   namespace: ai
 # spec:
 #   dependsOn:
+#     - name: secrets
 #     - name: kserve-resources
 #   interval: 5m
 #   sourceRef:

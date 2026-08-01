@@ -148,7 +148,7 @@
      {
        "customType": "regex",
        "managerFilePatterns": [
-         "/(^|/)infrastructure/kserve/config/.*\\.yaml$/"
+         "/(^|/)infrastructure/kserve/.*\\.yaml$/"
        ],
        "matchStrings": [
          "image:\\s+vllm/vllm-openai:(?<currentValue>v[0-9.]+-cu[0-9.]+)"
@@ -160,7 +160,7 @@
      {
        "customType": "regex",
        "managerFilePatterns": [
-         "/(^|/)infrastructure/kserve/config/.*\\.yaml$/"
+         "/(^|/)infrastructure/kserve/.*\\.yaml$/"
        ],
        "matchStrings": [
          "image:\\s+kserve/storage-initializer:(?<currentValue>.+)"

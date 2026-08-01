@@ -6,3 +6,5 @@ resources:
   - kserve-llmisvc-resources-ocirepository.yaml
   - kserve-resources-helmrelease.yaml
   - kserve-resources-ocirepository.yaml
+  - kserve-runtime-configs-helmrelease.yaml
+  - kserve-runtime-configs-ocirepository.yaml

@@ -3,6 +3,9 @@ kind: HelmRelease
 metadata:
   name: kserve-runtime-configs
 spec:
+  dependsOn:
+    - name: kserve-resources
+    - name: kserve-llmisvc-resources
   chartRef:
     kind: OCIRepository
     name: kserve-runtime-configs
