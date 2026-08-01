@@ -6,4 +6,4 @@ resources:
   - nvidia-template-llminferenceserviceconfig.yaml
   - models-persistentvolumeclaim.yaml
   - unsloth-qwen36-27b-nvfp4-llminferenceservice.yaml
-  # - nvidia-qwen-27b-nvfp4-llminferenceservice.yaml
+  - nvidia-qwen-27b-nvfp4-llminferenceservice.yaml
