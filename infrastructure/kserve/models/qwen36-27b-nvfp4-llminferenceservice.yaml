@@ -63,28 +63,37 @@ spec:
       - name: kserve-provision-location
         persistentVolumeClaim:
           claimName: kserve-models
-    # The preset defines no pod-level securityContext, which breaks two things
-    # here:
+    # The preset defines no pod-level securityContext, and a freshly provisioned
+    # topolvm volume is root:root. CreateInitContainerWithConfig sets no
+    # securityContext on the storage-initializer, so it runs as its image's USER
+    # (1000) and could not otherwise write to the PVC. fsGroup makes kubelet chown
+    # the mount to GID 1000; OnRootMismatch avoids re-chowning ~20 GiB per restart.
     #
-    # 1. fsGroup. A freshly provisioned topolvm volume is root:root, but
-    #    CreateInitContainerWithConfig sets no securityContext on the
-    #    storage-initializer, so it runs as the image's USER (1000) and cannot
-    #    write to the PVC. fsGroup makes kubelet chown the mount to GID 1000.
-    #    OnRootMismatch avoids re-chowning ~20 GiB on every restart.
-    # 2. runAsUser. The preset sets runAsNonRoot: true on main, but
-    #    nvidia-template swaps the image to vllm/vllm-openai, whose config has
-    #    no USER (i.e. root). kubelet then refuses the container with "container
-    #    has runAsNonRoot and image will run as root". Pinning uid/gid 1000
-    #    satisfies the check and matches fsGroup. Every path vLLM writes to
-    #    (/home, /tmp, /dev/shm, /models, /mnt/models) is a mounted volume, so
-    #    readOnlyRootFilesystem stays satisfiable.
+    # Deliberately NO pod-level runAsUser here. Forcing uid 1000 onto the vLLM
+    # container crashlooped it before it could parse a single flag:
+    #   KeyError: 'getpwuid(): uid not found: 1000'
+    #   torch/_inductor/runtime/cache_dir_utils.py -> default_cache_dir()
+    #     -> getpass.getuser() -> pwd.getpwuid(os.getuid())
+    # vllm/vllm-openai has no /etc/passwd entry for 1000, so any numeric uid
+    # without one breaks getpass at import time -- and torch is not the only
+    # library that resolves the current user that way. The image is built to run
+    # as root (its config has no USER), so let it.
     securityContext:
-      runAsUser: 1000
-      runAsGroup: 1000
       fsGroup: 1000
       fsGroupChangePolicy: OnRootMismatch
     containers:
       - name: main
+        # The preset sets runAsNonRoot: true, which suits its own
+        # ghcr.io/llm-d/llm-d-cuda image but not the vllm/vllm-openai that
+        # nvidia-template substitutes: kubelet refuses to start it with "container
+        # has runAsNonRoot and image will run as root". Relax just that field --
+        # strategic merge keeps the preset's readOnlyRootFilesystem, dropped
+        # capabilities, seccompProfile and allowPrivilegeEscalation: false, so
+        # this is uid 0 inside a container with no capabilities and no writable
+        # root filesystem. As root, getpass resolves and torch's inductor cache
+        # lands under /tmp, which the preset mounts as an emptyDir.
+        securityContext:
+          runAsNonRoot: false
         # See:
         # https://docs.vllm.ai/en/stable/cli/serve/
         # https://huggingface.co/nvidia/Qwen3.6-27B-NVFP4
@@ -195,23 +204,12 @@ spec:
           # SpeculativeConfig field but inert for Qwen3.6-27B, which is dense.
           - --speculative-config='{"method":"mtp","num_speculative_tokens":3}'
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: qwen36-27b-nvfp4
-spec:
-  ports:
-    - appProtocol: http
-      name: http
-      port: 8000
-      protocol: TCP
-      targetPort: 8000
-  selector:
-    app.kubernetes.io/name: qwen36-27b-nvfp4
-    app.kubernetes.io/part-of: llminferenceservice
-    kserve.io/component: workload
-  type: ClusterIP
----
+# No Service here: the llmisvc controller already creates one, named
+# kmeta.ChildName(<llmisvc name>, "-kserve-workload-svc"), with the same
+# 8000->8000 http port and the same three-label selector a hand-written one would
+# need. Its advantage is an ownerReference back to the LLMInferenceService, so it
+# is garbage-collected with the model instead of lingering as Flux-owned state.
+# See: pkg/controller/v1alpha2/llmisvc/workload.go
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -224,5 +222,5 @@ spec:
     - qwen36-27b-nvfp4.mmontes-internal.duckdns.org
   rules:
     - backendRefs:
-        - name: qwen36-27b-nvfp4
+        - name: qwen36-27b-nvfp4-kserve-workload-svc
           port: 8000
