@@ -35,7 +35,6 @@ spec:
           - --max-num-seqs=1
           - --max-num-batched-tokens=2048
           - --kv-cache-dtype=fp8
-          - --speculative-config='{"method":"mtp","num_speculative_tokens":2}'
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
