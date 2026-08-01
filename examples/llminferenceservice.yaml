@@ -8,7 +8,6 @@ metadata:
 spec:
   baseRefs:
     - name: nvidia-template
-    - name: sleep-template
   model:
     name: facebook/opt-125m
     uri: hf://facebook/opt-125m

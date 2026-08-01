@@ -3,7 +3,6 @@ kind: LLMInferenceServiceConfig
 metadata:
   name: nvidia-template
 spec:
-  replicas: 1
   template:
     runtimeClassName: nvidia
     affinity:
@@ -22,8 +21,7 @@ spec:
         image: vllm/vllm-openai:v0.25.1-cu129
         resources:
           requests:
-            cpu: "500m"
+            cpu: "1"
             memory: 4Gi
           limits:
-            memory: 8Gi
             nvidia.com/gpu: "1"
