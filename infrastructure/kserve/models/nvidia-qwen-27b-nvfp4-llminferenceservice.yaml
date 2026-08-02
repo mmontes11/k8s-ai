@@ -18,11 +18,6 @@ spec:
       fsGroupChangePolicy: OnRootMismatch
     containers:
       - name: main
-        securityContext:
-          runAsNonRoot: false
-        env:
-          - name: PYTORCH_CUDA_ALLOC_CONF
-            value: expandable_segments:True
         # See:
         # https://docs.vllm.ai/en/stable/cli/serve/
         # https://huggingface.co/nvidia/Qwen3.6-27B-NVFP4
