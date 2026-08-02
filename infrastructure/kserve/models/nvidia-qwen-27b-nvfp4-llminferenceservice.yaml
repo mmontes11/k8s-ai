@@ -9,13 +9,6 @@ spec:
     name: nvidia-qwen-27b-nvfp4
     uri: hf://nvidia/Qwen3.6-27B-NVFP4
   template:
-    volumes:
-      - name: kserve-provision-location
-        persistentVolumeClaim:
-          claimName: kserve-models
-    securityContext:
-      fsGroup: 1000
-      fsGroupChangePolicy: OnRootMismatch
     containers:
       - name: main
         # See:
