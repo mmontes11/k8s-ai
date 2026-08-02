@@ -33,7 +33,7 @@ spec:
           - --gpu-memory-utilization=0.98
           - --max-model-len=-1
           - --max-num-seqs=1
-          - --kv-cache-dtype=nvfp4
+          - --kv-cache-dtype=fp8
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
