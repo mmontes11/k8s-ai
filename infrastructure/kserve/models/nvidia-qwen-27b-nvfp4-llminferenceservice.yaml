@@ -27,15 +27,13 @@ spec:
         # https://docs.vllm.ai/en/stable/cli/serve/
         # https://huggingface.co/nvidia/Qwen3.6-27B-NVFP4
         args:
-          # - --quantization=modelopt
           - --reasoning-parser=qwen3
           - --default-chat-template-kwargs='{"preserve_thinking":true}'
           - --language-model-only
           - --gpu-memory-utilization=0.98
           - --max-model-len=-1
           - --max-num-seqs=1
-          # - --max-num-batched-tokens=2048
-          - --kv-cache-dtype=fp8
+          - --kv-cache-dtype=nvfp4
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
