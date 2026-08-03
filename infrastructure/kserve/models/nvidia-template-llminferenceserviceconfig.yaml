@@ -21,6 +21,8 @@ spec:
     containers:
       - name: main
         image: vllm/vllm-openai:v0.25.1-cu129
+        securityContext:
+          runAsNonRoot: false
         env:
           - name: PYTORCH_CUDA_ALLOC_CONF
             value: expandable_segments:True
