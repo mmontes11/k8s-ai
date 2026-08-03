@@ -16,13 +16,8 @@ spec:
     - effect: NoSchedule
       key: node.mmontes.io/type
       value: compute-xlarge
-    volumes:
-      - name: kserve-provision-location
-        persistentVolumeClaim:
-          claimName: kserve-models
     securityContext:
       fsGroup: 1000
-      fsGroupChangePolicy: OnRootMismatch
     containers:
       - name: main
         image: vllm/vllm-openai:v0.25.1-cu129

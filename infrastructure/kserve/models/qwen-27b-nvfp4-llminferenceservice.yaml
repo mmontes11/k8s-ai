@@ -1,3 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: qwen-27b-nvfp4
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 30Gi
+  storageClassName: topolvm
+---
 apiVersion: serving.kserve.io/v1alpha2
 kind: LLMInferenceService
 metadata:
@@ -9,6 +21,10 @@ spec:
     name: qwen-27b-nvfp4
     uri: hf://nvidia/Qwen3.6-27B-NVFP4
   template:
+    volumes:
+      - name: kserve-provision-location
+        persistentVolumeClaim:
+          claimName: qwen-27b-nvfp4
     containers:
       - name: main
         # See:

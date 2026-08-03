@@ -4,5 +4,4 @@ namespace: ai
 resources:
   - hf-storage-clusterstoragecontainer.yaml
   - nvidia-template-llminferenceserviceconfig.yaml
-  - models-persistentvolumeclaim.yaml
   - qwen-27b-nvfp4-llminferenceservice.yaml
