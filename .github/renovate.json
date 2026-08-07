@@ -145,18 +145,18 @@
        "datasourceTemplate": "github-releases",
        "packageNameTemplate": "kserve/kserve"
      },
-     {
-       "customType": "regex",
-       "managerFilePatterns": [
-         "/(^|/)infrastructure/kserve/.*\\.yaml$/"
-       ],
-       "matchStrings": [
-         "image:\\s+vllm/vllm-openai:(?<currentValue>v[0-9.]+-cu[0-9.]+)"
-       ],
-       "datasourceTemplate": "github-releases",
-       "packageNameTemplate": "vllm-project/vllm",
-       "versioningTemplate": "regex:^v(?<major>[0-9]+)\\.(?<minor>[0-9]+)\\.(?<patch>[0-9]+)(?<prerelease>.*)$"
-     },
+      {
+        "customType": "regex",
+        "managerFilePatterns": [
+          "/(^|/)infrastructure/kserve/.*\\.yaml$/"
+        ],
+        "matchStrings": [
+          "image:\\s+vllm/vllm-openai:(?<currentValue>v[0-9.]+)-cu[0-9.]+"
+        ],
+        "datasourceTemplate": "github-releases",
+        "packageNameTemplate": "vllm-project/vllm",
+        "versioningTemplate": "regex:^v(?<major>[0-9]+)\\.(?<minor>[0-9]+)\\.(?<patch>[0-9]+)(?<prerelease>.*)$"
+      },
      {
        "customType": "regex",
        "managerFilePatterns": [
