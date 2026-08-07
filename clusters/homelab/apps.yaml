@@ -59,3 +59,20 @@ spec:
   path: ./apps/opencode
   prune: true
   timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: multica
+  namespace: ai
+spec:
+  dependsOn:
+    - name: secrets
+  interval: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-tenant-ai
+    namespace: flux-system
+  path: ./apps/multica
+  prune: true
+  timeout: 5m
