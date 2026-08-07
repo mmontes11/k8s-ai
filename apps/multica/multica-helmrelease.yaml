@@ -25,7 +25,7 @@ spec:
         appUrl: https://multica.mmontes-internal.duckdns.org
         frontendOrigin: https://multica.mmontes-internal.duckdns.org
         corsAllowedOrigins: ""
-        cookieDomain: ""
+        cookieDomain: ".mmontes-internal.duckdns.org"
         resendFromEmail: noreply@multica.ai
         allowSignup: true
         allowedEmails: ""
@@ -38,7 +38,7 @@ spec:
         s3Region: us-west-2
         cloudfrontDomain: ""
         cloudfrontKeyPairId: ""
-        localUploadBaseUrl: https://api.multica.mmontes-internal.duckdns.org
+        localUploadBaseUrl: https://multica.mmontes-internal.duckdns.org
       resources:
         requests:
           cpu: 100m
@@ -72,12 +72,9 @@ spec:
       annotations: {}
       frontend:
         host: multica.mmontes-internal.duckdns.org
-      backend:
-        host: api.multica.mmontes-internal.duckdns.org
       tls:
         - hosts:
             - multica.mmontes-internal.duckdns.org
-            - api.multica.mmontes-internal.duckdns.org
           secretName: multica-tls
     monitoring:
       prometheusRule:

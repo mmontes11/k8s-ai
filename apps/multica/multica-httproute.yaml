@@ -8,15 +8,7 @@ spec:
       namespace: networking
   hostnames:
     - "multica.mmontes-internal.duckdns.org"
-    - "api.multica.mmontes-internal.duckdns.org"
   rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /
-      backendRefs:
-        - name: multica-frontend
-          port: 3000
     - matches:
         - path:
             type: PathPrefix
@@ -36,3 +28,6 @@ spec:
       backendRefs:
         - name: multica-backend
           port: 8080
+    - backendRefs:
+        - name: multica-frontend
+          port: 3000
