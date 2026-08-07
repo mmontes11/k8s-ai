@@ -1,0 +1,88 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: multica
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: multica
+  interval: 10m
+  values:
+    postgres:
+      external:
+        enabled: true
+    backend:
+      replicas: 1
+      uploads:
+        persistence:
+          enabled: true
+          existingClaim: multica-uploads
+          storageClass: ""
+          accessModes:
+            - ReadWriteOnce
+      config:
+        appEnv: production
+        appUrl: https://multica.mmontes-internal.duckdns.org
+        frontendOrigin: https://multica.mmontes-internal.duckdns.org
+        corsAllowedOrigins: ""
+        cookieDomain: ""
+        resendFromEmail: noreply@multica.ai
+        allowSignup: true
+        allowedEmails: ""
+        allowedEmailDomains: ""
+        disableWorkspaceCreation: false
+        vcsIntegrationEnabled: true
+        googleClientId: ""
+        googleRedirectUri: https://multica.mmontes-internal.duckdns.org/auth/callback
+        s3Bucket: ""
+        s3Region: us-west-2
+        cloudfrontDomain: ""
+        cloudfrontKeyPairId: ""
+        localUploadBaseUrl: https://api.multica.mmontes-internal.duckdns.org
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          cpu: 1000m
+          memory: 1Gi
+      affinity: {}
+      tolerations: []
+    frontend:
+      replicas: 1
+      config:
+        remoteApiUrl: ""
+        docsUrl: ""
+        publicApiUrl: ""
+        publicWsUrl: ""
+      compatibility:
+        backendAlias: false
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          cpu: 1000m
+          memory: 1Gi
+      affinity: {}
+      tolerations: []
+    ingress:
+      enabled: true
+      className: traefik
+      annotations: {}
+      frontend:
+        host: multica.mmontes-internal.duckdns.org
+      backend:
+        host: api.multica.mmontes-internal.duckdns.org
+      tls:
+        - hosts:
+            - multica.mmontes-internal.duckdns.org
+            - api.multica.mmontes-internal.duckdns.org
+          secretName: multica-tls
+    monitoring:
+      prometheusRule:
+        enabled: false
+        additionalLabels: {}
+        samplerQueryErrorsFor: 5m
+        samplerQueryLatencyFor: 10m
+        severity: warning
