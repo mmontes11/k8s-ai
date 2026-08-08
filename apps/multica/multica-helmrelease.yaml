@@ -1,0 +1,26 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: multica
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: multica
+  interval: 10m
+  values:
+    existingSecret: multica
+    postgres:
+      external:
+        enabled: true
+    backend:
+      uploads:
+        persistence:
+          existingClaim: multica-uploads
+      config:
+        appUrl: https://multica.mmontes-internal.duckdns.org
+        frontendOrigin: https://multica.mmontes-internal.duckdns.org
+        cookieDomain: ".mmontes-internal.duckdns.org"
+        googleRedirectUri: https://multica.mmontes-internal.duckdns.org/auth/callback
+        localUploadBaseUrl: https://multica.mmontes-internal.duckdns.org
+    ingress:
+      enabled: false
