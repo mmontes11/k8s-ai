@@ -15,12 +15,31 @@ spec:
     backend:
       uploads:
         persistence:
-          existingClaim: multica-uploads
+          enabled: true
+          size: 5Gi
+          storageClass: rook-ceph
+          accessModes:
+            - ReadWriteOnce
       config:
         appUrl: https://multica.mmontes-internal.duckdns.org
         frontendOrigin: https://multica.mmontes-internal.duckdns.org
-        cookieDomain: ".mmontes-internal.duckdns.org"
         googleRedirectUri: https://multica.mmontes-internal.duckdns.org/auth/callback
-        localUploadBaseUrl: https://multica.mmontes-internal.duckdns.org
+        localUploadBaseUrl: https://multica-api.mmontes-internal.duckdns.org
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          memory: 1Gi
+    frontend:
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          memory: 1Gi
     ingress:
       enabled: false
+    monitoring:
+      prometheusRule:
+        enabled: true
