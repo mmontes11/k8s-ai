@@ -168,16 +168,17 @@
        "datasourceTemplate": "github-releases",
        "packageNameTemplate": "kserve/kserve"
      },
-     {
-       "customType": "regex",
-       "managerFilePatterns": [
-         "/(^|/)apps/multica/.*\\.yaml$/"
-       ],
-       "matchStrings": [
-         "ref:\\s*\\n\\s+tag:\\s+\"?(?<currentValue>[^\"]+)\"?"
-       ],
-       "datasourceTemplate": "github-releases",
-       "packageNameTemplate": "multica-ai/multica"
-     }
+      {
+        "customType": "regex",
+        "managerFilePatterns": [
+          "/(^|/)apps/multica/multica-ocirepository\\.yaml$/"
+        ],
+        "matchStrings": [
+          "ref:\\s*\\n\\s+tag:\\s+\"?(?<currentValue>[^\"]+)\"?"
+        ],
+        "datasourceTemplate": "docker",
+        "packageNameTemplate": "ghcr.io/multica-ai/charts/multica",
+        "registryUrlTemplate": "https://ghcr.io"
+      }
    ]
  }
