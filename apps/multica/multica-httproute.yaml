@@ -12,3 +12,18 @@ spec:
     - backendRefs:
         - name: multica-frontend
           port: 3000
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: multica-api
+spec:
+  parentRefs:
+    - name: traefik-internal
+      namespace: networking
+  hostnames:
+    - "multica-api.mmontes-internal.duckdns.org"
+  rules:
+    - backendRefs:
+        - name: multica-backend
+          port: 8080
