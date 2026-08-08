@@ -12,66 +12,14 @@ spec:
       external:
         enabled: true
     backend:
-      replicas: 1
       uploads:
         persistence:
-          enabled: true
           existingClaim: multica-uploads
-          storageClass: ""
-          accessModes:
-            - ReadWriteOnce
       config:
-        appEnv: production
         appUrl: https://multica.mmontes-internal.duckdns.org
         frontendOrigin: https://multica.mmontes-internal.duckdns.org
-        corsAllowedOrigins: ""
         cookieDomain: ".mmontes-internal.duckdns.org"
-        resendFromEmail: noreply@multica.ai
-        allowSignup: true
-        allowedEmails: ""
-        allowedEmailDomains: ""
-        disableWorkspaceCreation: false
-        vcsIntegrationEnabled: true
-        googleClientId: ""
         googleRedirectUri: https://multica.mmontes-internal.duckdns.org/auth/callback
-        s3Bucket: ""
-        s3Region: us-west-2
-        cloudfrontDomain: ""
-        cloudfrontKeyPairId: ""
         localUploadBaseUrl: https://multica.mmontes-internal.duckdns.org
-      resources:
-        requests:
-          cpu: 100m
-          memory: 256Mi
-        limits:
-          cpu: 1000m
-          memory: 1Gi
-      affinity: {}
-      tolerations: []
-    frontend:
-      replicas: 1
-      config:
-        remoteApiUrl: ""
-        docsUrl: ""
-        publicApiUrl: ""
-        publicWsUrl: ""
-      compatibility:
-        backendAlias: false
-      resources:
-        requests:
-          cpu: 100m
-          memory: 256Mi
-        limits:
-          cpu: 1000m
-          memory: 1Gi
-      affinity: {}
-      tolerations: []
     ingress:
       enabled: false
-    monitoring:
-      prometheusRule:
-        enabled: false
-        additionalLabels: {}
-        samplerQueryErrorsFor: 5m
-        samplerQueryLatencyFor: 10m
-        severity: warning
