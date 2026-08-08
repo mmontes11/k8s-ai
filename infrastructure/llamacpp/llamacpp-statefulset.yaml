@@ -88,7 +88,7 @@ spec:
           - "1"
           - --models-autoload
           - --sleep-idle-seconds
-          - "600"
+          - "1200"
           - --n-gpu-layers
           - "999"
           - --fit
