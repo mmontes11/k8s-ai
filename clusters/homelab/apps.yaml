@@ -68,6 +68,8 @@ metadata:
 spec:
   dependsOn:
     - name: secrets
+    - name: postgresql
+      namespace: flux-system
   interval: 5m
   sourceRef:
     kind: GitRepository

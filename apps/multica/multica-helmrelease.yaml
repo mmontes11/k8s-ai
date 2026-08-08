@@ -67,15 +67,7 @@ spec:
       affinity: {}
       tolerations: []
     ingress:
-      enabled: true
-      className: traefik
-      annotations: {}
-      frontend:
-        host: multica.mmontes-internal.duckdns.org
-      tls:
-        - hosts:
-            - multica.mmontes-internal.duckdns.org
-          secretName: multica-tls
+      enabled: false
     monitoring:
       prometheusRule:
         enabled: false
