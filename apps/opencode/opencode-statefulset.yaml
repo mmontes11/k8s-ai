@@ -37,6 +37,26 @@ spec:
           emptyDir: {}
 
       initContainers:
+        - name: multica-config
+          image: ghcr.io/mmontes11/opencode:v1.18.18
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -eu
+              mkdir -p /home/mmontes/.multica
+              printf '{"serverUrl":"https://multica-api.mmontes-internal.duckdns.org","appUrl":"https://multica.mmontes-internal.duckdns.org","token":"%s"}' "$MULTICA_TOKEN" > /home/mmontes/.multica/config.json
+          env:
+            - name: MULTICA_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: multica-token
+                  key: MULTICA_TOKEN
+          volumeMounts:
+            - name: home
+              mountPath: /home/mmontes
         - name: sync
           image: ghcr.io/mmontes11/opencode:v1.18.18
           securityContext:
@@ -123,6 +143,48 @@ spec:
               mountPath: /var/run
             - name: docker
               mountPath: /var/lib/docker
+        - name: multica
+          image: ghcr.io/mmontes11/opencode:v1.18.18
+          securityContext:
+            runAsUser: 1111
+            runAsGroup: 1111
+          command: ["multica", "daemon", "start", "--foreground"]
+          env:
+            - name: MULTICA_WORKSPACES_ROOT
+              value: /home/mmontes/multica_workspaces
+            - name: MULTICA_DAEMON_ID
+              value: opencode-0
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: gh-token
+                  key: GITHUB_TOKEN
+            - name: GITHUB_TOKEN_MARIADB_OPERATOR
+              valueFrom:
+                secretKeyRef:
+                  name: gh-token-mariadb-operator
+                  key: GITHUB_TOKEN
+            - name: HF_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: hf-token
+                  key: HF_TOKEN
+            - name: N8N_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: n8n-token
+                  key: N8N_TOKEN
+            - name: DOCKER_HOST
+              value: unix:///var/run/docker.sock
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+          volumeMounts:
+            - name: home
+              mountPath: /home/mmontes
+            - name: run
+              mountPath: /var/run
   volumeClaimTemplates:
     - metadata:
         name: home
