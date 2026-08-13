@@ -62,7 +62,28 @@ spec:
           volumeMounts:
             - name: home
               mountPath: /home/mmontes
-
+        - name: multica-config
+          image: ghcr.io/mmontes11/opencode:v1.18.18
+          securityContext:
+            runAsUser: 1111
+            runAsGroup: 1111
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -e
+              multica login --token=$MULTICA_TOKEN --server-url=$MULTICA_SERVER_URL
+              chmod 600 /home/mmontes/.multica/config.json
+          env:
+            - name: MULTICA_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: multica-token
+                  key: MULTICA_TOKEN
+            - name: MULTICA_SERVER_URL
+              value: https://multica-api.mmontes-internal.duckdns.org
+          volumeMounts:
+            - name: home
+              mountPath: /home/mmontes
       containers:
         - name: opencode
           image: ghcr.io/mmontes11/opencode:v1.18.18
@@ -123,6 +144,68 @@ spec:
               mountPath: /var/run
             - name: docker
               mountPath: /var/lib/docker
+        - name: multica
+          image: ghcr.io/mmontes11/opencode:v1.18.18
+          securityContext:
+            runAsUser: 1111
+            runAsGroup: 1111
+          command:
+            - "multica"
+            - "daemon"
+            - "start"
+            - "--foreground"
+          # See: https://multica.ai/docs/environment-variables#daemon-configuration
+          env:
+            - name: MULTICA_SERVER_URL
+              value: https://multica-api.mmontes-internal.duckdns.org
+            - name: MULTICA_WORKSPACES_ROOT
+              value: /home/mmontes/multica_workspaces
+            - name: MULTICA_DAEMON_DEVICE_NAME
+              value: opencode-0
+            - name: MULTICA_AGENT_RUNTIME_NAME
+              value: "Local"
+            - name: MULTICA_DAEMON_MAX_CONCURRENT_TASKS
+              value: "1"
+            - name: MULTICA_OPENCODE_PATH
+              value: /home/mmontes/.opencode/bin/opencode
+            - name: MULTICA_OPENCODE_MODEL
+              value: "llama.cpp/qwen38:27b-q4-ctx128k"
+            - name: MULTICA_CLAUDE_PATH
+              value: /home/mmontes/.local/bin/claude
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: gh-token
+                  key: GITHUB_TOKEN
+            - name: GITHUB_TOKEN_MARIADB_OPERATOR
+              valueFrom:
+                secretKeyRef:
+                  name: gh-token-mariadb-operator
+                  key: GITHUB_TOKEN
+            - name: HF_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: hf-token
+                  key: HF_TOKEN
+            - name: N8N_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: n8n-token
+                  key: N8N_TOKEN
+            - name: DOCKER_HOST
+              value: unix:///var/run/docker.sock
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+          volumeMounts:
+            - name: home
+              mountPath: /home/mmontes
+            - name: opencode
+              mountPath: /home/mmontes/.config/opencode/opencode.json
+              subPath: opencode.json
+            - name: run
+              mountPath: /var/run
   volumeClaimTemplates:
     - metadata:
         name: home
