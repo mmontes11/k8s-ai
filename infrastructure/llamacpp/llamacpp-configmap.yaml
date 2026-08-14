@@ -144,9 +144,6 @@ data:
     spec-draft-n-max=2
     chat-template-kwargs={"preserve_thinking": true}
 
-    # See:
-    # https://huggingface.co/unsloth/Qwen3.8-27B-GGUF
-    # https://unsloth.ai/docs/models/qwen3.8
     [qwen38:27b-ctx128k]
     model=/models/unsloth/Qwen3.8-27B-GGUF/Qwen3.8-27B-UD-Q4_K_XL.gguf
     alias=qwen38:27b-ctx128k
