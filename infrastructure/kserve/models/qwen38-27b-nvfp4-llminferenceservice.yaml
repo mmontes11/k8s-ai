@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: qwen-27b-nvfp4
+  name: qwen38-27b-nvfp4
 spec:
   accessModes:
     - ReadWriteOnce
@@ -13,25 +13,25 @@ spec:
 apiVersion: serving.kserve.io/v1alpha2
 kind: LLMInferenceService
 metadata:
-  name: qwen-27b-nvfp4
+  name: qwen38-27b-nvfp4
 spec:
   baseRefs:
     - name: nvidia-template
   model:
-    name: qwen-27b-nvfp4
-    uri: hf://nvidia/Qwen3.6-27B-NVFP4
+    name: qwen38-27b-nvfp4
+    uri: hf://unsloth/Qwen3.8-27B-NVFP4
   template:
     volumes:
       - name: kserve-provision-location
         persistentVolumeClaim:
-          claimName: qwen-27b-nvfp4
+          claimName: qwen38-27b-nvfp4
     containers:
       - name: main
         # See:
         # https://docs.vllm.ai/en/stable/cli/serve/
-        # https://huggingface.co/nvidia/Qwen3.6-27B-NVFP4
+        # https://huggingface.co/unsloth/Qwen3.8-27B-NVFP4
         args:
-          - --served-model-name=qwen-27b-nvfp4
+          - --served-model-name=qwen38-27b-nvfp4
           - --reasoning-parser=qwen3
           - --enable-auto-tool-choice
           - --tool-call-parser=qwen3_xml
@@ -45,14 +45,14 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: qwen-27b-nvfp4
+  name: qwen38-27b-nvfp4
 spec:
   parentRefs:
     - name: traefik-internal
       namespace: networking
   hostnames:
-    - qwen-27b-nvfp4.mmontes-internal.duckdns.org
+    - qwen38-27b-nvfp4.mmontes-internal.duckdns.org
   rules:
     - backendRefs:
-        - name: qwen-27b-nvfp4-kserve-workload-svc
+        - name: qwen38-27b-nvfp4-kserve-workload-svc
           port: 8000
