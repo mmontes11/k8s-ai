@@ -4,6 +4,4 @@ namespace: ai
 resources:
   - hf-storage-clusterstoragecontainer.yaml
   - nvidia-template-llminferenceserviceconfig.yaml
-  # main (EngineCore pid=419) WARNING 08-03 20:01:49 [marlin.py:34[] Your GPU does not have native support for FP4 computation but FP4 quantization is being used. Weight-only FP4 compression will be used leveraging the Marlin kernel. This may degrade performance for compute-heavy workloads.
-  - qwen-27b-nvfp4-llminferenceservice.yaml
   - qwen38-27b-nvfp4-llminferenceservice.yaml
