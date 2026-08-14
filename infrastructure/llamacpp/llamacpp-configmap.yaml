@@ -27,9 +27,6 @@ data:
       --local-dir /models/unsloth/Qwen3.6-35B-A3B-MTP-GGUF \
       --include "*MXFP4_MOE*" "*UD-IQ4_NL*" "*mmproj-BF16*"
 
-    # See:
-    # https://huggingface.co/unsloth/Qwen3.8-27B-GGUF
-    # https://unsloth.ai/docs/models/qwen3.8
     hf download unsloth/Qwen3.8-27B-GGUF \
       --local-dir /models/unsloth/Qwen3.8-27B-GGUF \
       --include "*UD-Q4_K_XL*"
@@ -38,9 +35,6 @@ data:
   # https://github.com/ggml-org/llama.cpp/tree/master/tools/llama-bench
   # https://github.com/ggml-org/llama.cpp/blob/master/.devops/tools.sh
   # https://github.com/ggml-org/llama.cpp/discussions/15396
-  # https://www.reddit.com/r/LocalLLaMA/comments/1sne4gh/psa_qwen36_ships_with_preserve_thinking_make_sure/
-  # https://unsloth.ai/docs/models/qwen3.6#qwen3.6-inference-tutorials
-  # https://unsloth.ai/docs/models/mtp
   bench.sh: |
     #!/bin/bash
     set -e
@@ -48,7 +42,7 @@ data:
     echo "Starting llama-bench..."
     /app/tools.sh \
       --bench \
-      --model "/models/unsloth/Qwen3.6-35B-A3B-MTP-GGUF/Qwen3.6-35B-A3B-MXFP4_MOE.gguf" \
+      --model "/models/unsloth/Qwen3.8-27B-GGUF/Qwen3.8-27B-UD-Q4_K_XL.gguf" \
       --threads 1 \
       --flash-attn on \
       --n-prompt 2048,8192 \
@@ -62,8 +56,6 @@ data:
   # https://unsloth.ai/docs/models
   # https://github.com/ggml-org/llama.cpp/discussions/18939
   # https://huggingface.co/blog/ggml-org/model-management-in-llamacpp
-  # https://huggingface.co/Qwen/Qwen3.6-27B#using-qwen36-via-the-chat-completions-api
-  # https://www.reddit.com/r/LocalLLaMA/comments/1sne4gh/psa_qwen36_ships_with_preserve_thinking_make_sure/
   models.ini: |
     [gemma4:26b-ctx256k]
     model=/models/unsloth/gemma-4-26B-A4B-it-GGUF/gemma-4-26B-A4B-it-MXFP4_MOE.gguf
@@ -151,10 +143,11 @@ data:
     parallel=1
     cache-type-k=q8_0
     cache-type-v=q8_0
-    temperature=0.6
+    temperature=1.0
     top-p=0.95
     top-k=20
     min-p=0.0
     presence-penalty=0.0
     repeat-penalty=1.0
-    chat-template-kwargs={"preserve_thinking": true}
+    spec-type=draft-mtp
+    spec-draft-n-max=2
