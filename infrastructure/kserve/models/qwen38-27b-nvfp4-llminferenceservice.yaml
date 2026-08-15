@@ -37,7 +37,11 @@ spec:
           - --enable-auto-tool-choice
           - --tool-call-parser=qwen3_xml
           - --language-model-only
-          - --gpu-memory-utilization=0.98
+          # Weights are 20.32Gi of the 23.42Gi card. Do NOT raise this: the KV
+          # cache gets whatever budget is left over, but FlashInfer workspaces
+          # and warmup activations are allocated *after* profiling and are not
+          # accounted for. 0.98 left only 470Mi of slack and OOMed on warmup.
+          - --gpu-memory-utilization=0.94
           - --max-model-len=-1
           - --max-num-seqs=1
           - --kv-cache-dtype=fp8
