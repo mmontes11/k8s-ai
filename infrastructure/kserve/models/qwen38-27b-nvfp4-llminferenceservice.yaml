@@ -45,11 +45,11 @@ spec:
           - --max-num-seqs=1
           - --kv-cache-dtype=fp8
           # Minimize VRAM usage:
-          # - --compilation-config='{"cudagraph_mode":"NONE"}'
+          - --compilation-config='{"cudagraph_mode":"NONE"}'
           - --max-num-batched-tokens=1024
           # -----------
           - --default-chat-template-kwargs='{"preserve_thinking":true,"reasoning_effort":"xhigh"}'
-          - --speculative-config='{"method":"mtp","num_speculative_tokens":1}'
+          # - --speculative-config='{"method":"mtp","num_speculative_tokens":1}'
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
