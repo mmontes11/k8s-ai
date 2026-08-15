@@ -153,10 +153,10 @@ data:
     spec-draft-n-max=2
     chat-template-kwargs={"preserve_thinking": true, "reasoning_effort": "xhigh"}
 
-    [qwen38:27b-q5-ctx128k]
+    [qwen38:27b-ctx100k]
     model=/models/unsloth/Qwen3.8-27B-GGUF/Qwen3.8-27B-UD-Q5_K_XL.gguf
     alias=qwen38:27b-q5-ctx128k
-    ctx-size=131072
+    ctx-size=100000
     parallel=1
     cache-type-k=q8_0
     cache-type-v=q8_0
