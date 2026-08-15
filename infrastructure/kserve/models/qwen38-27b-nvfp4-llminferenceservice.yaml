@@ -42,7 +42,7 @@ spec:
           - --max-num-seqs=1
           - --kv-cache-dtype=fp8
           # Minimize VRAM usage:
-          - --compilation-config='{"cudagraph_mode":"NONE"}''
+          - --compilation-config='{"cudagraph_mode":"NONE"}'
           - --max-num-batched-tokens=1024
           # -----------
           - --default-chat-template-kwargs='{"preserve_thinking":true,"reasoning_effort":"xhigh"}'
