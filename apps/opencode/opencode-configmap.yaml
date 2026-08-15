@@ -85,22 +85,6 @@ data:
               }
             }
           }
-        },
-        "vllm-qwen3.8": {
-          "npm": "@ai-sdk/openai-compatible",
-          "name": "vllm-qwen3.8",
-          "options": {
-            "baseURL": "http://qwen38-27b-nvfp4-kserve-workload-svc:8000/v1"
-          },
-          "models": {
-            "qwen38:27b-nvfp4-ctx20k": {
-              "name": "qwen38:27b-nvfp4-ctx20k",
-              "limit": {
-                "context": 20480,
-                "output": 8192
-              }
-            }
-          }
         }
       },
       "mcp": {
