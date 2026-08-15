@@ -46,7 +46,7 @@ spec:
           - --max-model-len=-1
           - --default-chat-template-kwargs='{"preserve_thinking":true,"reasoning_effort":"xhigh"}'
           # Drafter does not fit in VRAM
-          # - --speculative-config='{"method":"mtp","num_speculative_tokens":1}'
+          - --speculative-config='{"method":"mtp","num_speculative_tokens":1}'
           # Minimize VRAM usage
           # - --max-num-batched-tokens=1024
           # - --compilation-config='{"cudagraph_mode":"NONE"}'
