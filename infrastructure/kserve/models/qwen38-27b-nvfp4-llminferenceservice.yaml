@@ -38,7 +38,7 @@ spec:
           - --tool-call-parser=qwen3_xml
           - --language-model-only
           - --gpu-memory-utilization=0.98
-          - --max-model-len=4096
+          - --max-model-len=-1
           - --max-num-seqs=1
           - --kv-cache-dtype=fp8
           # Minimize VRAM usage:
