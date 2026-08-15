@@ -41,13 +41,14 @@ spec:
           # and warmup activations are allocated *after* profiling and are not
           # accounted for. 0.98 left only 470Mi of slack and OOMed on warmup.
           - --gpu-memory-utilization=0.94
-          - --max-model-len=-1
-          - --max-num-seqs=1
           - --kv-cache-dtype=fp8
+          - --max-num-seqs=1
+          - --max-model-len=-1
           - --default-chat-template-kwargs='{"preserve_thinking":true,"reasoning_effort":"xhigh"}'
           # Drafter does not fit in VRAM
           - --speculative-config='{"method":"mtp","num_speculative_tokens":1}'
           # Minimize VRAM usage
+          - --max-num-batched-tokens=1024
           - --compilation-config='{"cudagraph_mode":"NONE"}'
 ---
 apiVersion: gateway.networking.k8s.io/v1
