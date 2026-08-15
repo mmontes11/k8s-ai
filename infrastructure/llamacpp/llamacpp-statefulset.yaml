@@ -3,7 +3,6 @@ kind: StatefulSet
 metadata:
   name: llamacpp
 spec:
-  replicas: 1
   serviceName: llamacpp
   selector:
     matchLabels:
