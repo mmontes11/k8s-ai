@@ -86,9 +86,9 @@ data:
             }
           }
         },
-        "vllm-qwen38": {
+        "vllm-qwen3.8": {
           "npm": "@ai-sdk/openai-compatible",
-          "name": "vllm-qwen38",
+          "name": "vllm-qwen3.8"",
           "options": {
             "baseURL": "http://qwen38-27b-nvfp4-kserve-workload-svc:8000/v1"
           },
