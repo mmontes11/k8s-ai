@@ -63,10 +63,24 @@ data:
                 "output": 65536
               }
             },
+            "qwen38:27b-q3-ctx200k: {
+              "name": "qwen38:27b-q3-ctx200k",
+              "limit": {
+                "context": 204800,
+                "output": 65536
+              }
+            },
             "qwen38:27b-q4-ctx128k": {
               "name": "qwen38:27b-q4-ctx128k",
               "limit": {
                 "context": 131072,
+                "output": 65536
+              }
+            },
+            "qwen38:27b-q5-ctx100k": {
+              "name": "qwen38:27b-q5-ctx100k",
+              "limit": {
+                "context": 102400,
                 "output": 65536
               }
             }
