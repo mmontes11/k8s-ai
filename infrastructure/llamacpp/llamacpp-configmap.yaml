@@ -29,7 +29,7 @@ data:
 
     hf download unsloth/Qwen3.8-27B-GGUF \
       --local-dir /models/unsloth/Qwen3.8-27B-GGUF \
-      --include "*UD-Q4_K_XL*"
+      --include "*UD-Q4_K_XL*" "*UD-Q5_K_XL*"
 
   # See:
   # https://github.com/ggml-org/llama.cpp/tree/master/tools/llama-bench
@@ -140,6 +140,23 @@ data:
     model=/models/unsloth/Qwen3.8-27B-GGUF/Qwen3.8-27B-UD-Q4_K_XL.gguf
     alias=qwen38:27b-ctx128k
     ctx-size=131072
+    parallel=1
+    cache-type-k=q8_0
+    cache-type-v=q8_0
+    temperature=1.0
+    top-p=0.95
+    top-k=20
+    min-p=0.0
+    presence-penalty=0.0
+    repeat-penalty=1.0
+    spec-type=draft-mtp
+    spec-draft-n-max=2
+    chat-template-kwargs={"preserve_thinking": true, "reasoning_effort": "xhigh"}
+
+    [qwen38:27b-q5-ctx64k]
+    model=/models/unsloth/Qwen3.8-27B-GGUF/Qwen3.8-27B-UD-Q5_K_XL.gguf
+    alias=qwen38:27b-q5-ctx64k
+    ctx-size=65536
     parallel=1
     cache-type-k=q8_0
     cache-type-v=q8_0
