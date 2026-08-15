@@ -69,13 +69,6 @@ data:
                 "context": 131072,
                 "output": 65536
               }
-            },
-            "qwen38:27b-q5-ctx64k": {
-              "name": "qwen38:27b-q5-ctx64k",
-              "limit": {
-                "context": 65536,
-                "output": 65536
-              }
             }
           }
         }
