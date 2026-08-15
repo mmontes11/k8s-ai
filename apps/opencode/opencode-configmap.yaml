@@ -42,6 +42,13 @@ data:
             "baseURL": "http://llamacpp.ai.svc.cluster.local:8080/v1"
           },
           "models": {
+            "gemma4:26b-ctx256k": {
+              "name": "gemma4:26b-ctx256k",
+              "limit": {
+                "context": 262144,
+                "output": 65536
+              }
+            },
             "qwen36:27b-ctx128k": {
               "name": "qwen36:27b-ctx128k",
               "limit": {
@@ -51,13 +58,6 @@ data:
             },
             "qwen36:35b-ctx256k": {
               "name": "qwen36:35b-ctx256k",
-              "limit": {
-                "context": 262144,
-                "output": 65536
-              }
-            },
-            "gemma4:26b-ctx256k": {
-              "name": "gemma4:26b-ctx256k",
               "limit": {
                 "context": 262144,
                 "output": 65536
