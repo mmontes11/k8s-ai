@@ -37,8 +37,8 @@ spec:
           - --enable-auto-tool-choice
           - --tool-call-parser=qwen3_xml
           - --language-model-only
-          - --gpu-memory-utilization=0.98
-          - --max-model-len=16384
+          - --gpu-memory-utilization=0.99
+          - --max-model-len=8192
           - --max-num-seqs=1
           - --kv-cache-dtype=fp8
           - --default-chat-template-kwargs='{"preserve_thinking":true,"reasoning_effort":"xhigh"}'
