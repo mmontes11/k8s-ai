@@ -49,7 +49,6 @@ spec:
           # - --speculative-config='{"method":"mtp","num_speculative_tokens":1}'
           # Minimize VRAM usage:
           # - --compilation-config='{"cudagraph_mode":"NONE"}'
-
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
