@@ -1,0 +1,39 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: multica-github
+  labels:
+    app.kubernetes.io/part-of: multica
+spec:
+  parentRefs:
+    - name: traefik-external
+      namespace: networking
+  hostnames:
+    - "multica-api.mmontes.duckdns.org"
+  rules:
+    # GitHub App post-install setup callback. GitHub 302-redirects the user's
+    # browser here after the App is authorized. It is self-authenticating: the
+    # signed `state` query param (HMAC-SHA256 keyed by GITHUB_WEBHOOK_SECRET) is
+    # verified before anything is persisted, so it is safe to reach without a
+    # Multica session. Exact path + GET only.
+    - matches:
+        - path:
+            type: Exact
+            value: /api/github/setup
+          method: GET
+      backendRefs:
+        - name: multica-backend
+          port: 8080
+    # GitHub App webhook destination for every event from a connected
+    # installation. Public by design: requests are authenticated only by the
+    # HMAC-SHA256 signature in the X-Hub-Signature-256 header (verified in the
+    # handler; fail-closed when GITHUB_WEBHOOK_SECRET is unset). Exact path +
+    # POST only.
+    - matches:
+        - path:
+            type: Exact
+            value: /api/webhooks/github
+          method: POST
+      backendRefs:
+        - name: multica-backend
+          port: 8080

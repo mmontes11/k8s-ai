@@ -4,5 +4,6 @@ namespace: ai
 resources:
   - multica-helmrelease.yaml
   - multica-httproute.yaml
+  - multica-github-httproute.yaml
   - multica-ocirepository.yaml
   - multica-sealedsecret.yaml
