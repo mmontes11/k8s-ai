@@ -151,7 +151,7 @@ data:
     repeat-penalty=1.0
     spec-type=draft-mtp
     spec-draft-n-max=2
-    chat-template-kwargs={"preserve_thinking": true, "reasoning_effort": "xhigh"}
+    chat-template-kwargs={"preserve_thinking": true, "reasoning_effort": "medium"}
 
     [qwen38:27b-q4-ctx128k]
     model=/models/unsloth/Qwen3.8-27B-GGUF/Qwen3.8-27B-UD-Q4_K_XL.gguf
@@ -168,7 +168,7 @@ data:
     repeat-penalty=1.0
     spec-type=draft-mtp
     spec-draft-n-max=2
-    chat-template-kwargs={"preserve_thinking": true, "reasoning_effort": "xhigh"}
+    chat-template-kwargs={"preserve_thinking": true, "reasoning_effort": "medium"}
 
     [qwen38:27b-q5-ctx100k]
     model=/models/unsloth/Qwen3.8-27B-GGUF/Qwen3.8-27B-UD-Q5_K_XL.gguf
