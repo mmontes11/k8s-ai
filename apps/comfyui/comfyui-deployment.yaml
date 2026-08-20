@@ -86,7 +86,7 @@ spec:
           claimName: comfyui-nodes
       - name: user
         persistentVolumeClaim:
-          claimName: comfyui-user
+          claimName: comfyui
       - name: nas
         nfs:
           path: /volume1/comfyui
