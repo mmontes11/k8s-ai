@@ -29,7 +29,7 @@ data:
 
     hf download unsloth/Qwen3.8-27B-GGUF \
       --local-dir /models/unsloth/Qwen3.8-27B-GGUF \
-      --include "*UD-Q3_K_XL*" "*UD-Q4_K_XL*" "*UD-Q5_K_XL*"
+      --include "*UD-Q4_K_XL*" "*UD-Q5_K_XL*"
 
   # See:
   # https://github.com/ggml-org/llama.cpp/tree/master/tools/llama-bench
