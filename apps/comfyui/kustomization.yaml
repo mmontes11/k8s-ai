@@ -7,7 +7,6 @@ resources:
   # TODO: migrate PVC to rook-ceph
   - comfyui-pvc.yaml
   # - comfyui-replicationsource.yaml
-  # - comfyui-replicationdestination.yaml
-  # -----------------------------------
+  - comfyui-replicationdestination.yaml
   - comfyui-service.yaml
   - restic-comfyui-sealedsecret.yaml

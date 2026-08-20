@@ -25,6 +25,18 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  name: comfyui
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: rook-ceph
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
   name: comfyui-user
 spec:
   accessModes:
