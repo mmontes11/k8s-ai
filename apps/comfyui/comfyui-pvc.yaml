@@ -33,16 +33,3 @@ spec:
     requests:
       storage: 1Gi
   storageClassName: rook-ceph
----
-# TODO: verify comfyui works and delete
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: comfyui-user
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  storageClassName: topolvm
