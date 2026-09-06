@@ -170,6 +170,8 @@ spec:
               value: /home/mmontes/.opencode/bin/opencode
             - name: MULTICA_OPENCODE_MODEL
               value: "llama.cpp/qwen38:27b-q4-ctx128k"
+            - name: MULTICA_OPENCODE_IDLE_WATCHDOG
+              value: 1h
             - name: MULTICA_CLAUDE_PATH
               value: /home/mmontes/.local/bin/claude
             - name: GITHUB_TOKEN
