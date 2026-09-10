@@ -144,7 +144,8 @@ spec:
               mountPath: /var/run
             - name: docker
               mountPath: /var/lib/docker
-        - name: multica
+        # See: https://multica.ai/docs/environment-variables#daemon-configuration
+        - name: multica-opencode
           image: ghcr.io/mmontes11/opencode:v1.18.29
           securityContext:
             runAsUser: 1111
@@ -154,18 +155,17 @@ spec:
             - "daemon"
             - "start"
             - "--foreground"
-          # See: https://multica.ai/docs/environment-variables#daemon-configuration
           env:
             - name: MULTICA_SERVER_URL
               value: https://multica-api.mmontes-internal.duckdns.org
             - name: MULTICA_WORKSPACES_ROOT
               value: /home/mmontes/multica_workspaces
             - name: MULTICA_DAEMON_DEVICE_NAME
-              value: opencode-0
+              value: opencode
             - name: MULTICA_AGENT_RUNTIME_NAME
-              value: "Local"
+              value: opencode
             - name: MULTICA_DAEMON_MAX_CONCURRENT_TASKS
-              value: "2"
+              value: "1"
             - name: MULTICA_OPENCODE_PATH
               value: /home/mmontes/.opencode/bin/opencode
             - name: MULTICA_OPENCODE_MODEL
@@ -173,7 +173,7 @@ spec:
             - name: MULTICA_OPENCODE_IDLE_WATCHDOG
               value: 1h
             - name: MULTICA_CLAUDE_PATH
-              value: /home/mmontes/.local/bin/claude
+              value: disabled
             - name: GITHUB_TOKEN
               valueFrom:
                 secretKeyRef:
@@ -206,6 +206,42 @@ spec:
             - name: opencode
               mountPath: /home/mmontes/.config/opencode/opencode.json
               subPath: opencode.json
+            - name: run
+              mountPath: /var/run
+        - name: multica-claude
+          image: ghcr.io/mmontes11/opencode:v1.18.29
+          securityContext:
+            runAsUser: 1111
+            runAsGroup: 1111
+          command:
+            - "multica"
+            - "daemon"
+            - "start"
+            - "--foreground"
+          env:
+            - name: MULTICA_SERVER_URL
+              value: https://multica-api.mmontes-internal.duckdns.org
+            - name: MULTICA_WORKSPACES_ROOT
+              value: /home/mmontes/multica_workspaces
+            - name: MULTICA_DAEMON_DEVICE_NAME
+              value: claude
+            - name: MULTICA_AGENT_RUNTIME_NAME
+              value: claude
+            - name: MULTICA_DAEMON_MAX_CONCURRENT_TASKS
+              value: "4"
+            - name: MULTICA_CLAUDE_PATH
+              value: /home/mmontes/.local/bin/claude
+            - name: MULTICA_OPENCODE_PATH
+              value: disabled
+            - name: DOCKER_HOST
+              value: unix:///var/run/docker.sock
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+          volumeMounts:
+            - name: home
+              mountPath: /home/mmontes
             - name: run
               mountPath: /var/run
   volumeClaimTemplates:
