@@ -232,7 +232,7 @@ spec:
             - name: MULTICA_AGENT_RUNTIME_NAME
               value: claude
             - name: MULTICA_DAEMON_MAX_CONCURRENT_TASKS
-              value: "2"
+              value: "4"
             - name: MULTICA_CLAUDE_PATH
               value: /home/mmontes/.local/bin/claude
             - name: MULTICA_OPENCODE_PATH
