@@ -72,9 +72,7 @@ spec:
             - |
               set -e
               multica login --token=$MULTICA_TOKEN --server-url=$MULTICA_SERVER_URL
-              multica login --token=$MULTICA_TOKEN --server-url=$MULTICA_SERVER_URL --profile claude
               chmod 600 /home/mmontes/.multica/config.json
-              chmod 600 /home/mmontes/.multica/profiles/claude/config.json
           env:
             - name: MULTICA_TOKEN
               valueFrom:
@@ -220,13 +218,11 @@ spec:
             - "daemon"
             - "start"
             - "--foreground"
-            - "--profile"
-            - "claude"
           env:
             - name: MULTICA_SERVER_URL
               value: https://multica-api.mmontes-internal.duckdns.org
             - name: MULTICA_WORKSPACES_ROOT
-              value: /home/mmontes/multica_workspaces_claude
+              value: /home/mmontes/multica_workspaces
             - name: MULTICA_DAEMON_DEVICE_NAME
               value: claude
             - name: MULTICA_AGENT_RUNTIME_NAME
@@ -237,26 +233,6 @@ spec:
               value: /home/mmontes/.local/bin/claude
             - name: MULTICA_OPENCODE_PATH
               value: disabled
-            - name: GITHUB_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: gh-token
-                  key: GITHUB_TOKEN
-            - name: GITHUB_TOKEN_MARIADB_OPERATOR
-              valueFrom:
-                secretKeyRef:
-                  name: gh-token-mariadb-operator
-                  key: GITHUB_TOKEN
-            - name: HF_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: hf-token
-                  key: HF_TOKEN
-            - name: N8N_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: n8n-token
-                  key: N8N_TOKEN
             - name: DOCKER_HOST
               value: unix:///var/run/docker.sock
           resources:
