@@ -165,7 +165,7 @@ spec:
             - name: MULTICA_AGENT_RUNTIME_NAME
               value: "Local"
             - name: MULTICA_DAEMON_MAX_CONCURRENT_TASKS
-              value: "2"
+              value: "1"
             - name: MULTICA_OPENCODE_PATH
               value: /home/mmontes/.opencode/bin/opencode
             - name: MULTICA_OPENCODE_MODEL
