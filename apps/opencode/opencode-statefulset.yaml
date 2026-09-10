@@ -166,7 +166,7 @@ spec:
               value: "Local"
             - name: MULTICA_DAEMON_MAX_CONCURRENT_TASKS
               value: "4"
-            - name: MULTICA_OPENCOqDE_PATH
+            - name: MULTICA_OPENCODE_PATH
               value: /home/mmontes/.opencode/bin/opencode
             - name: MULTICA_OPENCODE_MODEL
               value: "llama.cpp/qwen38:27b-q4-ctx128k"
