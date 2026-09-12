@@ -37,15 +37,18 @@ spec:
           emptyDir: {}
 
       initContainers:
-        - name: sync
+        - name: setup
           image: ghcr.io/mmontes11/opencode:v1.18.29
           securityContext:
+            privileged: true
             runAsUser: 0
             runAsGroup: 0
           command: ["/bin/sh", "-c"]
           args:
             - |
               set -e
+
+              # setup home
               if [ $(ls -A /home/mmontes | grep -v "lost+found" | wc -l) -eq 0 ]; then
                 echo "PVC is empty. Initializing..."
                 rsync -rlptDq /opt/template/ /home/mmontes/
@@ -58,7 +61,12 @@ spec:
               chmod 644 /home/mmontes/.ssh/known_hosts|| true
               chmod 644 /home/mmontes/.ssh/config || true
               cp /opt/template/.opencode/bin/opencode /home/mmontes/.opencode/bin
-              echo "Sync complete."
+              
+              # required for vscode debugger (delve)
+              echo 1 > /proc/sys/kernel/yama/ptrace_scope
+              echo "kernel.yama.ptrace_scope=$(cat /proc/sys/kernel/yama/ptrace_scope)"
+              
+              echo "Setup complete."
           volumeMounts:
             - name: home
               mountPath: /home/mmontes
