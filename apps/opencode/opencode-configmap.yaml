@@ -3,11 +3,34 @@ kind: ConfigMap
 metadata:
   name: opencode
 data:
+  # Useful context = tokens available before opencode auto-compacts the session.
+  #
+  # opencode computes it as:
+  #   reserved = compaction.reserved ?? min(20000, min(limit.output, 32000))
+  #   useful   = limit.input ? limit.input - reserved
+  #                          : limit.context - min(limit.output, 32000)
+  # and auto-compacts once the session total reaches "useful".
+  #
+  # "reserved" is only honoured when the model declares limit.input, hence
+  # limit.input = limit.context below, which makes compaction.reserved the one
+  # and only buffer: useful = limit.context - 16384.
+  #
+  #   gemma4:26b-ctx256k      262144 - 16384 = 245760 (93.8%)
+  #   qwen36:35b-ctx256k      262144 - 16384 = 245760 (93.8%)
+  #   qwen38:27b-q4-ctx157k   160768 - 16384 = 144384 (89.8%)
+  #   qwen38:27b-q5-ctx90k     92160 - 16384 =  75776 (82.2%)
+  #
+  # The 16384 buffer has to absorb the turn that trips the threshold plus the
+  # summarisation call that follows, so keep limit.output <= compaction.reserved:
+  # a single generation can then never overflow the llama.cpp slot. Raise both
+  # together if long file writes get truncated.
+  #
+  # limit.context must match ctx-size in infrastructure/llamacpp/llamacpp-configmap.yaml.
+  # opencode cannot discover it: openai-compatible providers never query the endpoint.
   opencode.json: |
     {
       "$schema": "https://opencode.ai/config.json",
       "autoupdate": false,
-      "model": "llama.cpp/qwen38:27b-q4-ctx157k",
       "permission": {
         "bash": {
           "*": "ask",
@@ -26,6 +49,7 @@ data:
         "webfetch": "allow",
         "websearch": "allow"
       },
+      "model": "llama.cpp/qwen38:27b-q4-ctx157k",
       "agent": {
         "kubernetes": {
           "model": "llama.cpp/qwen38:27b-q4-ctx157k",
@@ -33,6 +57,11 @@ data:
           "description": "Kubernetes expert with live cluster access via the Kubernetes MCP tools. Inspects cluster internals to troubleshoot workloads and reads CRD schemas to author accurate custom resources.",
           "prompt": "You are a Kubernetes expert. You have live, read access to a real Kubernetes cluster through the `kubernetes` MCP tools, and you always prefer looking at the cluster over guessing.\n\n## Knowledge Base\n\n* You have access to a local knowledge base restricted to the `~/code/knowledge-base/kubernetes` directory. You must strictly confine your searches and file reads to this folder.\n* This directory contains API references, release notes, and feature documentation for well-known Kubernetes projects.\n\n## Core principles\n\n* Never answer from memory about the state of the cluster. Query it.\n* Never invent API fields. Read the schema first.\n* Be explicit about namespace, apiVersion/kind, and resource names in everything you report or generate.\n* Distinguish clearly between what you observed in the cluster and what you are inferring or recommending.\n\n## Discovering the cluster\n\nUse the Kubernetes MCP tools to orient yourself before doing anything else:\n\n* List contexts and view the current configuration to confirm which cluster you are working against.\n* List namespaces and the resources relevant to the task.\n* Use the generic resource tools (list/get by apiVersion + kind) for anything that is not a core workload type, including all custom resources.\n* Read pod specs and status, container statuses, and pod logs (including previous containers when a pod is restarting).\n* Read events, scoped to the namespace or object in question, and read them early: they usually name the problem.\n* Use node information and metrics (node/pod resource usage, node stats) when the symptoms look like scheduling, capacity, eviction, or pressure issues.\n\n## Troubleshooting method\n\n1. **Establish the desired state:** read the object's spec.\n2. **Establish the actual state:** read its status, conditions, and the status of everything it owns (Deployment to ReplicaSet to Pod, StatefulSet to Pod to PVC, Service to EndpointSlice, and so on).\n3. **Correlate with events and logs:** find the first failure in the chain, not the last symptom.\n4. **Follow the ownership and dependency graph outwards when needed:** controllers and operators, RBAC, ServiceAccounts, ConfigMaps and Secrets, StorageClasses and PVs, webhooks, network policies, ingress and gateway objects, scheduling constraints (requests/limits, node selectors, affinity, taints and tolerations, topology spread, PodDisruptionBudgets).\n5. **State the root cause:** include the evidence for it, and a concrete remediation. If the evidence is inconclusive, say so and name the exact command or query that would settle it.\n6. **Pay particular attention to stateful workloads (databases, storage):** ordering guarantees, volume binding and expansion, data safety. Never propose an action that risks data loss without calling that risk out first.\n\n## Building custom resources\n\nWhen you are asked to write or fix a custom resource, do not rely on remembered API shapes. Inspect the CRD in the cluster:\n\n* List `apiextensions.k8s.io/v1` `CustomResourceDefinition` objects to find the CRD that backs the kind you need.\n* Get that CRD and read its `spec.versions[].schema.openAPIV3Schema` to learn the exact fields, nesting, types, enums, defaults, formats, and validation rules, and read `spec.versions[].served`/`storage` to pick the right apiVersion.\n* Honour `required` fields, respect enum values verbatim, and do not add fields that are absent from the schema. If the schema has `x-kubernetes-preserve-unknown-fields`, say so rather than assuming free-form input is intended.\n* Cross-check against real objects of the same kind already in the cluster: they show working conventions and how the controller populates status.\n* If the CRD is not installed, say that plainly instead of guessing the schema, and point out which operator provides it.\n\nEvery manifest you produce must be complete and applyable: correct apiVersion, kind, metadata (including namespace when the resource is namespaced), and a spec that validates against the CRD schema you read. Explain any field whose value is a judgement call.\n\n## Changing the cluster\n\nDefault to read-only investigation. Propose changes as manifests or exact commands for a human to review and apply, and mention the blast radius (restarts, rescheduling, downtime, data impact) before anything disruptive."
         }
+      },
+      "compaction": {
+        "auto": true,
+        "prune": true,
+        "reserved": 16384
       },
       "provider": {
         "llama.cpp": {
@@ -46,7 +75,8 @@ data:
               "name": "gemma4:26b-ctx256k",
               "limit": {
                 "context": 262144,
-                "output": 65536
+                "input": 262144,
+                "output": 16384
               },
               "modalities": {
                 "input": ["text", "image"],
@@ -57,21 +87,24 @@ data:
               "name": "qwen36:35b-ctx256k",
               "limit": {
                 "context": 262144,
-                "output": 65536
+                "input": 262144,
+                "output": 16384
               }
             },
             "qwen38:27b-q4-ctx157k": {
               "name": "qwen38:27b-q4-ctx157k",
               "limit": {
                 "context": 160768,
-                "output": 65536
+                "input": 160768,
+                "output": 16384
               }
             },
             "qwen38:27b-q5-ctx90k": {
               "name": "qwen38:27b-q5-ctx90k",
               "limit": {
                 "context": 92160,
-                "output": 65536
+                "input": 92160,
+                "output": 16384
               }
             }
           }
@@ -105,7 +138,7 @@ data:
           "url": "http://mcp-kubernetes.ai.svc.cluster.local:8080/mcp"
         },
         "n8n": {
-          "enabled": true,
+          "enabled": false,
           "type": "remote",
           "url": "http://n8n-main.ai.svc.cluster.local:5678/mcp-server/http",
           "headers": {
@@ -113,12 +146,12 @@ data:
           }
         },
         "photprism-mmontes": {
-          "enabled": true,
+          "enabled": false,
           "type": "remote",
           "url": "http://mcp-photoprism-mmontes.ai.svc.cluster.local:9001/mcp"
         },
         "photprism-xiaowen": {
-          "enabled": true,
+          "enabled": false,
           "type": "remote",
           "url": "http://mcp-photoprism-xiaowen.ai.svc.cluster.local:9001/mcp"
         }
