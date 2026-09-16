@@ -113,6 +113,7 @@ spec:
             cpu: "1"
             memory: 8Gi
           limits:
+            memory: 24Gi
             nvidia.com/gpu: "1"
         volumeMounts:
         - name: config
