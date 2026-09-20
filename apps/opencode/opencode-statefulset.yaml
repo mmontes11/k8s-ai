@@ -119,6 +119,11 @@ spec:
                 secretKeyRef:
                   name: n8n-token
                   key: N8N_TOKEN
+            - name: N8N_WEBHOOK_MESSAGE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: n8n-webhook-message-url
+                  key: N8N_WEBHOOK_MESSAGE_URL
             - name: DOCKER_HOST
               value: unix:///var/run/docker.sock
           resources:
@@ -202,6 +207,11 @@ spec:
                 secretKeyRef:
                   name: n8n-token
                   key: N8N_TOKEN
+            - name: N8N_WEBHOOK_MESSAGE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: n8n-webhook-message-url
+                  key: N8N_WEBHOOK_MESSAGE_URL
             - name: DOCKER_HOST
               value: unix:///var/run/docker.sock
           resources:
