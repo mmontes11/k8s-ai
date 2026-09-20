@@ -138,7 +138,7 @@ data:
           "url": "http://mcp-kubernetes.ai.svc.cluster.local:8080/mcp"
         },
         "n8n": {
-          "enabled": false,
+          "enabled": true,
           "type": "remote",
           "url": "http://n8n-main.ai.svc.cluster.local:5678/mcp-server/http",
           "headers": {
