@@ -124,8 +124,9 @@ spec:
           resources:
             requests:
               cpu: "2"
-              memory: "4Gi"
+              memory: "8Gi"
             limits:
+              memory: "24Gi"
               nvidia.com/gpu: "1"
           ports:
             - containerPort: 4096
@@ -145,7 +146,9 @@ spec:
             privileged: true
           resources:
             requests:
-              cpu: "2"
+              cpu: "1"
+              memory: "2Gi"
+            limits:
               memory: "4Gi"
           volumeMounts:
             - name: run
@@ -206,8 +209,10 @@ spec:
               value: unix:///var/run/docker.sock
           resources:
             requests:
-              cpu: "500m"
-              memory: "1Gi"
+              cpu: "1"
+              memory: "2Gi"
+            limits:
+              memory: "4Gi"
           volumeMounts:
             - name: home
               mountPath: /home/mmontes
