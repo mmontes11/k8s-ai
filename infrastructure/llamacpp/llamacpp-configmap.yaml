@@ -145,6 +145,9 @@ data:
     min-p=0.0
     presence-penalty=0.0
     repeat-penalty=1.0
-    spec-type=draft-mtp
+    spec-type=draft-mtp,ngram-mod 
     spec-draft-n-max=3
+    spec-ngram-mod-n-match=24
+    spec-ngram-mod-n-min=48
+    spec-ngram-mod-n-max=64
     chat-template-kwargs={"preserve_thinking": true, "reasoning_effort": "medium"}
