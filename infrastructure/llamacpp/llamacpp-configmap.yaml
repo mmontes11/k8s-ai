@@ -49,8 +49,8 @@ data:
 
   # See:
   # https://github.com/ggml-org/llama.cpp/blob/master/tools/server
+  # https://github.com/ggml-org/llama.cpp/blob/master/docs/speculative.md
   # https://unsloth.ai/docs/models
-  # https://github.com/ggml-org/llama.cpp/discussions/18939
   # https://huggingface.co/blog/ggml-org/model-management-in-llamacpp
   models.ini: |
     [gemma4:26b-ctx256k]
@@ -146,5 +146,5 @@ data:
     presence-penalty=0.0
     repeat-penalty=1.0
     spec-type=draft-mtp
-    spec-draft-n-max=2
+    spec-draft-n-max=3
     chat-template-kwargs={"preserve_thinking": true, "reasoning_effort": "medium"}
