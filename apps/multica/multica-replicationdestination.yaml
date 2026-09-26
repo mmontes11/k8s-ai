@@ -1,0 +1,23 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: multica
+spec:
+  trigger:
+    manual: multica-1
+  restic:
+    repository: restic-multica
+    destinationPVC: multica-backend-uploads
+    copyMethod: Snapshot
+    moverResources:
+      requests:
+        cpu: 1
+        memory: 300Mi
+      limits:
+        memory: 4Gi
+    cacheCapacity: 5Gi
+    cacheAccessModes:
+      - ReadWriteOnce
+    customCA:
+      secretName: homelab-bundle
+      key: ca.crt
