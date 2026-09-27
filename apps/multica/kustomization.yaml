@@ -6,7 +6,7 @@ resources:
   - multica-helmrelease.yaml
   - multica-httproute.yaml
   - multica-ocirepository.yaml
-  # - multica-pvc.yaml
+  - multica-pvc.yaml
   - multica-replicationdestination.yaml
   - multica-replicationsource.yaml
   - multica-sealedsecret.yaml
