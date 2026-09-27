@@ -5,12 +5,14 @@ metadata:
 spec:
   sourcePVC: multica-backend-uploads
   trigger:
-    schedule: "0 1 * * *"
+    # schedule: "0 1 * * *"
+    manual: multica-1
   restic:
     repository: restic-multica
     retain:
       daily: 7
     pruneIntervalDays: 14
+    unlock: multica-1
     copyMethod: Clone
     moverResources:
       requests:
