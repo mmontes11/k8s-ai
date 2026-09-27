@@ -7,7 +7,7 @@ resources:
   - multica-httproute.yaml
   - multica-ocirepository.yaml
   # - multica-pvc.yaml
-  # - multica-replicationdestination.yaml
+  - multica-replicationdestination.yaml
   - multica-replicationsource.yaml
   - multica-sealedsecret.yaml
   - restic-multica-sealedsecret.yaml

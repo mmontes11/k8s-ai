@@ -5,8 +5,8 @@ metadata:
 spec:
   sourcePVC: multica-backend-uploads
   trigger:
-    # schedule: "0 1 * * *"
-    manual: multica-2
+    schedule: "0 1 * * *"
+    # manual: multica-2
   restic:
     repository: restic-multica
     retain:
