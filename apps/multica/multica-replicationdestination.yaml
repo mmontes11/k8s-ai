@@ -4,6 +4,7 @@ metadata:
   name: multica
 spec:
   trigger:
+    # schedule: "0 1 * * *"
     manual: multica-1
   restic:
     repository: restic-multica
