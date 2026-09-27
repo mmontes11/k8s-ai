@@ -20,6 +20,8 @@ spec:
       - effect: NoSchedule
         key: node.mmontes.io/type
         value: compute-xlarge
+      nodeSelector:
+        node.mmontes.io/type: compute-xlarge
       volumes:
         - name: opencode
           configMap:
