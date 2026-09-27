@@ -16,14 +16,6 @@ spec:
       automountServiceAccountToken: false
       securityContext:
         fsGroup: 1111
-      runtimeClassName: nvidia
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: nvidia.com/gpu.present
-                operator: Exists
       tolerations:
       - effect: NoSchedule
         key: node.mmontes.io/type
@@ -126,7 +118,6 @@ spec:
               memory: "8Gi"
             limits:
               memory: "24Gi"
-              nvidia.com/gpu: "1"
           ports:
             - containerPort: 4096
           volumeMounts:
