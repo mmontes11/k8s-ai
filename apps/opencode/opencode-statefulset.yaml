@@ -16,6 +16,8 @@ spec:
       automountServiceAccountToken: false
       securityContext:
         fsGroup: 1111
+        # See: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#configure-volume-permission-and-ownership-change-policy-for-pods
+        fsGroupChangePolicy: "OnRootMismatch"
       runtimeClassName: nvidia
       affinity:
         nodeAffinity:
