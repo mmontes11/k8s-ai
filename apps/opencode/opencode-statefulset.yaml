@@ -49,11 +49,13 @@ spec:
             - |
               set -e
 
-              # setup home
+              # setup home on empty PVC
               if [ $(ls -A /home/mmontes | grep -v "lost+found" | wc -l) -eq 0 ]; then
                 echo "PVC is empty. Initializing..."
                 rsync -rlptDq /opt/template/ /home/mmontes/
-              fi              
+              fi
+              
+              # setup permissions            
               chown -R 1111:1111 /home/mmontes/
               mkdir -p /home/mmontes/.ssh
               chmod 700 /home/mmontes/.ssh
@@ -61,7 +63,14 @@ spec:
               chmod 644 /home/mmontes/.ssh/*.pub  || true
               chmod 644 /home/mmontes/.ssh/known_hosts|| true
               chmod 644 /home/mmontes/.ssh/config || true
+              
+              # sync updated dependencies 
               cp /opt/template/.opencode/bin/opencode /home/mmontes/.opencode/bin
+              cp /opt/template/.npm-global/bin /home/mmontes/.npm-global/bin
+              cp /opt/template/.local/bin /home/mmontes/.local/bin
+              
+              # required for mermaid-render
+              cp -r /opt/template/.config/mermaid /home/mmontes/.config
               
               # required for vscode debugger (delve)
               echo 1 > /proc/sys/kernel/yama/ptrace_scope
