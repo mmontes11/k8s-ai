@@ -66,10 +66,15 @@ spec:
               
               # sync updated dependencies 
               cp /opt/template/.opencode/bin/opencode /home/mmontes/.opencode/bin
-              cp -R /opt/template/.npm-global/bin /home/mmontes/.npm-global/bin
+              # npm global packages: sync the whole tree (package code under
+              # lib/node_modules + bin symlinks). rsync -a preserves symlinks, so
+              # ~/.npm-global/bin/mmdc stays a symlink to the package instead of
+              # being dereferenced into a broken regular file by cp -R.
+              rsync -a /opt/template/.npm-global/ /home/mmontes/.npm-global/
               cp -R /opt/template/.local/bin /home/mmontes/.local/bin
               
-              # required for mermaid-render
+              # mermaid-render: headless Chromium (puppeteer) + no-sandbox config
+              rsync -a /opt/template/.cache/puppeteer/ /home/mmontes/.cache/puppeteer/
               cp -R /opt/template/.config/mermaid /home/mmontes/.config
               
               # required for vscode debugger (delve)
