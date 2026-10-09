@@ -65,13 +65,9 @@ spec:
               chmod 644 /home/mmontes/.ssh/config || true
               
               # sync updated dependencies
-              # Use merge-aware rsync (trailing slashes), never `cp -R`: when the
-              # destination dir already exists, `cp -R src dest` nests the copy
-              # under dest/<basename(src)> instead of updating it in place.
               cp /opt/template/.opencode/bin/opencode /home/mmontes/.opencode/bin
               rsync -a /opt/template/.local/bin/ /home/mmontes/.local/bin/
               # ~/.local/bin/claude is a symlink into ~/.local/share/claude/versions/<ver>;
-              # sync the binaries too, or the link dangles after a version bump.
               rsync -a /opt/template/.local/share/claude/ /home/mmontes/.local/share/claude/
               rsync -a /opt/template/.npm-global/ /home/mmontes/.npm-global/
               
