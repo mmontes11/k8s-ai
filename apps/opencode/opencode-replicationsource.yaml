@@ -3,6 +3,7 @@ kind: ReplicationSource
 metadata:
   name: opencode
 spec:
+  paused: true
   sourcePVC: home-opencode-0
   trigger:
     schedule: "0 1 * * *"

@@ -3,6 +3,7 @@ kind: ReplicationSource
 metadata:
   name: comfyui
 spec:
+  paused: true
   sourcePVC: comfyui
   trigger:
     schedule: "0 1 * * *"
