@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: mcp-github
-          image: ghcr.io/github/github-mcp-server:1.14.0
+          image: ghcr.io/github/github-mcp-server:2.0.2
           imagePullPolicy: IfNotPresent
           args:
             -  http 
