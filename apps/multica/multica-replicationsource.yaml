@@ -3,7 +3,7 @@ kind: ReplicationSource
 metadata:
   name: multica
 spec:
-  paused: true
+  paused: false
   sourcePVC: multica-backend-uploads
   trigger:
     schedule: "0 1 * * *"

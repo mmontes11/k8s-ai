@@ -3,7 +3,7 @@ kind: ReplicationSource
 metadata:
   name: n8n
 spec:
-  paused: true
+  paused: false
   sourcePVC: n8n
   trigger:
     schedule: "0 1 * * *"

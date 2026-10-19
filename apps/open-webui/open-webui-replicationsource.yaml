@@ -3,7 +3,7 @@ kind: ReplicationSource
 metadata:
   name: open-webui
 spec:
-  paused: true
+  paused: false
   sourcePVC: open-webui
   trigger:
     schedule: "0 1 * * *"
