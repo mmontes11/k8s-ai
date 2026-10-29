@@ -109,6 +109,8 @@ spec:
             runAsUser: 1111
             runAsGroup: 1111
           env:
+            - name: OPENCODE_LOG_LEVEL
+              value: DEBUG
             - name: GITHUB_TOKEN
               valueFrom:
                 secretKeyRef:
