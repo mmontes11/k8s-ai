@@ -135,7 +135,7 @@ spec:
               value: unix:///var/run/docker.sock
           envFrom:
             - secretRef:
-                name: opencode-secret
+                name: opencode
           resources:
             requests:
               cpu: "4"
