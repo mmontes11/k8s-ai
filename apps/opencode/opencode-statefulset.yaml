@@ -133,6 +133,9 @@ spec:
                   key: N8N_TOKEN
             - name: DOCKER_HOST
               value: unix:///var/run/docker.sock
+          envFrom:
+            - secretRef:
+                name: opencode-secret
           resources:
             requests:
               cpu: "4"
