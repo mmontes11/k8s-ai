@@ -111,6 +111,11 @@ spec:
           env:
             - name: OPENCODE_LOG_LEVEL
               value: DEBUG
+            - name: HF_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: hf-token
+                  key: HF_TOKEN
             - name: GITHUB_TOKEN
               valueFrom:
                 secretKeyRef:
@@ -121,11 +126,11 @@ spec:
                 secretKeyRef:
                   name: gh-token-mariadb-operator
                   key: GITHUB_TOKEN
-            - name: HF_TOKEN
+            - name: GRAFANA_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: hf-token
-                  key: HF_TOKEN
+                  name: mcp-grafana
+                  key: GRAFANA_TOKEN
             - name: N8N_TOKEN
               valueFrom:
                 secretKeyRef:
