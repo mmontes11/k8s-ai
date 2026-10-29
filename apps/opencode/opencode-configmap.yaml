@@ -132,7 +132,7 @@ data:
           "type": "remote",
           "url": "http://mcp-grafana.ai.svc.cluster.local:8000/mcp",
           "headers": {
-            "Authorization": "Bearer {env:GRAFANA_MCP_TOKEN}"
+            "Authorization": "Bearer {env:GRAFANA_TOKEN}"
           }
         },
         "kubernetes": {
