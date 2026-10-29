@@ -21,6 +21,8 @@ spec:
     extraArgs:
       - --address
       - 0.0.0.0:8000
+      - --allowed-hosts
+      - mcp-grafana.ai.svc.cluster.local:8000,mcp-grafana.mmontes-internal.duckdns.org:8443
       - -t
       - streamable-http
       - --disable-write
