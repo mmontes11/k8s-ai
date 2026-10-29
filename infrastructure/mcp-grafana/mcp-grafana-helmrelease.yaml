@@ -15,7 +15,9 @@ spec:
         name: mcp-grafana
         key: token
     serverAuth:
-      token: null
+      tokenSecret:
+        name: mcp-grafana
+        key: mcp-token
     extraArgs:
       - --address
       - 0.0.0.0:8000
