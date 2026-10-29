@@ -6,6 +6,7 @@ resources:
   - opencode-httproute.yaml
   - opencode-replicationdestination.yaml
   - opencode-replicationsource.yaml
+  - opencode-sealedsecret.yaml
   - opencode-service.yaml
   - opencode-statefulset.yaml
   - restic-opencode-sealedsecret.yaml
