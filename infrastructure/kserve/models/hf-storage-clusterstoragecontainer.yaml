@@ -14,12 +14,6 @@ spec:
           name: hf-token
           key: HF_TOKEN
           optional: false
-    resources:
-      requests:
-        cpu: 500m
-        memory: 256Mi
-      limits:
-        memory: 4Gi
     securityContext:
       allowPrivilegeEscalation: false
       capabilities:

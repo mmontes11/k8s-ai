@@ -16,6 +16,14 @@ spec:
         enabled: true
       storagecontainer:
         enabled: true
+      storage:
+        resources:
+          requests:
+            cpu: 500m
+            memory: 256Mi
+          limits:
+            cpu: 1
+            memory: 4Gi
       metricsaggregator:
         enableMetricAggregation: 'true'
         enablePrometheusScraping: 'true'
