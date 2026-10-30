@@ -118,35 +118,6 @@ Rationale:
 
 **Gateway API implementation.** Deploy Envoy Gateway (the implementation Agent Router is built on) inside the `ai` tenant and point AI `HTTPRoute`s at it via `parentRef`. Traefik remains the cluster-wide Gateway API implementation for all other tenants. A full cluster-wide Traefik replacement is out of scope here — it is a separate decision with a much larger blast radius.
 
-## Single-GPU optimizations and the second-GPU question
-
-The open question: *is it worth starting with llm-d now to learn LLM-inference optimization, in case a larger GPU lands later?* Short answer: **no — and deferring costs nothing, because both routes share the same substrate.**
-
-**How "better" is llm-d's observability, and does it rely on Envoy?**
-
-llm-d is not a proxy. Its Router is any L7 proxy (Istio, Envoy Gateway, agentgateway, Envoy AI Gateway — i.e. Envoy-family data planes) plus the **EPP** (Endpoint Picker), a custom llm-d service the proxy consults per request over Envoy's `ext_proc` protocol; the `InferencePool` CRD wires the EPP into the proxy. So: the data plane relies on an Envoy-family proxy, but the *observability artifacts are custom llm-d work* — the `llm_d_epp_*` metric family (TTFT/TPOT/ITL/NTPOT per model and priority, KV-cache utilization and queue depth per endpoint, prefix-indexer hit ratios, flow-control saturation, SLO violations), 13 Grafana dashboards, and metric-reference docs. Crucially, most of the underlying data is the **model server's own** Prometheus metrics (vLLM/SGLang `/metrics`) plus the EPP's request accounting — the same metrics already scraped today. Its vLLM overview dashboard, for example, is pure vLLM metrics and can be imported into the existing Grafana without installing any llm-d component. What Agent Router's `gen_ai.*` metrics (TTFT, TPOT, token usage, request duration) do not cover is the multi-endpoint layer: KV-cache utilization spread, per-endpoint queues, prefix-routing hit ratios — which only have a signal when there is more than one endpoint.
-
-**Do llm-d's optimizations help a single GPU?**
-
-No — its differentiators are *routing* features, and routing needs choices. With one GPU and `--max-num-seqs=1`, the EPP scheduler has exactly one candidate per pool: KV-cache-affinity placement, load-aware balancing, P/D disaggregation, flow control and SLO-aware scheduling all degenerate to "forward to the only pod." The EPP metrics would mostly be flat lines.
-
-**What does help on one GPU today (no llm-d required):**
-
-- **Prefix caching — yes, it suits a single GPU.** This is an *engine-level* feature, not a routing feature: vLLM's V1 engine enables automatic prefix caching by default (the commented-out `vllm-stack` values enable it explicitly; the current KServe `LLMInferenceService` can add `--enable-prefix-caching` to be explicit). It pays off for agentic workloads (opencode) where system prompts and conversation prefixes repeat across requests, even with serialized requests. It is measurable without any gateway: vLLM exports `vllm:prefix_cache_hits_total` / `vllm:prefix_cache_hit_rate`. llm-d's "prefix cache" feature is a different thing — it *routes* requests to the replica that already holds the prefix, which is meaningless with one replica.
-- Chunked prefill / token-budget control (`--max-num-batched-tokens=1024` in the current manifest), FP8 KV cache (`--kv-cache-dtype=fp8`), sleep mode (llama.cpp and vLLM), PagedAttention (inherent to vLLM) — all already in play or engine-level.
-- Speculative decoding (MTP drafter) is the obvious next lever but is blocked by VRAM ("Drafter does not fit in VRAM", `qwen38-27b-nvfp4-llminferenceservice.yaml:49-50`); no gateway fixes that — only more/faster VRAM.
-
-**Is "Agent Router now, llm-d when/if the second GPU lands" a supported combination?**
-
-Yes — it is the documented path, not just an architectural hope. llm-d's supported-proxy list includes **Envoy AI Gateway** — Agent Router's former name (same lineage: Envoy Gateway + GAIE EPP) — and llm-d ships a dedicated Gateway Mode deployment guide for it (`docs/infrastructure/gateway/envoy-ai-gateway.md`): an Envoy Gateway with the AI Gateway integration values and InferencePool add-on, an `envoy-ai-gateway` GatewayClass, an llm-d `Gateway`, and the EPP consulted per `InferencePool` via ext-proc. The evolution is therefore:
-
-1. **Now**: Agent Router — Envoy Gateway + GAIE EPP + `gen_ai.*` metrics, single-pool routing.
-2. **When/if the second GPU lands**: deploy llm-d in Gateway Mode on the *same* Envoy Gateway data plane. Carried over unchanged: Gateway, GatewayClass, HTTPRoutes, `InferencePool` CRD, model-server metrics and dashboards. What changes: the EPP that the pool consults (the EPP is configured **per InferencePool**, so it is a swap — other pools can stay on the Agent Router EPP), plus llm-d's serving stack (P/D, KV index, latency predictor), which only pays off with 2+ endpoints.
-
-Practical caveats: do not run two EPPs for the same pool — the Agent Router chart deploys its own EPP, which is disabled for any pool llm-d takes over; the llm-d guide currently pins Envoy Gateway v1.8.1 / Envoy AI Gateway v0.7.0, so a minor version alignment may be needed at cutover; and the guide's model-server recipes are GKE-oriented — on the homelab the existing KServe/vLLM manifests stay and only the pool is repointed.
-
-The learnable, durable layer is GAIE itself, which the chosen design teaches now.
-
 ## Consequences
 
 ### Positive
