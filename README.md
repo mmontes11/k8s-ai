@@ -6,6 +6,10 @@ Tenant repository bootstrapped by [k8s-infrastructure](https://github.com/mmonte
 
 This repository manages AI workloads on Kubernetes using GitOps with Flux CD. It includes deployments for LLM inference services, web UIs, and model serving infrastructure.
 
+## Design decisions
+
+- [ADR-0001: AI Gateway Adoption for the ai Tenant](./design/adr-001-ai-gateway.md) — Evaluates AI gateways (Agent Router, agentgateway, llm-d, kgateway) against the Gateway API Inference Extension, LLM inference metrics (TTFT/TPOT/throughput) and Grafana dashboards. Decision: **Agent Router** (formerly Envoy AI Gateway) with Envoy Gateway as the Gateway API implementation for the `ai` tenant.
+
 ## Applications
 
 ### Open WebUI
