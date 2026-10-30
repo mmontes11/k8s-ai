@@ -136,9 +136,16 @@ No — its differentiators are *routing* features, and routing needs choices. Wi
 - Chunked prefill / token-budget control (`--max-num-batched-tokens=1024` in the current manifest), FP8 KV cache (`--kv-cache-dtype=fp8`), sleep mode (llama.cpp and vLLM), PagedAttention (inherent to vLLM) — all already in play or engine-level.
 - Speculative decoding (MTP drafter) is the obvious next lever but is blocked by VRAM ("Drafter does not fit in VRAM", `qwen38-27b-nvfp4-llminferenceservice.yaml:49-50`); no gateway fixes that — only more/faster VRAM.
 
-**Why deferring llm-d costs nothing when the second GPU decision lands.**
+**Is "Agent Router now, llm-d when/if the second GPU lands" a supported combination?**
 
-Both Agent Router and llm-d sit on the same GAIE substrate: `InferencePool` + an EPP consulted by an Envoy-family proxy. Agent Router already runs a GAIE EPP today; llm-d's EPP is an extension of the GAIE reference EPP. Adopting llm-d later is therefore an *upgrade of the same control plane* (swap/extend the EPP, add the model-server recipes) — not a rewrite of routing, dashboards or InferencePool wiring. The learnable, durable layer is GAIE itself, which the chosen design teaches now.
+Yes — it is the documented path, not just an architectural hope. llm-d's supported-proxy list includes **Envoy AI Gateway** — Agent Router's former name (same lineage: Envoy Gateway + GAIE EPP) — and llm-d ships a dedicated Gateway Mode deployment guide for it (`docs/infrastructure/gateway/envoy-ai-gateway.md`): an Envoy Gateway with the AI Gateway integration values and InferencePool add-on, an `envoy-ai-gateway` GatewayClass, an llm-d `Gateway`, and the EPP consulted per `InferencePool` via ext-proc. The evolution is therefore:
+
+1. **Now**: Agent Router — Envoy Gateway + GAIE EPP + `gen_ai.*` metrics, single-pool routing.
+2. **When/if the second GPU lands**: deploy llm-d in Gateway Mode on the *same* Envoy Gateway data plane. Carried over unchanged: Gateway, GatewayClass, HTTPRoutes, `InferencePool` CRD, model-server metrics and dashboards. What changes: the EPP that the pool consults (the EPP is configured **per InferencePool**, so it is a swap — other pools can stay on the Agent Router EPP), plus llm-d's serving stack (P/D, KV index, latency predictor), which only pays off with 2+ endpoints.
+
+Practical caveats: do not run two EPPs for the same pool — the Agent Router chart deploys its own EPP, which is disabled for any pool llm-d takes over; the llm-d guide currently pins Envoy Gateway v1.8.1 / Envoy AI Gateway v0.7.0, so a minor version alignment may be needed at cutover; and the guide's model-server recipes are GKE-oriented — on the homelab the existing KServe/vLLM manifests stay and only the pool is repointed.
+
+The learnable, durable layer is GAIE itself, which the chosen design teaches now.
 
 ## Consequences
 
@@ -167,7 +174,7 @@ Both Agent Router and llm-d sit on the same GAIE substrate: `InferencePool` + an
 ### llm-d
 
 - **ALT-003**: **Description**: CNCF sandbox LLM serving platform shipping the reference GAIE EPP/router, 13 Grafana dashboards and cost tracking, plus KV-cache-aware serving.
-- **ALT-004**: **Rejection Reason**: Rejected for scale: it is a full serving platform requiring a separate Gateway API implementation (Istio or Envoy Gateway) plus its own router/EPP/monitoring stack — the largest operational footprint of the four — to deliver P/D and KV-cache features a single-GPU homelab cannot use yet (a second GPU is under consideration but not decided). Its routing intelligence needs more than one endpoint, and its best observability pieces (vLLM dashboards, engine metrics) are importable without adopting the platform. Revisit when the second-GPU decision is made — the shared GAIE InferencePool/EPP substrate makes that an upgrade, not a rewrite.
+- **ALT-004**: **Rejection Reason**: Rejected for scale: it is a full serving platform requiring a separate Gateway API implementation (Istio or Envoy Gateway) plus its own router/EPP/monitoring stack — the largest operational footprint of the four — to deliver P/D and KV-cache features a single-GPU homelab cannot use yet (a second GPU is under consideration but not decided). Its routing intelligence needs more than one endpoint, and its best observability pieces (vLLM dashboards, engine metrics) are importable without adopting the platform. Revisit when the second-GPU decision is made — llm-d documents Gateway Mode on Envoy AI Gateway (Agent Router), so that revisit is an EPP swap on the existing Envoy Gateway, not a rewrite.
 
 ### kgateway
 
@@ -187,7 +194,7 @@ Both Agent Router and llm-d sit on the same GAIE substrate: `InferencePool` + an
 - **IMP-004**: Point existing clients (Open WebUI, opencode, n8n) at the gateway's OpenAI-compatible endpoint; keep the per-engine HTTPRoutes as fallback until failover is verified.
 - **IMP-005**: Success criteria: `gen_ai.*` metrics present in Prometheus for both llama.cpp and vLLM traffic; TTFT/TPOT percentiles rendering on the imported dashboard; the `InferencePool`-backed `HTTPRoute` routing correctly to both engines.
 - **IMP-006**: Capture llm-d's observability value without its footprint: import the `llm-d-vllm-overview.json` dashboard (pure vLLM metrics) and add a `vllm:prefix_cache_hit_rate` panel; make prefix caching explicit in the KServe `LLMInferenceService` args if the hit-rate metric is absent.
-- **IMP-007**: When the second-GPU question is decided: if yes, revisit prefill/decode disaggregation (vLLM distserve or llm-d) — this gateway choice does not preclude it and the GAIE InferencePool/EPP substrate carries over.
+- **IMP-007**: When the second-GPU question is decided: if yes, enable llm-d in Gateway Mode on the *same* Envoy Gateway data plane (llm-d ships a dedicated Envoy AI Gateway guide, REF-009) — swap the pool's EPP per `InferencePool` and add llm-d's serving stack (P/D, KV index); the Gateway, HTTPRoutes, InferencePool and dashboards carry over unchanged.
 
 ## References
 
@@ -199,3 +206,4 @@ Both Agent Router and llm-d sit on the same GAIE substrate: `InferencePool` + an
 - **REF-006**: llm-d (v1.0.0): <https://github.com/llm-d/llm-d>
 - **REF-007**: kgateway (v2.4.7; GAIE EP-10411 experimental): <https://github.com/kgateway-dev/kgateway>
 - **REF-008**: llama.cpp metrics/sleep issue: <https://github.com/ggml-org/llama.cpp/issues/20227>
+- **REF-009**: llm-d Gateway Mode deployment guide for Envoy AI Gateway (Agent Router): <https://github.com/llm-d/llm-d/blob/main/docs/infrastructure/gateway/envoy-ai-gateway.md>
