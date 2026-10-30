@@ -35,26 +35,9 @@ spec:
           - --reasoning-parser=gemma4
           - --enable-auto-tool-choice
           - --tool-call-parser=gemma4
-          # No --language-model-only: Gemma 4 12B Unified is encoder-free
-          # (multimodality is handled inside the decoder), unlike qwen38.
-          # No --max-model-len: the model card asks for plain `vllm serve`,
-          # letting vLLM auto-fit the context (256K native) from the
-          # remaining KV-cache budget.
-          # No attention/quantization backend flags: let vLLM auto-select the
-          # NVFP4 kernel (Cutlass DSL). Do NOT pin the Marlin backend (~2x
-          # slower).
-          # Weights are 8.70Gi of the 23.42Gi card — qwen38-27b-nvfp4
-          # (20.32Gi) is the other tenant of this GPU; both scale to zero
-          # when idle, so only one is resident at a time. Do NOT raise this:
-          # the KV cache gets whatever budget is left over, but FlashInfer
-          # workspaces and warmup activations are allocated *after* profiling
-          # and are not accounted for.
           - --gpu-memory-utilization=0.92
           - --kv-cache-dtype=fp8
           - --max-num-seqs=1
-          # Minimize VRAM usage
-          - --max-num-batched-tokens=1024
-          - --compilation-config='{"cudagraph_mode":"NONE"}'
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
