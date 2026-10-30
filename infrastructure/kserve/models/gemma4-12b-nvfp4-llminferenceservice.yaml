@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gemma4-12b-nvfp4
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 15Gi
+  storageClassName: topolvm
+---
+apiVersion: serving.kserve.io/v1alpha2
+kind: LLMInferenceService
+metadata:
+  name: gemma4-12b-nvfp4
+spec:
+  baseRefs:
+    - name: nvidia-template
+  model:
+    name: gemma4-12b-nvfp4
+    uri: hf://unsloth/gemma-4-12b-it-NVFP4
+  template:
+    volumes:
+      - name: kserve-provision-location
+        persistentVolumeClaim:
+          claimName: gemma4-12b-nvfp4
+    containers:
+      - name: main
+        # See:
+        # https://docs.vllm.ai/en/stable/cli/serve/
+        # https://huggingface.co/unsloth/gemma-4-12b-it-NVFP4
+        args:
+          - --served-model-name=gemma4:12b-nvfp4
+          - --reasoning-parser=gemma4
+          - --enable-auto-tool-choice
+          - --tool-call-parser=gemma4
+          # No --language-model-only: Gemma 4 12B Unified is encoder-free
+          # (multimodality is handled inside the decoder), unlike qwen38.
+          # No --max-model-len: the model card asks for plain `vllm serve`,
+          # letting vLLM auto-fit the context (256K native) from the
+          # remaining KV-cache budget.
+          # No attention/quantization backend flags: let vLLM auto-select the
+          # NVFP4 kernel (Cutlass DSL). Do NOT pin the Marlin backend (~2x
+          # slower).
+          # Weights are 8.70Gi of the 23.42Gi card — qwen38-27b-nvfp4
+          # (20.32Gi) is the other tenant of this GPU; both scale to zero
+          # when idle, so only one is resident at a time. Do NOT raise this:
+          # the KV cache gets whatever budget is left over, but FlashInfer
+          # workspaces and warmup activations are allocated *after* profiling
+          # and are not accounted for.
+          - --gpu-memory-utilization=0.92
+          - --kv-cache-dtype=fp8
+          - --max-num-seqs=1
+          # Minimize VRAM usage
+          - --max-num-batched-tokens=1024
+          - --compilation-config='{"cudagraph_mode":"NONE"}'
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: gemma4-12b-nvfp4
+spec:
+  parentRefs:
+    - name: traefik-internal
+      namespace: networking
+  hostnames:
+    - gemma4-12b-nvfp4.mmontes-internal.duckdns.org
+  rules:
+    - backendRefs:
+        - name: gemma4-12b-nvfp4-kserve-workload-svc
+          port: 8000
