@@ -6,22 +6,21 @@ data:
   # Useful context = tokens available before opencode auto-compacts the session:
   #   useful = window - buffer,  window = min(limit.input, limit.context)
   # An explicit buffer is honoured verbatim (share of the window), so one
-  # value fits every model. "10%" (raised from 5% so a large task's summary
-  # has room to fit):
+  # value fits every model. With "10%":
   #
   #   gemma4:26b-ctx256k      262144 - 26214 = 235930 (90.0%)
   #   qwen36:35b-ctx256k      262144 - 26214 = 235930 (90.0%)
   #   qwen38:27b-q4-ctx157k   160768 - 16077 = 144691 (90.0%)
   #   qwen38:27b-q5-ctx90k     92160 -  9216 =  82944 (90.0%)
   #
-  # Trade-offs: compaction starts at 90% instead of 95% (4.6k-13.1k fewer
-  # useful tokens than "5%", still above the unset default's 85%/82.2% start),
-  # in exchange for up to twice the room for the summary (at most the
-  # buffer-sized room, 9216-26214 output tokens at the threshold). Overflow
-  # is impossible either way: v2 fits each request's max output to the room
-  # left in the window, and a "too long" rejection recovers once via auto
-  # compaction plus retry. limit.output (32768) is a plain cap; the V1-era
-  # `<= buffer` invariant no longer applies.
+  # Trade-offs: compaction starts at 90% of the window (later than the unset
+  # default's 85%/82.2% start, so more of the context stays usable), and the
+  # summary gets at most the buffer-sized room at the threshold (9216-26214
+  # output tokens) — enough room for a large task's summarization. Overflow
+  # is impossible: v2 fits each request's max output to the room left in the
+  # window, and a "too long" rejection recovers once via auto compaction plus
+  # retry. limit.output (32768) is a plain cap; the V1-era `<= buffer`
+  # invariant no longer applies.
   #
   # limit.context must match ctx-size in infrastructure/llamacpp/llamacpp-configmap.yaml.
   # opencode cannot discover it: openai-compatible providers never query the endpoint.
