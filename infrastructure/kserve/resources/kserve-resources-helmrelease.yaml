@@ -23,7 +23,7 @@ spec:
             memory: 256Mi
           limits:
             cpu: 4
-            memory: 8GB
+            memory: 8Gi
       metricsaggregator:
         enableMetricAggregation: 'true'
         enablePrometheusScraping: 'true'
