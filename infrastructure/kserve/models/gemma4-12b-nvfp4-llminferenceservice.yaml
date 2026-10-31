@@ -30,6 +30,8 @@ spec:
         # See:
         # https://docs.vllm.ai/en/stable/cli/serve/
         # https://huggingface.co/unsloth/gemma-4-12b-it-NVFP4
+        # https://unsloth.ai/docs/models/gemma-4
+        # https://unsloth.ai/docs/basics/nvfp4
         args:
           - --served-model-name=gemma4:12b-nvfp4
           - --reasoning-parser=gemma4
@@ -38,6 +40,7 @@ spec:
           - --gpu-memory-utilization=0.92
           - --kv-cache-dtype=fp8
           - --max-num-seqs=1
+          - --speculative-config='{"method":"mtp","num_speculative_tokens":2}'
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute

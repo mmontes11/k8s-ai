@@ -31,6 +31,7 @@ spec:
         # https://docs.vllm.ai/en/stable/cli/serve/
         # https://huggingface.co/unsloth/Qwen3.8-27B-NVFP4
         # https://unsloth.ai/docs/models/qwen3.8
+        # https://unsloth.ai/docs/basics/nvfp4
         args:
           - --served-model-name=qwen38:27b-nvfp4-ctx20k
           - --reasoning-parser=qwen3
