@@ -22,7 +22,7 @@ spec:
             cpu: 500m
             memory: 256Mi
           limits:
-            cpu: 2
+            cpu: 4
             memory: 8GB
       metricsaggregator:
         enableMetricAggregation: 'true'
