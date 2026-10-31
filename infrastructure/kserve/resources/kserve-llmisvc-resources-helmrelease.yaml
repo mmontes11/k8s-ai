@@ -14,7 +14,10 @@ spec:
         controller:
           resources:
             requests:
-              cpu: 100m
+              cpu: 200m
               memory: 300Mi
             limits:
+              # Set by the helm chart and enforced by kserve.
+              # See: https://github.com/kserve/kserve/pull/6536
+              cpu: 200m 
               memory: 300Mi
