@@ -3,46 +3,25 @@ kind: ConfigMap
 metadata:
   name: opencode
 data:
-  # Useful context = tokens available before opencode auto-compacts the session.
+  # Useful context = tokens available before opencode auto-compacts the session:
+  #   useful = window - buffer,  window = min(limit.input, limit.context)
+  # An explicit buffer is honoured verbatim (share of the window), so one
+  # value fits every model. "10%" (raised from 5% so a large task's summary
+  # has room to fit):
   #
-  # opencode (V2) checks, before each request is sent, whether the measured
-  # prompt plus the estimated new text has reached:
-  #   useful = window - buffer
-  #   window = min(limit.input, limit.context)
-  # An explicit buffer is honoured verbatim: a share of each model's window, so
-  # one value fits every model. The 15%-at-least-16k default applies only when
-  # no buffer is set. With "5%":
+  #   gemma4:26b-ctx256k      262144 - 26214 = 235930 (90.0%)
+  #   qwen36:35b-ctx256k      262144 - 26214 = 235930 (90.0%)
+  #   qwen38:27b-q4-ctx157k   160768 - 16077 = 144691 (90.0%)
+  #   qwen38:27b-q5-ctx90k     92160 -  9216 =  82944 (90.0%)
   #
-  #   gemma4:26b-ctx256k      262144 - 13107 = 249037 (95.0%)
-  #   qwen36:35b-ctx256k      262144 - 13107 = 249037 (95.0%)
-  #   qwen38:27b-q4-ctx157k   160768 -  8038 = 152730 (95.0%)
-  #   qwen38:27b-q5-ctx90k     92160 -  4608 =  87552 (95.0%)
-  #
-  # Is "5%" safe? Yes, per the v2.2.5 compaction implementation — although it
-  # breaks the V1-era invariant limit.output <= buffer, which no longer holds:
-  # * Compaction is preemptive: the measured prompt (llama.cpp reports usage)
-  #   plus an estimate of the pending text is checked before each request, so
-  #   the threshold-crossing request is normally never sent.
-  # * Every request's max output is fit to the room left in the window (1%
-  #   headroom, 15% estimate margin), so a single generation cannot overflow
-  #   the llama.cpp slot; a reply starting in the last 5% is truncated
-  #   (finish "length") instead of overflowing.
-  # * If the estimate runs low and llama.cpp rejects a request as too long,
-  #   auto compaction recovers once: it compacts, then retries the turn.
-  # * The summary call is sized to the buffer-sized room (up to 8038 output
-  #   tokens here, 4608 on the 90k model), and its history is progressively
-  #   shortened, oldest tool output first, if it still would not fit.
-  #
-  # Trade-offs accepted: compaction now starts at 95% of every window instead
-  # of the unset default's 85.0% / 85.0% / 85.0% / 82.2%, so the summary runs
-  # on a tighter budget (at most the buffer-sized room), and long replies
-  # beginning in the last 5% are capped at the room left. keep.tokens stays at
-  # its 15000 default (recent conversation kept verbatim beside the summary).
-  # experimental.background_compaction is left off: it is experimental, and
-  # its held summaries are in-memory, lost on restart.
-  # limit.output was raised 16384 -> 32768: with the <= buffer invariant gone,
-  # the 16k cap only truncated long file writes; the window is still protected
-  # by the dynamic output fit.
+  # Trade-offs: compaction starts at 90% instead of 95% (4.6k-13.1k fewer
+  # useful tokens than "5%", still above the unset default's 85%/82.2% start),
+  # in exchange for up to twice the room for the summary (at most the
+  # buffer-sized room, 9216-26214 output tokens at the threshold). Overflow
+  # is impossible either way: v2 fits each request's max output to the room
+  # left in the window, and a "too long" rejection recovers once via auto
+  # compaction plus retry. limit.output (32768) is a plain cap; the V1-era
+  # `<= buffer` invariant no longer applies.
   #
   # limit.context must match ctx-size in infrastructure/llamacpp/llamacpp-configmap.yaml.
   # opencode cannot discover it: openai-compatible providers never query the endpoint.
@@ -76,7 +55,7 @@ data:
       },
       "compaction": {
         "auto": true,
-        "buffer": "5%"
+        "buffer": "10%"
       },
       "providers": {
         "llama.cpp": {
