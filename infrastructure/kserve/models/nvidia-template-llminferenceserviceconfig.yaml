@@ -31,6 +31,7 @@ spec:
       # and fits the 16Gi memory limit. Remove once kserve stops forcing
       # high-performance mode and the image ships hf-xet >= 1.7.0
       # (cgroup-aware buffers).
+      # See: https://huggingface.co/docs/huggingface_hub/main/en/package_reference/environment_variables#hfxethighperformance
       - name: storage-initializer
         env:
           - name: HF_XET_HIGH_PERFORMANCE
