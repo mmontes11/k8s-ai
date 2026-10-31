@@ -186,6 +186,41 @@ spec:
   path: ./infrastructure/kserve/models
   prune: true
   timeout: 10m
+---
+# Agent Router (formerly Envoy AI Gateway) control plane, per ADR-001.
+# Installed in the ai tenant namespace; the CRD chart must reconcile
+# before the controller chart (agent-router-crds -> agent-router).
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: agent-router-crds
+  namespace: ai
+spec:
+  interval: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-tenant-ai
+    namespace: flux-system
+  path: ./infrastructure/ai-gateway/agent-router-crds
+  prune: true
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: agent-router
+  namespace: ai
+spec:
+  dependsOn:
+    - name: agent-router-crds
+  interval: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-tenant-ai
+    namespace: flux-system
+  path: ./infrastructure/ai-gateway/agent-router
+  prune: true
+  timeout: 5m
 # ---
 # apiVersion: kustomize.toolkit.fluxcd.io/v1
 # kind: Kustomization
