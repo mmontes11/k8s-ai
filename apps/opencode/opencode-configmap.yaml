@@ -5,21 +5,44 @@ metadata:
 data:
   # Useful context = tokens available before opencode auto-compacts the session.
   #
-  # opencode (V2) auto-compacts once the session total reaches:
-  #   useful = limit.context - buffer
-  #   buffer = compaction.buffer ?? max(16384, 15% of limit)
-  # An explicit buffer: 16384 preserves the V1 start point; the V2 default
-  # would start compaction earlier on the 160k/256k models:
+  # opencode (V2) checks, before each request is sent, whether the measured
+  # prompt plus the estimated new text has reached:
+  #   useful = window - buffer
+  #   window = min(limit.input, limit.context)
+  # An explicit buffer is honoured verbatim: a share of each model's window, so
+  # one value fits every model. The 15%-at-least-16k default applies only when
+  # no buffer is set. With "5%":
   #
-  #   gemma4:26b-ctx256k      262144 - 16384 = 245760 (93.8%)
-  #   qwen36:35b-ctx256k      262144 - 16384 = 245760 (93.8%)
-  #   qwen38:27b-q4-ctx157k   160768 - 16384 = 144384 (89.8%)
-  #   qwen38:27b-q5-ctx90k     92160 - 16384 =  75776 (82.2%)
+  #   gemma4:26b-ctx256k      262144 - 13107 = 249037 (95.0%)
+  #   qwen36:35b-ctx256k      262144 - 13107 = 249037 (95.0%)
+  #   qwen38:27b-q4-ctx157k   160768 -  8038 = 152730 (95.0%)
+  #   qwen38:27b-q5-ctx90k     92160 -  4608 =  87552 (95.0%)
   #
-  # The 16384 buffer has to absorb the turn that trips the threshold plus the
-  # summarisation call that follows, so keep limit.output <= compaction.buffer:
-  # a single generation can then never overflow the llama.cpp slot. Raise both
-  # together if long file writes get truncated.
+  # Is "5%" safe? Yes, per the v2.2.5 compaction implementation — although it
+  # breaks the V1-era invariant limit.output <= buffer, which no longer holds:
+  # * Compaction is preemptive: the measured prompt (llama.cpp reports usage)
+  #   plus an estimate of the pending text is checked before each request, so
+  #   the threshold-crossing request is normally never sent.
+  # * Every request's max output is fit to the room left in the window (1%
+  #   headroom, 15% estimate margin), so a single generation cannot overflow
+  #   the llama.cpp slot; a reply starting in the last 5% is truncated
+  #   (finish "length") instead of overflowing.
+  # * If the estimate runs low and llama.cpp rejects a request as too long,
+  #   auto compaction recovers once: it compacts, then retries the turn.
+  # * The summary call is sized to the buffer-sized room (up to 8038 output
+  #   tokens here, 4608 on the 90k model), and its history is progressively
+  #   shortened, oldest tool output first, if it still would not fit.
+  #
+  # Trade-offs accepted: compaction now starts at 95% of every window instead
+  # of the unset default's 85.0% / 85.0% / 85.0% / 82.2%, so the summary runs
+  # on a tighter budget (at most the buffer-sized room), and long replies
+  # beginning in the last 5% are capped at the room left. keep.tokens stays at
+  # its 15000 default (recent conversation kept verbatim beside the summary).
+  # experimental.background_compaction is left off: it is experimental, and
+  # its held summaries are in-memory, lost on restart.
+  # limit.output was raised 16384 -> 32768: with the <= buffer invariant gone,
+  # the 16k cap only truncated long file writes; the window is still protected
+  # by the dynamic output fit.
   #
   # limit.context must match ctx-size in infrastructure/llamacpp/llamacpp-configmap.yaml.
   # opencode cannot discover it: openai-compatible providers never query the endpoint.
@@ -68,7 +91,7 @@ data:
               "limit": {
                 "context": 262144,
                 "input": 262144,
-                "output": 16384
+                "output": 32768
               },
               "capabilities": {
                 "input": ["text", "image"],
@@ -80,7 +103,7 @@ data:
               "limit": {
                 "context": 262144,
                 "input": 262144,
-                "output": 16384
+                "output": 32768
               }
             },
             "qwen38:27b-q4-ctx157k": {
@@ -88,7 +111,7 @@ data:
               "limit": {
                 "context": 160768,
                 "input": 160768,
-                "output": 16384
+                "output": 32768
               },
               "variants": [
                 {
@@ -104,7 +127,7 @@ data:
               "limit": {
                 "context": 92160,
                 "input": 92160,
-                "output": 16384
+                "output": 32768
               }
             }
           }
