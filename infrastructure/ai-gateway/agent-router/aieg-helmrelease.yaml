@@ -1,0 +1,9 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: aieg
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: agent-router
+  interval: 10m
