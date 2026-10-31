@@ -19,11 +19,11 @@ spec:
       storage:
         resources:
           requests:
-            cpu: 500m
-            memory: 256Mi
+            cpu: 1
+            memory: 4Gi
           limits:
-            cpu: 4
-            memory: 8Gi
+            cpu: 1
+            memory: 4Gi
       metricsaggregator:
         enableMetricAggregation: 'true'
         enablePrometheusScraping: 'true'
