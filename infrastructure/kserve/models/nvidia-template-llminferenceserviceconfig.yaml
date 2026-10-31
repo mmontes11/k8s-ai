@@ -23,8 +23,8 @@ spec:
         # The "-cu129" variants of this image are broken: they bundle a torchcodec
         # built against CUDA 13 while shipping a CUDA 12.9 runtime, so the container
         # dies at import time with "libnvrtc.so.13: cannot open shared object file"
-        # (vllm-project/vllm#60406). The default tag is the CUDA 13 build and needs
-        # driver 580 or newer; the operator's target node runs 591.86.
+        # See: https://github.com/vllm-project/vllm/issues/60406
+        # The default tag is the CUDA 13 build and needs driver 580 or newer.
         image: vllm/vllm-openai:v0.32.0
         securityContext:
           runAsNonRoot: false
