@@ -53,7 +53,7 @@ data:
       },
       "compaction": {
         "auto": true,
-        "buffer": 16384
+        "buffer": "5%"
       },
       "providers": {
         "llama.cpp": {
