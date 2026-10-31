@@ -20,12 +20,12 @@ spec:
         resources:
           requests:
             cpu: 1
-            memory: 4Gi
+            memory: 8Gi
           limits:
             # Set by the helm chart and enforced by kserve.
             # See: https://github.com/kserve/kserve/pull/6536
             cpu: 1
-            memory: 4Gi
+            memory: 8Gi
       metricsaggregator:
         enableMetricAggregation: 'true'
         enablePrometheusScraping: 'true'
