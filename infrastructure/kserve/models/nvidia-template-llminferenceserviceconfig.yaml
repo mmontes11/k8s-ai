@@ -18,6 +18,23 @@ spec:
       value: compute-xlarge
     securityContext:
       fsGroup: 1000
+    initContainers:
+      # The kserve controller hardcodes HF_XET_HIGH_PERFORMANCE=1 into the
+      # storage-initializer (AddDefaultHuggingFaceEnvVars in
+      # pkg/utils/storage.go). The v0.21.0 image bundles hf-xet 1.5.1, whose
+      # high-performance mode uses a static 16Gi download buffer with 124
+      # concurrent downloads (64Gi hard cap), so the init container gets
+      # OOMKilled in a loop under a modest memory limit. The controller
+      # merges a user-provided storage-initializer init container on top of
+      # its own (by env var name), so this override takes effect: "0"
+      # selects the standard download mode, whose buffer is capped at 8Gi
+      # and fits the 16Gi memory limit. Remove once kserve stops forcing
+      # high-performance mode and the image ships hf-xet >= 1.7.0
+      # (cgroup-aware buffers).
+      - name: storage-initializer
+        env:
+          - name: HF_XET_HIGH_PERFORMANCE
+            value: "0"
     containers:
       - name: main
         # The "-cu129" variants of this image are broken: they bundle a torchcodec
