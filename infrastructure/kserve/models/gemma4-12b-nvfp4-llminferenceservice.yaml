@@ -40,7 +40,9 @@ spec:
           - --gpu-memory-utilization=0.92
           - --kv-cache-dtype=fp8
           - --max-num-seqs=1
-          - --speculative-config='{"method":"mtp","num_speculative_tokens":2}'
+          - --spec-method=mtp
+          - --spec-model=google/gemma-4-12B-it-assistant
+          - --spec-tokens=2
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
