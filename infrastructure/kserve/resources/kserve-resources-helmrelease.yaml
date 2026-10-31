@@ -22,8 +22,8 @@ spec:
             cpu: 500m
             memory: 256Mi
           limits:
-            cpu: 1
-            memory: 4Gi
+            cpu: null # set by the helm chart
+            memory: 8GB
       metricsaggregator:
         enableMetricAggregation: 'true'
         enablePrometheusScraping: 'true'
