@@ -188,7 +188,7 @@ spec:
   prune: true
   timeout: 10m
 # ---
-# The envoy-ai-gateway stack (Envoy Gateway, Gateway API CRDs, Gateway API
+# The envoy-gateway stack (Envoy Gateway, Gateway API CRDs, Gateway API
 # Inference Extension CRDs) is provisioned by k8s-infrastructure (networking
 # namespace, LAB-362); this repo only keeps the kserve GAIE-CRD disablement
 # and the cross-repo dependency above.
