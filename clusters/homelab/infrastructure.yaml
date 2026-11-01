@@ -156,6 +156,8 @@ metadata:
 spec:
   dependsOn:
     - name: kserve-crds
+    - name: gateway-api-inference-extension
+      namespace: flux-system
     - name: cert-manager-crds
       namespace: flux-system
   interval: 5m
