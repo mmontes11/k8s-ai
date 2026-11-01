@@ -15,4 +15,12 @@ spec:
     crds: Skip
   upgrade:
     crds: Skip
-  valuesFile: ai-gateway-values.yaml
+  values:
+    # The Envoy Gateway data plane (LAB-362) installs into the `ai` tenant
+    # namespace (2026-10-31 decision), not the chart default
+    # `envoy-gateway-system`. Keeps the chart's bundled InferencePool
+    # ClusterRoleBinding pointed at the `envoy-gateway` ServiceAccount where
+    # it actually runs (the RBAC is owned by LAB-362; a Flux postRenderer
+    # can't strip chart-bundled objects).
+    envoyGateway:
+      namespace: ai
