@@ -1,0 +1,17 @@
+# Agent Router (aigateway.envoyproxy.io) CRDs — LAB-363.
+#
+# Laid out like the Envoy Gateway CRDs in k8s-infrastructure PR #126: a
+# dedicated `crds/` subdirectory that is its own Flux Kustomization, so the
+# CRDs reconcile first and the controller Kustomization `dependsOn` it.
+#
+# Upstream ships these CRDs only as the `ai-gateway-crds-helm` OCI chart
+# (the agent-router releases carry no static CRD asset), so — unlike the
+# Envoy Gateway CRDs, which use a release-asset URL — these are installed
+# from the OCI chart. Version is pinned exactly (the docs warn `latest` is
+# overwritten on main).
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: ai
+resources:
+  - ai-gateway-crds-helmrelease.yaml
+  - ai-gateway-crds-ocirepository.yaml
