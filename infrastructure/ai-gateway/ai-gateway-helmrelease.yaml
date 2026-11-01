@@ -1,0 +1,26 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ai-gateway
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: ai-gateway
+  interval: 10m
+  # CRDs are installed by the separate `ai-gateway-crds` Kustomization
+  # (./crds); the controller chart ships no CRDs of its own, but Skip makes
+  # the ownership explicit and matches the Envoy Gateway HelmRelease
+  # (k8s-infrastructure PR #126).
+  install:
+    crds: Skip
+  upgrade:
+    crds: Skip
+  values:
+    # The Envoy Gateway data plane (LAB-362) installs into the `ai` tenant
+    # namespace (2026-10-31 decision), not the chart default
+    # `envoy-gateway-system`. Keeps the chart's bundled InferencePool
+    # ClusterRoleBinding pointed at the `envoy-gateway` ServiceAccount where
+    # it actually runs (the RBAC is owned by LAB-362; a Flux postRenderer
+    # can't strip chart-bundled objects).
+    envoyGateway:
+      namespace: ai
