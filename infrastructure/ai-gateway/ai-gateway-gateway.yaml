@@ -1,0 +1,23 @@
+# Data-plane Gateway for the AI tenant. With the GatewayNamespace deploy
+# mode (see envoy-gateway-values.yaml) the Envoy proxy for this Gateway is
+# deployed into `ai`.
+#
+# HTTP only for now: TLS termination for the *.mmontes-internal.duckdns.org
+# hosts stays on traefik until (if) Envoy is promoted to `networking`
+# (out of scope for this stack, see ADR-001).
+#
+# No hostname on the listener: the inference HTTPRoutes reparented to this
+# Gateway in Stage 4 (LAB-369) keep their existing hostnames.
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: ai-gateway
+spec:
+  gatewayClassName: envoy
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: Same

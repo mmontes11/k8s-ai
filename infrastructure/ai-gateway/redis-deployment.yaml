@@ -1,0 +1,30 @@
+# Redis backing the Envoy Gateway token rate limiting.
+# See redis-service.yaml. Image per the agent-router token_ratelimit example.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - image: redis:8.2.4-alpine3.22
+          imagePullPolicy: IfNotPresent
+          name: redis
+          ports:
+            - name: redis
+              containerPort: 6379
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi

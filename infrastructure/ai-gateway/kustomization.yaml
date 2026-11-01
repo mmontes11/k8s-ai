@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: ai
+resources:
+  - ai-gateway-gateway.yaml
+  - envoy-gateway-crds-backends.yaml
+  - envoy-gateway-crds-backendtrafficpolicies.yaml
+  - envoy-gateway-crds-clienttrafficpolicies.yaml
+  - envoy-gateway-crds-envoyextensionpolicies.yaml
+  - envoy-gateway-crds-envoypatchpolicies.yaml
+  - envoy-gateway-crds-envoyproxies.yaml
+  - envoy-gateway-crds-httproutefilters.yaml
+  - envoy-gateway-crds-securitypolicies.yaml
+  - envoy-gateway-helmrelease.yaml
+  - envoy-gateway-inferencepool-rbac.yaml
+  - envoy-gateway-ocirepository.yaml
+  - envoy-gatewayclass.yaml
+  - redis-deployment.yaml
+  - redis-service.yaml
