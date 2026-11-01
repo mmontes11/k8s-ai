@@ -156,7 +156,6 @@ metadata:
 spec:
   dependsOn:
     - name: kserve-crds
-    # GAIE CRDs are installed by k8s-infrastructure (flux-system) now.
     - name: gateway-api-inference-extension
       namespace: flux-system
     - name: cert-manager-crds
@@ -187,11 +186,6 @@ spec:
   path: ./infrastructure/kserve/models
   prune: true
   timeout: 10m
-# ---
-# The envoy-gateway stack (Envoy Gateway, Gateway API CRDs, Gateway API
-# Inference Extension CRDs) is provisioned by k8s-infrastructure (networking
-# namespace, LAB-362); this repo only keeps the kserve GAIE-CRD disablement
-# and the cross-repo dependency above.
 # ---
 # apiVersion: kustomize.toolkit.fluxcd.io/v1
 # kind: Kustomization
