@@ -156,6 +156,7 @@ metadata:
 spec:
   dependsOn:
     - name: kserve-crds
+    - name: gateway-api-inference-extension
     - name: cert-manager-crds
       namespace: flux-system
   interval: 5m
@@ -188,21 +189,33 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: ai-gateway
+  name: gateway-api-inference-extension
   namespace: ai
 spec:
-  # The GAIE CRDs (inferencepools.inference.networking.k8s.io) are installed
-  # by the kserve-llmisvc-resources HelmRelease in kserve-resources (the KServe
-  # chart vendors GAIE v1.5.0-rc.2); wait for it so they exist before Envoy
-  # Gateway starts with the InferencePool backend resource enabled.
-  dependsOn:
-    - name: kserve-resources
   interval: 5m
   sourceRef:
     kind: GitRepository
     name: flux-tenant-ai
     namespace: flux-system
-  path: ./infrastructure/ai-gateway
+  path: ./infrastructure/gateway-api-inference-extension
+  prune: true
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: envoy-ai-gateway
+  namespace: ai
+spec:
+  # Tenant-side resources for the envoy-ai-gateway data plane (Redis for the
+  # rate limiting backend). The Envoy Gateway controller itself lives in the
+  # `networking` namespace, managed by k8s-infrastructure.
+  interval: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-tenant-ai
+    namespace: flux-system
+  path: ./infrastructure/envoy-ai-gateway
   prune: true
   timeout: 5m
 # ---

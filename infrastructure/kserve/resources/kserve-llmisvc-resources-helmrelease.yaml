@@ -11,6 +11,11 @@ spec:
     kserve:
       createSharedResources: false
       llmisvc:
+        # The Gateway API Inference Extension CRDs are installed standalone
+        # by the `gateway-api-inference-extension` Kustomization (see
+        # infrastructure/gateway-api-inference-extension) instead of being
+        # vendored by this chart.
+        createGIECRDs: false
         controller:
           resources:
             requests:
