@@ -1,10 +1,10 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: agent-router-crds
+  name: ai-gateway
 spec:
   interval: 5m
-  url: oci://docker.io/envoyproxy/ai-gateway-crds-helm
+  url: oci://docker.io/envoyproxy/ai-gateway-helm
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy
