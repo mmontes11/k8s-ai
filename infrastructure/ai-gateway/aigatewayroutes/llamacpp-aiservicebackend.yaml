@@ -1,10 +1,31 @@
+# Envoy Gateway Backend wrapping the llama.cpp router Service
+# (LAB-364, ADR-0001 IMP-009).
+#
+# AIServiceBackend only accepts a Backend resource of the Envoy Gateway as
+# backendRef (a plain k8s Service is not supported yet — upstream tracking
+# issue envoyproxy/ai-gateway#902), so the multi-model router Service is
+# wrapped here. The FQDN endpoint form is the only endpoint type the
+# Backend CRD supports in EG v1.9.x (no Service backendRef); STRICT_DNS
+# keeps resolving the ClusterIP, so the sleeping router (it idles after an
+# hour, --sleep-idle-seconds) simply 503s until a request wakes it. Port
+# 8080 is the llama-server port (infrastructure/llamacpp).
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: Backend
+metadata:
+  name: llamacpp
+spec:
+  endpoints:
+    - fqdn:
+        hostname: llamacpp.ai.svc.cluster.local
+        port: 8080
+---
 # AIServiceBackend for the catch-all rule of the ai-inference
 # AIGatewayRoute (LAB-364, ADR-0001 IMP-009).
 #
 # The rule has no matches (Gateway API catch-all) and routes every model
 # not matched by the vLLM rules — the llama.cpp router models and any
 # unknown name — to this backend, which wraps the router Service through
-# the paired llamacpp-backend.yaml (the backendRef must be an Envoy Gateway
+# the Backend document above (the backendRef must be an Envoy Gateway
 # Backend — schema-enforced on AIServiceBackendSpec). The router answers
 # with its own model-not-found error for models it does not serve.
 #
