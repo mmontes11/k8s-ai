@@ -1,0 +1,30 @@
+# HelmRepository serving the vendored llm-d-router v1.0.0 charts (LAB-364).
+#
+# llm-d/llm-d-router ships its charts in-repo (config/charts) and does not
+# publish them to any registry: the v1.0.0 release contains only kustomize
+# manifests and SBOMs, and the maintainer's gh token here lacks the
+# packages:write scope needed for a GHCR push. So the charts are packaged
+# (helm package, version bumped to 1.0.0 to match the release) and served
+# from this repo's main branch through a git-served index (../charts):
+#
+#   infrastructure/ai-gateway/charts/
+#     index.yaml
+#     llm-d-router-gateway-1.0.0.tgz
+#     llm-d-router-standalone-1.0.0.tgz
+#
+# The two HelmReleases in this directory are a side-by-side evaluation of
+# both charts: qwen38-27b-nvfp4 runs the gateway chart (EPP +
+# InferencePool), gemma4-12b-nvfp4 runs the standalone chart (EPP + Envoy
+# sidecar proxy, no pool). The llamacpp pool keeps its hand-written EPP
+# until one of the two charts is chosen.
+#
+# Until this branch lands on main the repository 404s on reconciliation;
+# that is expected — the inference stack is not live before this PR, so the
+# failed source reconciliations cannot affect anything.
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: llm-d-router
+spec:
+  interval: 1h
+  url: https://raw.githubusercontent.com/mmontes11/k8s-ai/main/infrastructure/ai-gateway/charts

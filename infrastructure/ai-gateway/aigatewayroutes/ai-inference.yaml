@@ -7,9 +7,15 @@
 # `x-ai-eg-model` header before the routing decision, so the rules below
 # select the engine by model, in Gateway API first-match-wins order:
 #
-#   1. qwen38-27b-nvfp4 -> InferencePool qwen38-27b-nvfp4 (vLLM via KServe)
-#   2. gemma4-12b-nvfp4 -> InferencePool gemma4-12b-nvfp4 (vLLM via KServe)
+#   1. qwen38-27b-nvfp4 -> InferencePool qwen38-27b-nvfp4 (vLLM via KServe,
+#      EPP from the llm-d-router-gateway chart)
+#   2. gemma4-12b-nvfp4 -> AIServiceBackend gemma4-12b-nvfp4 -> standalone
+#      EPP + Envoy sidecar (llm-d-router-standalone chart, no pool)
 #   3. everything else  -> InferencePool llamacpp (multi-model router)
+#
+# Rules 1 and 2 exist only to evaluate the two llm-d-router Helm charts
+# side by side (LAB-364); the loser goes back to a hand-written or
+# same-chart pair, keeping one code path per model type.
 #
 # Rule 3 has no matches: it is the Gateway API catch-all. The Agent Router
 # controller appends its own `route-not-found` 404 rule after the user
@@ -68,9 +74,12 @@ spec:
               type: Exact
               value: gemma4-12b-nvfp4
       backendRefs:
-        - group: inference.networking.k8s.io
-          kind: InferencePool
-          name: gemma4-12b-nvfp4
+        # AIServiceBackend reference (no group/kind) — see
+        # gemma4-12b-nvfp4-aiservicebackend.yaml. Wraps the standalone
+        # chart's EPP Service through an Envoy Gateway Backend; the
+        # sidecar proxy does the ext_proc endpoint picking to the vLLM
+        # pods, so no InferencePool is involved for this model.
+        - name: gemma4-12b-nvfp4
       timeouts:
         request: 10m
       modelsOwnedBy: vllm

@@ -225,8 +225,10 @@ spec:
 ---
 # Inference pools, EPPs and the AIGatewayRoute that serves the single
 # OpenAI endpoint on the Envoy Gateway (LAB-364). Ordering: the pools
-# need the GAIE CRDs, the EPPs watch their pool, and the AIGatewayRoute
-# needs its CRDs (ai-gateway-crds), the pools (backendRefs), the Agent
+# need the GAIE CRDs, the EPPs (hand-written llamacpp + the llm-d-router
+# chart HelmReleases) watch their pool, and the AIGatewayRoute needs its
+# CRDs (ai-gateway-crds), the pools (InferencePool backendRefs), the EPP
+# Services (the gemma4 standalone-mode Backend wraps one), the Agent
 # Router control plane that reconciles it (ai-gateway) and the Envoy
 # Gateway data plane (parentRef, k8s-infrastructure).
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -274,6 +276,7 @@ spec:
     - name: ai-gateway
     - name: ai-gateway-crds
     - name: ai-gateway-pools
+    - name: ai-gateway-epp
     - name: envoy-gateway
       namespace: flux-system
   interval: 5m
