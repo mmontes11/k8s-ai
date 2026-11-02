@@ -1,0 +1,69 @@
+# Shared RBAC for the three EPP ServiceAccounts in this directory (LAB-364).
+#
+# The EPP discovers and watches pool members through the Kubernetes API
+# (InferencePool + pod informers), so the Role only needs read access to
+# those objects. The ClusterRole covers the token/subject-access reviews
+# the llm-d-router performs for authenticated requests; both shapes mirror
+# the upstream examples (theagentrouter/agent-router
+# examples/inference-pool/base.yaml).
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: inference-pool-epp-pod-read
+rules:
+  - apiGroups: ["inference.networking.k8s.io"]
+    resources: ["inferencepools"]
+    verbs: ["get", "watch", "list"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "watch", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: inference-pool-epp-pod-read-binding
+subjects:
+  - kind: ServiceAccount
+    name: llamacpp-epp
+    namespace: ai
+  - kind: ServiceAccount
+    name: qwen38-27b-nvfp4-epp
+    namespace: ai
+  - kind: ServiceAccount
+    name: gemma4-12b-nvfp4-epp
+    namespace: ai
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: inference-pool-epp-pod-read
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: inference-pool-epp-auth-reviewer
+rules:
+  - apiGroups: ["authentication.k8s.io"]
+    resources: ["tokenreviews"]
+    verbs: ["create"]
+  - apiGroups: ["authorization.k8s.io"]
+    resources: ["subjectaccessreviews"]
+    verbs: ["create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: inference-pool-epp-auth-reviewer-binding
+subjects:
+  - kind: ServiceAccount
+    name: llamacpp-epp
+    namespace: ai
+  - kind: ServiceAccount
+    name: qwen38-27b-nvfp4-epp
+    namespace: ai
+  - kind: ServiceAccount
+    name: gemma4-12b-nvfp4-epp
+    namespace: ai
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: inference-pool-epp-auth-reviewer

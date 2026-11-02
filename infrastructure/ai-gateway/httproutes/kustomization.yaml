@@ -1,0 +1,7 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: ai
+resources:
+  - llamacpp-inference-pool-httproute.yaml
+  - qwen38-27b-nvfp4-inference-pool-httproute.yaml
+  - gemma4-12b-nvfp4-inference-pool-httproute.yaml
