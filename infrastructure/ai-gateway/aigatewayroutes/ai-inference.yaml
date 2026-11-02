@@ -1,0 +1,83 @@
+# Single OpenAI-compatible endpoint for the ai tenant (LAB-364, ADR-0001 R1).
+#
+# Every model — llama.cpp router models, vLLM/KServe models, and anything
+# unknown — arrives at mmontes-internal.duckdns.org with the plain OpenAI
+# API. The Agent Router filter (installed by feature-agent-router) reads
+# the `model` field from the request body and exposes it as the
+# `x-ai-eg-model` header before the routing decision, so the rules below
+# select the engine by model, in Gateway API first-match-wins order:
+#
+#   1. qwen38-27b-nvfp4 -> InferencePool qwen38-27b-nvfp4 (vLLM via KServe)
+#   2. gemma4-12b-nvfp4 -> InferencePool gemma4-12b-nvfp4 (vLLM via KServe)
+#   3. everything else  -> InferencePool llamacpp (multi-model router)
+#
+# Rule 3 has no matches: it is the Gateway API catch-all. The Agent Router
+# controller appends its own `route-not-found` 404 rule after the user
+# rules, so this catch-all takes precedence and unknown model names reach
+# the llama.cpp router — whose EPP rejects models the pool does not serve —
+# instead of the gateway's generic 404. New models added to the llama.cpp
+# `--models-preset` route through this rule with no manifest change.
+#
+# The controller generates the HTTPRoute (and a hostname-rewrite filter)
+# from this object; no handwritten HTTPRoute is needed. GET /v1/models is
+# answered by the gateway itself, built from the Exact matches above: the
+# two vLLM models are advertised, the llama.cpp router models are not
+# (catch-all rules do not contribute to the model list). Clients already
+# configure model names explicitly, so discovery of the router models is
+# not required.
+#
+# The object name deliberately differs from the legacy `llamacpp`
+# HTTPRoute (infrastructure/llamacpp, parent traefik-internal): that route
+# stays in place until the DNS cutover to the Envoy Gateway, and Gateway
+# API hostnames are scoped per Gateway, so both can coexist.
+apiVersion: aigateway.envoyproxy.io/v1beta1
+kind: AIGatewayRoute
+metadata:
+  name: ai-inference
+spec:
+  hostnames:
+    - mmontes-internal.duckdns.org
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: envoy-gateway
+      namespace: networking
+      # The http listener has no hostname constraint (k8s-infrastructure
+      # envoy-gateway Gateway) so the tenant routes keep their hostnames.
+      sectionName: http
+  rules:
+    - matches:
+        - headers:
+            - name: x-ai-eg-model
+              type: Exact
+              value: qwen38-27b-nvfp4
+      backendRefs:
+        - group: inference.networking.k8s.io
+          kind: InferencePool
+          name: qwen38-27b-nvfp4
+      timeouts:
+        # Timeouts.Request bounds the whole response including all streamed
+        # chunks; the Agent Router default of 60s would cut off long local
+        # generations (27B on a 24GB GPU streams at single-digit to low
+        # double-digit tok/s). Judgement call, kept uniform across rules.
+        request: 10m
+      modelsOwnedBy: vllm
+    - matches:
+        - headers:
+            - name: x-ai-eg-model
+              type: Exact
+              value: gemma4-12b-nvfp4
+      backendRefs:
+        - group: inference.networking.k8s.io
+          kind: InferencePool
+          name: gemma4-12b-nvfp4
+      timeouts:
+        request: 10m
+      modelsOwnedBy: vllm
+    # Fallback: llama.cpp router models and any unknown model name.
+    - backendRefs:
+        - group: inference.networking.k8s.io
+          kind: InferencePool
+          name: llamacpp
+      timeouts:
+        request: 10m
