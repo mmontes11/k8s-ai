@@ -7,30 +7,39 @@
 # `x-ai-eg-model` header before the routing decision, so the rules below
 # select the engine by model, in Gateway API first-match-wins order:
 #
-#   1. qwen38-27b-nvfp4 -> InferencePool qwen38-27b-nvfp4 (vLLM via KServe,
-#      EPP from the llm-d-router-gateway chart)
-#   2. gemma4-12b-nvfp4 -> AIServiceBackend gemma4-12b-nvfp4 -> standalone
-#      EPP + Envoy sidecar (llm-d-router-standalone chart, no pool)
-#   3. everything else  -> InferencePool llamacpp (multi-model router)
+#   1. qwen38:27b-nvfp4 -> AIServiceBackend qwen38-27b-nvfp4 (vLLM via KServe)
+#   2. gemma4:12b-nvfp4 -> AIServiceBackend gemma4-12b-nvfp4 (vLLM via KServe)
+#   3. everything else  -> AIServiceBackend llamacpp (multi-model router)
 #
-# Rules 1 and 2 exist only to evaluate the two llm-d-router Helm charts
-# side by side (LAB-364); the loser goes back to a hand-written or
-# same-chart pair, keeping one code path per model type.
+# The match values are the vLLM `--served-model-name` values (colon, not the
+# hyphenated resource names): that is the name clients send in the request
+# body's `model` field, and what the filter puts in the header.
+#
+# Each AIServiceBackend wraps an Envoy Gateway Backend (AIServiceBackend
+# only accepts the gateway.envoyproxy.io Backend kind as backendRef — plain
+# k8s Services are not supported yet, upstream envoyproxy/ai-gateway#902),
+# which in turn points at the model server Service FQDN. There is no
+# InferencePool and no endpoint picker (LAB-364 decision, ADR-0001 IMP-009):
+# with one ready pod per model, EPP picking degenerates to "forward to the
+# only pod", and the Agent Router already collects the per-request gen_ai.*
+# metrics the pool+EPP would add control-plane surface for. A pool can be
+# re-added in front of a model that grows past one ready endpoint (GAIE
+# v1.6.2 makes endpointPickerRef optional).
 #
 # Rule 3 has no matches: it is the Gateway API catch-all. The Agent Router
 # controller appends its own `route-not-found` 404 rule after the user
 # rules, so this catch-all takes precedence and unknown model names reach
-# the llama.cpp router — whose EPP rejects models the pool does not serve —
+# the llama.cpp router — which answers with its own model-not-found error —
 # instead of the gateway's generic 404. New models added to the llama.cpp
 # `--models-preset` route through this rule with no manifest change.
 #
 # The controller generates the HTTPRoute (and a hostname-rewrite filter)
 # from this object; no handwritten HTTPRoute is needed. GET /v1/models is
 # answered by the gateway itself, built from the Exact matches above: the
-# two vLLM models are advertised, the llama.cpp router models are not
-# (catch-all rules do not contribute to the model list). Clients already
-# configure model names explicitly, so discovery of the router models is
-# not required.
+# two vLLM models are advertised under their served names, the llama.cpp
+# router models are not (catch-all rules do not contribute to the model
+# list). Clients already configure model names explicitly, so discovery of
+# the router models is not required.
 #
 # The object name deliberately differs from the legacy `llamacpp`
 # HTTPRoute (infrastructure/llamacpp, parent traefik-internal): that route
@@ -56,11 +65,11 @@ spec:
         - headers:
             - name: x-ai-eg-model
               type: Exact
-              value: qwen38-27b-nvfp4
+              value: qwen38:27b-nvfp4
       backendRefs:
-        - group: inference.networking.k8s.io
-          kind: InferencePool
-          name: qwen38-27b-nvfp4
+        # AIServiceBackend reference (no group/kind) — see
+        # qwen38-27b-nvfp4-aiservicebackend.yaml.
+        - name: qwen38-27b-nvfp4
       timeouts:
         # Timeouts.Request bounds the whole response including all streamed
         # chunks; the Agent Router default of 60s would cut off long local
@@ -72,21 +81,14 @@ spec:
         - headers:
             - name: x-ai-eg-model
               type: Exact
-              value: gemma4-12b-nvfp4
+              value: gemma4:12b-nvfp4
       backendRefs:
-        # AIServiceBackend reference (no group/kind) — see
-        # gemma4-12b-nvfp4-aiservicebackend.yaml. Wraps the standalone
-        # chart's EPP Service through an Envoy Gateway Backend; the
-        # sidecar proxy does the ext_proc endpoint picking to the vLLM
-        # pods, so no InferencePool is involved for this model.
         - name: gemma4-12b-nvfp4
       timeouts:
         request: 10m
       modelsOwnedBy: vllm
     # Fallback: llama.cpp router models and any unknown model name.
     - backendRefs:
-        - group: inference.networking.k8s.io
-          kind: InferencePool
-          name: llamacpp
+        - name: llamacpp
       timeouts:
         request: 10m

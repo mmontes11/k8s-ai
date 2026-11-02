@@ -1,12 +1,12 @@
-# AIServiceBackend for the gemma4-12b-nvfp4 rule of the ai-inference
-# AIGatewayRoute (LAB-364 chart evaluation — standalone mode).
+# AIServiceBackend for the gemma4:12b-nvfp4 rule of the ai-inference
+# AIGatewayRoute (LAB-364, ADR-0001 IMP-009).
 #
-# This is what makes the standalone chart reachable from the single
-# AIGatewayRoute: rule 2 matches x-ai-eg-model: gemma4-12b-nvfp4 (set from
-# the request body's `model` field by the Agent Router filter) and routes
-# to this backend. The backendRef must be an Envoy Gateway Backend
-# (schema-enforced on AIServiceBackendSpec), hence the paired
-# gemma4-12b-nvfp4-backend.yaml pointing at the standalone EPP Service.
+# The rule matches x-ai-eg-model: gemma4:12b-nvfp4 (the vLLM
+# --served-model-name, set from the request body's `model` field by the
+# Agent Router filter) and routes to this backend, which wraps the vLLM
+# Service through the paired gemma4-12b-nvfp4-backend.yaml (the backendRef
+# must be an Envoy Gateway Backend — schema-enforced on
+# AIServiceBackendSpec).
 #
 # schema.name: OpenAI is the request/response contract the Agent Router
 # expects from this backend — the vLLM workload speaks OpenAI natively, so

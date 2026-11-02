@@ -3,8 +3,12 @@ kind: Kustomization
 namespace: ai
 resources:
   - ai-inference.yaml
-  # Standalone-mode backends for the gemma4 rule (LAB-364 chart
-  # evaluation): the AIServiceBackend and the Envoy Gateway Backend it
-  # wraps (standalone chart EPP Service, no InferencePool).
+  # One AIServiceBackend + Envoy Gateway Backend pair per model server
+  # (LAB-364, ADR-0001 IMP-009): the AIGatewayRoute rules reference the
+  # AIServiceBackends, each wrapping its model Service through a Backend.
+  - qwen38-27b-nvfp4-backend.yaml
+  - qwen38-27b-nvfp4-aiservicebackend.yaml
   - gemma4-12b-nvfp4-backend.yaml
   - gemma4-12b-nvfp4-aiservicebackend.yaml
+  - llamacpp-backend.yaml
+  - llamacpp-aiservicebackend.yaml
