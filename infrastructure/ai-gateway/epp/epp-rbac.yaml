@@ -1,11 +1,12 @@
-# Shared RBAC for the three EPP ServiceAccounts in this directory (LAB-364).
+# RBAC for the hand-written llamacpp EPP (LAB-364).
 #
 # The EPP discovers and watches pool members through the Kubernetes API
 # (InferencePool + pod informers), so the Role only needs read access to
 # those objects. The ClusterRole covers the token/subject-access reviews
 # the llm-d-router performs for authenticated requests; both shapes mirror
 # the upstream examples (theagentrouter/agent-router
-# examples/inference-pool/base.yaml).
+# examples/inference-pool/base.yaml). The qwen38 and gemma4 EPPs get
+# equivalent, chart-generated RBAC from the llm-d-router HelmReleases.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -25,12 +26,6 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: llamacpp-epp
-    namespace: ai
-  - kind: ServiceAccount
-    name: qwen38-27b-nvfp4-epp
-    namespace: ai
-  - kind: ServiceAccount
-    name: gemma4-12b-nvfp4-epp
     namespace: ai
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -56,12 +51,6 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: llamacpp-epp
-    namespace: ai
-  - kind: ServiceAccount
-    name: qwen38-27b-nvfp4-epp
-    namespace: ai
-  - kind: ServiceAccount
-    name: gemma4-12b-nvfp4-epp
     namespace: ai
 roleRef:
   apiGroup: rbac.authorization.k8s.io
