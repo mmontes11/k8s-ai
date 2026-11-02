@@ -1,0 +1,25 @@
+# AIServiceBackend for the catch-all rule of the ai-inference
+# AIGatewayRoute (LAB-364, ADR-0001 IMP-009).
+#
+# The rule has no matches (Gateway API catch-all) and routes every model
+# not matched by the vLLM rules — the llama.cpp router models and any
+# unknown name — to this backend, which wraps the router Service through
+# the paired llamacpp-backend.yaml (the backendRef must be an Envoy Gateway
+# Backend — schema-enforced on AIServiceBackendSpec). The router answers
+# with its own model-not-found error for models it does not serve.
+#
+# schema.name: OpenAI is the request/response contract the Agent Router
+# expects from this backend — the llama.cpp server exposes an
+# OpenAI-compatible API natively, so no translation happens (same contract
+# as the route's own schema).
+apiVersion: aigateway.envoyproxy.io/v1beta1
+kind: AIServiceBackend
+metadata:
+  name: llamacpp
+spec:
+  schema:
+    name: OpenAI
+  backendRef:
+    name: llamacpp
+    kind: Backend
+    group: gateway.envoyproxy.io
