@@ -1,0 +1,31 @@
+# ServiceMonitor for the KServe LLMInferenceService workload pods (LAB-365).
+#
+# One monitor covers every model in `ai`: both `*-kserve-workload-svc`
+# services (qwen38-27b-nvfp4, gemma4-12b-nvfp4) share the labels
+# app.kubernetes.io/component=llminferenceservice-workload and
+# app.kubernetes.io/part-of=llminferenceservice, and each vLLM pod exposes
+# its Prometheus metrics on the API port 8000 at /metrics. A new
+# LLMInferenceService added to this namespace is picked up automatically.
+#
+# Targets appear when a model has replicas > 0 (both models currently scale
+# to zero). llama.cpp is intentionally not scraped here: a Prometheus scrape
+# wakes the sleeping model (ggml-org/llama.cpp#20227); its observability
+# comes gateway-side (Agent Router gen_ai.* metrics).
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: llminferenceservice-workload
+spec:
+  namespaceSelector:
+    matchNames:
+      - ai
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: llminferenceservice-workload
+      app.kubernetes.io/part-of: llminferenceservice
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 25s
+      honorLabels: false

@@ -4,5 +4,6 @@ namespace: ai
 resources:
   - gemma4-12b-nvfp4-llminferenceservice.yaml
   - hf-storage-clusterstoragecontainer.yaml
+  - llminferenceservice-workload-servicemonitor.yaml
   - nvidia-template-llminferenceserviceconfig.yaml
   - qwen38-27b-nvfp4-llminferenceservice.yaml
