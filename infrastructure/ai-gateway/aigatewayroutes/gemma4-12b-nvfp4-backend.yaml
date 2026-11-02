@@ -1,14 +1,14 @@
-# Envoy Gateway Backend wrapping the gemma4-12b-nvfp4 standalone EPP
-# Service (LAB-364 chart evaluation — standalone mode).
+# Envoy Gateway Backend wrapping the gemma4-12b-nvfp4 vLLM Service
+# (LAB-364, ADR-0001 IMP-009).
 #
 # AIServiceBackend only accepts a Backend resource of the Envoy Gateway as
 # backendRef (a plain k8s Service is not supported yet — upstream tracking
-# issue envoyproxy/ai-gateway#902), so the standalone chart's EPP Service
-# (ClusterIP, entrypoint port 8081 of the bundled Envoy sidecar proxy) is
-# wrapped here. The FQDN form mirrors the upstream
-# examples/basic/basic.yaml. Port 8081 is the proxy entrypoint: the
-# sidecar does the ext_proc endpoint picking and forwards to the chosen
-# vLLM pod, so the Backend never talks to the vLLM pods directly.
+# issue envoyproxy/ai-gateway#902), so the KServe workload Service is
+# wrapped here. The FQDN endpoint form is the only endpoint type the
+# Backend CRD supports in EG v1.9.x (no Service backendRef); STRICT_DNS
+# keeps resolving the ClusterIP while the model is not ready, so a
+# scaled-down vLLM simply 503s until it warms up. Port 8000 is vLLM's
+# OpenAI API port — the same one the legacy traefik HTTPRoute routes to.
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: Backend
 metadata:
@@ -16,5 +16,5 @@ metadata:
 spec:
   endpoints:
     - fqdn:
-        hostname: gemma4-12b-nvfp4-epp.ai.svc.cluster.local
-        port: 8081
+        hostname: gemma4-12b-nvfp4-kserve-workload-svc.ai.svc.cluster.local
+        port: 8000
