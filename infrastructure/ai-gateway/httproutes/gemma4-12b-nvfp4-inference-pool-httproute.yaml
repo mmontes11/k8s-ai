@@ -1,0 +1,31 @@
+# Routes gemma4-12b-nvfp4.mmontes-internal.duckdns.org through the
+# gemma4-12b-nvfp4 InferencePool + EPP on the Envoy Gateway (LAB-364).
+#
+# The object name differs from the legacy `gemma4-12b-nvfp4` HTTPRoute
+# (kserve-models, parent traefik-internal) on purpose: that route stays
+# in place until the DNS cutover to the Envoy Gateway, so both can
+# coexist (Gateway API hostnames are scoped per Gateway).
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: gemma4-12b-nvfp4-inference-pool
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: envoy-gateway
+      namespace: networking
+      # The http listener has no hostname constraint (k8s-infrastructure
+      # envoy-gateway Gateway) so the tenant routes keep their hostnames.
+      sectionName: http
+  hostnames:
+    - gemma4-12b-nvfp4.mmontes-internal.duckdns.org
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - group: inference.networking.k8s.io
+          kind: InferencePool
+          name: gemma4-12b-nvfp4
