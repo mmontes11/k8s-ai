@@ -1,0 +1,81 @@
+# gemma4-12b-nvfp4 EPP via the llm-d-router-standalone chart
+# (LAB-364 chart evaluation — standalone mode).
+#
+# Standalone mode creates NO InferencePool (router.inferencePool.create:
+# false): the EPP runs with --endpoint-selector <matchLabels> and watches
+# the KServe workload pods directly through the API. Traffic does not go
+# through GAIE at all for this model — the chart bundles an Envoy sidecar
+# proxy (entrypoint, Service port 8081) that:
+#   1. sends the request to the EPP via ext_proc (failure_mode_allow:
+#      true, i.e. fail-open), which picks a pod IP and sets the
+#      x-gateway-destination-endpoint header;
+#   2. routes it to that pod:8000 through an ORIGINAL_DST cluster;
+#   3. if the EPP is unreachable, load-balances the pod IPs directly via
+#      the headless gemma4-12b-nvfp4-epp-model-servers Service.
+#
+# The AIGatewayRoute (../aigatewayroutes) reaches this chart through an
+# AIServiceBackend + Envoy Gateway Backend wrapping the EPP Service, so
+# the single-endpoint-by-model routing stays body-driven.
+#
+# Values that intentionally differ from the chart defaults:
+#   router.modelServers.* — the KServe workload pod labels and vLLM port,
+#     the selector the hand-written pool used.
+#   router.epp.image — pinned to the v1.0.0 release tag; the chart default
+#     tracks main.
+#   router.epp.resources / router.proxy.resources — homelab-sized requests;
+#     chart defaults (4 CPU / 8 Gi requests, 16 Gi limits) do not apply.
+#     limits: null on the EPP reproduces the hand-written EPP (requests
+#     only); an empty map would not work because Helm merges maps
+#     key-by-key and the 16 Gi limit default would survive. The sidecar
+#     gets a small 256 Mi limit (it is a stateless proxy).
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: gemma4-12b-nvfp4-epp
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: llm-d-router-standalone
+      version: 1.0.0
+      sourceRef:
+        kind: HelmRepository
+        name: llm-d-router
+  install:
+    crds: Skip
+  upgrade:
+    crds: Skip
+  values:
+    router:
+      inferencePool:
+        create: false
+      modelServers:
+        matchLabels:
+          app.kubernetes.io/name: gemma4-12b-nvfp4
+          app.kubernetes.io/part-of: llminferenceservice
+          kserve.io/component: workload
+        type: vllm
+        protocol: http
+        targetPorts:
+          - number: 8000
+      epp:
+        image:
+          registry: ghcr.io/llm-d
+          repository: llm-d-router-endpoint-picker
+          tag: v1.0.0
+          pullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits: null
+      proxy:
+        enabled: true
+        proxyType: envoy
+        mode: sidecar
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            memory: 256Mi

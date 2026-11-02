@@ -1,8 +1,13 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: ai
+# Hand-written EPP for the llama.cpp router pool. The qwen38 and gemma4
+# EPPs (and the qwen38 InferencePool) come from the vendored llm-d-router
+# Helm charts (../charts) via the HelmReleases below — LAB-364 is running a
+# side-by-side evaluation of both charts before choosing one.
 resources:
   - epp-rbac.yaml
   - llamacpp-epp.yaml
-  - qwen38-27b-nvfp4-epp.yaml
-  - gemma4-12b-nvfp4-epp.yaml
+  - llm-d-router-helmrepository.yaml
+  - qwen38-27b-nvfp4-epp-helmrelease.yaml
+  - gemma4-12b-nvfp4-epp-helmrelease.yaml
