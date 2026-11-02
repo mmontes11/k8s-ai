@@ -1,0 +1,23 @@
+# InferencePool for the llama.cpp router (LAB-364).
+#
+# The router (role: router, models_autoload) serves every model under
+# llamacpp.mmontes-internal.duckdns.org from one pod; the EPP therefore
+# picks among the pool's members (today a single StatefulSet replica) by
+# Kubernetes pod readiness, not by model name. Per-model sleep
+# (--sleep-idle-seconds) is transparent to the pool: the router process
+# stays up and only the per-model instances sleep inside it.
+apiVersion: inference.networking.k8s.io/v1
+kind: InferencePool
+metadata:
+  name: llamacpp
+spec:
+  targetPorts:
+    - number: 8080
+  selector:
+    matchLabels:
+      app: llamacpp
+  endpointPickerRef:
+    kind: Service
+    name: llamacpp-epp
+    port:
+      number: 9002

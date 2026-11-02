@@ -1,0 +1,25 @@
+# InferencePool for the Gemma4-12B-NVFP4 vLLM workload (LAB-364).
+#
+# Selector mirrors the workload Service created by the LLMInferenceService
+# controller (gemma4-12b-nvfp4-kserve-workload-svc). One pool per model:
+# the EPP picks endpoints, not models, so a shared pool would route to the
+# wrong vLLM server. While the model is scaled to zero the pool has no
+# ready endpoints and requests get a 503, same as the empty workload
+# Service does today.
+apiVersion: inference.networking.k8s.io/v1
+kind: InferencePool
+metadata:
+  name: gemma4-12b-nvfp4
+spec:
+  targetPorts:
+    - number: 8000
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: gemma4-12b-nvfp4
+      app.kubernetes.io/part-of: llminferenceservice
+      kserve.io/component: workload
+  endpointPickerRef:
+    kind: Service
+    name: gemma4-12b-nvfp4-epp
+    port:
+      number: 9002
