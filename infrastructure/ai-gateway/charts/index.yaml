@@ -1,0 +1,35 @@
+apiVersion: v1
+entries:
+  llm-d-router-gateway:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2026-11-02T15:53:41.433447074Z"
+    dependencies:
+    - alias: router
+      name: router
+      repository: file://../routerlib
+      version: 0.0.0
+    description: A Helm chart for llm-d-router-gateway
+    digest: 33d2ed494749cafb9191ab15681e8aea3789720d3be9df37fc4d5adabedb1109
+    name: llm-d-router-gateway
+    type: application
+    urls:
+    - https://raw.githubusercontent.com/mmontes11/k8s-ai/main/infrastructure/ai-gateway/charts/llm-d-router-gateway-1.0.0.tgz
+    version: 1.0.0
+  llm-d-router-standalone:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2026-11-02T15:53:41.436374513Z"
+    dependencies:
+    - alias: router
+      name: router
+      repository: file://../routerlib
+      version: 0.0.0
+    description: A Helm chart for Endpoint Picker
+    digest: 97ccf4f20b6c0ed5f4b000a2a4b1bad76e79e56a127eb273bdb38eb330506cc5
+    name: llm-d-router-standalone
+    type: application
+    urls:
+    - https://raw.githubusercontent.com/mmontes11/k8s-ai/main/infrastructure/ai-gateway/charts/llm-d-router-standalone-1.0.0.tgz
+    version: 1.0.0
+generated: "2026-11-02T15:53:41.432009925Z"
