@@ -1,0 +1,35 @@
+# Routes llamacpp.mmontes-internal.duckdns.org through the llamacpp
+# InferencePool + EPP on the Envoy Gateway (LAB-364).
+#
+# Hostname-based routing: every model name served by the llama.cpp router
+# resolves to this one hostname, and the router multiplexes the model
+# names internally (the EPP picks pool members, not models).
+#
+# The object name differs from the legacy `llamacpp` HTTPRoute
+# (infrastructure/llamacpp, parent traefik-internal) on purpose: that
+# route stays in place until the DNS cutover to the Envoy Gateway, and
+# Gateway API hostnames are scoped per Gateway, so both can coexist.
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: llamacpp-inference-pool
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: envoy-gateway
+      namespace: networking
+      # The http listener has no hostname constraint (k8s-infrastructure
+      # envoy-gateway Gateway) so the tenant routes keep their hostnames.
+      sectionName: http
+  hostnames:
+    - llamacpp.mmontes-internal.duckdns.org
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - group: inference.networking.k8s.io
+          kind: InferencePool
+          name: llamacpp
