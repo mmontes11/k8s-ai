@@ -1,0 +1,24 @@
+# AIServiceBackend for the qwen38:27b-nvfp4 rule of the ai-inference
+# AIGatewayRoute (LAB-364, ADR-0001 IMP-009).
+#
+# The rule matches x-ai-eg-model: qwen38:27b-nvfp4 (the vLLM
+# --served-model-name, set from the request body's `model` field by the
+# Agent Router filter) and routes to this backend, which wraps the vLLM
+# Service through the paired qwen38-27b-nvfp4-backend.yaml (the backendRef
+# must be an Envoy Gateway Backend — schema-enforced on
+# AIServiceBackendSpec).
+#
+# schema.name: OpenAI is the request/response contract the Agent Router
+# expects from this backend — the vLLM workload speaks OpenAI natively, so
+# no translation happens (same contract as the route's own schema).
+apiVersion: aigateway.envoyproxy.io/v1beta1
+kind: AIServiceBackend
+metadata:
+  name: qwen38-27b-nvfp4
+spec:
+  schema:
+    name: OpenAI
+  backendRef:
+    name: qwen38-27b-nvfp4
+    kind: Backend
+    group: gateway.envoyproxy.io
