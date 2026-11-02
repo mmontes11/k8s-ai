@@ -223,11 +223,12 @@ spec:
   prune: true
   timeout: 5m
 ---
-# Inference pools, EPPs and the HTTPRoutes that route the tenant hostnames
-# through them on the Envoy Gateway (LAB-364). Ordering: the pools need
-# the GAIE CRDs, the EPPs watch their pool, and the routes need both the
-# pools (backendRefs) and the Envoy Gateway data plane (parentRef,
-# k8s-infrastructure).
+# Inference pools, EPPs and the AIGatewayRoute that serves the single
+# OpenAI endpoint on the Envoy Gateway (LAB-364). Ordering: the pools
+# need the GAIE CRDs, the EPPs watch their pool, and the AIGatewayRoute
+# needs its CRDs (ai-gateway-crds), the pools (backendRefs), the Agent
+# Router control plane that reconciles it (ai-gateway) and the Envoy
+# Gateway data plane (parentRef, k8s-infrastructure).
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
@@ -266,10 +267,12 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: ai-gateway-httproutes
+  name: ai-gateway-aigatewayroutes
   namespace: ai
 spec:
   dependsOn:
+    - name: ai-gateway
+    - name: ai-gateway-crds
     - name: ai-gateway-pools
     - name: envoy-gateway
       namespace: flux-system
@@ -278,7 +281,7 @@ spec:
     kind: GitRepository
     name: flux-tenant-ai
     namespace: flux-system
-  path: ./infrastructure/ai-gateway/httproutes
+  path: ./infrastructure/ai-gateway/aigatewayroutes
   prune: true
   timeout: 5m
 # ---
