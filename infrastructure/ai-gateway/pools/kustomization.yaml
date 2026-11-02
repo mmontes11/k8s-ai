@@ -1,7 +1,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: ai
+# The qwen38-27b-nvfp4 and gemma4-12b-nvfp4 pools are created by their
+# llm-d-router HelmReleases (see ../epp): the llm-d-router-gateway chart
+# renders the InferencePool named after the release.
 resources:
   - llamacpp-inferencepool.yaml
-  - qwen38-27b-nvfp4-inferencepool.yaml
-  - gemma4-12b-nvfp4-inferencepool.yaml
