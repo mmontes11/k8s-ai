@@ -1,0 +1,33 @@
+# PodMonitor for the llm-d EPP (endpoint picker) pods (LAB-365).
+#
+# One EPP per InferencePool, deployed by LAB-364 (PR mmontes11/k8s-ai#232,
+# infrastructure/ai-gateway/epp/): a PodMonitor (not a ServiceMonitor)
+# because the *-epp Services only expose the gRPC endpoint-picker port
+# 9002, while the EPP's own Prometheus metrics (llm_d_epp_*: TTFT/TPOT/
+# ITL/NTPOT, KV-cache utilization, queue depth, prefix-cache hit ratios)
+# listen on container port `metrics` (9090) at /metrics.
+#
+# The selector matches the EPP pod labels from that PR; until it merges,
+# this monitor simply has no targets.
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: epp
+spec:
+  namespaceSelector:
+    matchNames:
+      - ai
+  selector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values:
+          - qwen38-27b-nvfp4-epp
+          - gemma4-12b-nvfp4-epp
+          - llamacpp-epp
+  podMetricsEndpoints:
+    - port: metrics
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 25s
+      honorLabels: false
