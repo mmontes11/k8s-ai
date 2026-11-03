@@ -55,10 +55,10 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: envoy-gateway
-      namespace: networking
+      name: envoy-internal
+      namespace: envoy-internal
       # The http listener has no hostname constraint (k8s-infrastructure
-      # envoy-gateway Gateway) so the tenant routes keep their hostnames.
+      # envoy-internal Gateway) so the tenant routes keep their hostnames.
       sectionName: http
   rules:
     - matches:
