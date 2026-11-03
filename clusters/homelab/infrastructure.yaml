@@ -251,3 +251,25 @@ spec:
   path: ./infrastructure/ai-gateway/aigatewayroutes
   prune: true
   timeout: 5m
+---
+# Grafana dashboards for the ai tenant's AI gateway (LAB-365). The
+# ConfigMaps are picked up by the kube-prometheus-stack Grafana sidecar
+# (label grafana_dashboard=1, searchNamespace: monitoring) — same mechanism
+# as the dashboards in k8s-infrastructure infrastructure/prometheus/dashboards.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: grafana-dashboards
+  namespace: ai
+spec:
+  dependsOn:
+    - name: prometheus
+      namespace: flux-system
+  interval: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-tenant-ai
+    namespace: flux-system
+  path: ./infrastructure/grafana-dashboards
+  prune: true
+  timeout: 5m
