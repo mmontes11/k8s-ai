@@ -179,6 +179,37 @@
         "datasourceTemplate": "docker",
         "packageNameTemplate": "ghcr.io/multica-ai/charts/multica",
         "registryUrlTemplate": "https://ghcr.io"
+      },
+      {
+        "customType": "regex",
+        "managerFilePatterns": [
+          "/(^|/)infrastructure/ai-gateway/ai-gateway-ocirepository\\.yaml$/"
+        ],
+        "matchStrings": [
+          "ref:\\s*\\n\\s+tag:\\s+\"?(?<currentValue>[^\"]+)\"?"
+        ],
+        "datasourceTemplate": "docker",
+        "packageNameTemplate": "envoyproxy/ai-gateway-helm"
+      },
+      {
+        "customType": "regex",
+        "managerFilePatterns": [
+          "/(^|/)infrastructure/ai-gateway/crds/ai-gateway-crds-ocirepository\\.yaml$/"
+        ],
+        "matchStrings": [
+          "ref:\\s*\\n\\s+tag:\\s+\"?(?<currentValue>[^\"]+)\"?"
+        ],
+        "datasourceTemplate": "docker",
+        "packageNameTemplate": "envoyproxy/ai-gateway-crds-helm"
       }
-   ]
- }
+   ],
+  "packageRules": [
+    {
+      "matchPackageNames": [
+        "envoyproxy/ai-gateway-helm",
+        "envoyproxy/ai-gateway-crds-helm"
+      ],
+      "groupName": "agent-router"
+    }
+  ]
+}
