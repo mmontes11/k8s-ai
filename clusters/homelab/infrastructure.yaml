@@ -251,3 +251,35 @@ spec:
   path: ./infrastructure/ai-gateway/aigatewayroutes
   prune: true
   timeout: 5m
+---
+# The MCPRoute set exposing the opencode MCP servers on the Agent Router
+# MCP gateway (LAB-377): one route per server, distinct path per server
+# (see the mcproutes/ kustomization for the design). Ordering: the routes
+# need the Agent Router control plane (ai-gateway), the CRDs (ai-gateway-crds),
+# the Envoy Gateway data plane (parentRef, k8s-infrastructure) and the
+# MCP server Services the backendRefs point at.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: ai-gateway-mcproutes
+  namespace: ai
+spec:
+  dependsOn:
+    - name: ai-gateway
+    - name: ai-gateway-crds
+    - name: envoy-gateway
+      namespace: flux-system
+    - name: mcp-github
+    - name: mcp-grafana
+    - name: mcp-kubernetes
+    - name: mcp-photoprism-mmontes
+    - name: mcp-photoprism-xiaowen
+    - name: n8n
+  interval: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-tenant-ai
+    namespace: flux-system
+  path: ./infrastructure/ai-gateway/mcproutes
+  prune: true
+  timeout: 5m

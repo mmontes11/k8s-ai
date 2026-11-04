@@ -1,0 +1,46 @@
+# The opencode MCP servers (apps/opencode/opencode-configmap.yaml) exposed
+# through the Agent Router MCP gateway (LAB-377).
+#
+# Design — one MCPRoute per MCP server, not one unified route:
+#   * An MCPRoute is a single unified endpoint: all of its backends are
+#     aggregated behind spec.path with tool names prefixed
+#     `<backendRef-name>__`. The issue asks for a distinct path per server
+#     (e.g. /mcp/github), which is only expressible as one route per server.
+#   * Tool names arrive prefixed with the backend Service name
+#     (default prefixMode Always, e.g. mcp-github__search_repositories).
+#     The Never mode is not usable here: it requires hand-maintained
+#     toolSelector.include lists (capped at 32 tools per backend) just to
+#     prove name uniqueness, while github-mcp-server and the n8n MCP
+#     endpoint expose more than 32 tools. Clients that call tools by
+#     catalog name (like opencode) work unchanged; the re-pointing
+#     (LAB-378) only updates URLs, and any config that hardcodes tool
+#     names must adopt the prefixed ones.
+#   * Auth is per-user passthrough, not gateway-side credentials:
+#     forwardHeaders forwards the client's Authorization header to the
+#     backend, so each client sends the token it already uses
+#     (GITHUB_TOKEN, GITHUB_TOKEN_MARIADB_OPERATOR, GRAFANA_MCP_TOKEN,
+#     N8N_TOKEN) — no new secrets in the cluster or in Git.
+#
+# Client endpoints (exact path match, streamable HTTP):
+#   https://mmontes-llm.duckdns.org/mcp/github
+#   https://mmontes-llm.duckdns.org/mcp/github-mariadb-operator
+#   https://mmontes-llm.duckdns.org/mcp/grafana
+#   https://mmontes-llm.duckdns.org/mcp/kubernetes
+#   https://mmontes-llm.duckdns.org/mcp/n8n
+#   https://mmontes-llm.duckdns.org/mcp/photprism-mmontes
+#   https://mmontes-llm.duckdns.org/mcp/photprism-xiaowen
+#
+# The two github routes target the same upstream Service (mcp-github):
+# opencode authenticates against it with two different tokens, and
+# forwardHeaders keeps that distinction per request.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: ai
+resources:
+  - mcp-github.yaml
+  - mcp-github-mariadb-operator.yaml
+  - mcp-grafana.yaml
+  - mcp-kubernetes.yaml
+  - mcp-n8n.yaml
+  - mcp-photprism-mmontes.yaml
+  - mcp-photprism-xiaowen.yaml

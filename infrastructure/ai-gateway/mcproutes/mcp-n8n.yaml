@@ -1,0 +1,28 @@
+# MCPRoute: `n8n` MCP server (built-in MCP endpoint of the n8n app) — LAB-377.
+#
+# n8n serves its MCP endpoint at /mcp-server/http, so the backend path
+# differs from the /mcp used by the other servers; the controller rewrites
+# the client path (/mcp/n8n) to it per request.
+#
+# The client's Authorization header (Bearer N8N_TOKEN) is forwarded to the
+# backend verbatim.
+apiVersion: aigateway.envoyproxy.io/v1beta1
+kind: MCPRoute
+metadata:
+  name: mcp-n8n
+spec:
+  hostnames:
+    - mmontes-llm.duckdns.org
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ai-gateway
+      namespace: networking
+      sectionName: websecure
+  path: /mcp/n8n
+  backendRefs:
+    - name: n8n-main
+      port: 5678
+      path: /mcp-server/http
+      forwardHeaders:
+        - name: Authorization
