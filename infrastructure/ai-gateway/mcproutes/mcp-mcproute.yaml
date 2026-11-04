@@ -1,0 +1,39 @@
+apiVersion: aigateway.envoyproxy.io/v1beta1
+kind: MCPRoute
+metadata:
+  name: mcp
+spec:
+  hostnames:
+    - mmontes-llm.duckdns.org
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ai-gateway
+      namespace: networking
+      sectionName: websecure
+  path: "/mcp"
+  backendRefs:
+    - name: mcp-github
+      port: 8080
+      path: /mcp
+      forwardHeaders:
+        - name: Authorization
+    - name: mcp-grafana
+      port: 8000
+      path: /mcp
+      forwardHeaders:
+        - name: Authorization
+    - name: mcp-kubernetes
+      port: 8080
+      path: /mcp
+    - name: n8n-main
+      port: 5678
+      path: /mcp-server/http
+      forwardHeaders:
+        - name: Authorization
+    - name: mcp-photoprism-mmontes
+      port: 9001
+      path: /mcp
+    - name: mcp-photoprism-xiaowen
+      port: 9001
+      path: /mcp

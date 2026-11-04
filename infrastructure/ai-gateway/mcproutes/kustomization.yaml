@@ -37,10 +37,10 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: ai
 resources:
-  - mcp-github.yaml
-  - mcp-github-mariadb-operator.yaml
-  - mcp-grafana.yaml
-  - mcp-kubernetes.yaml
-  - mcp-n8n.yaml
-  - mcp-photprism-mmontes.yaml
-  - mcp-photprism-xiaowen.yaml
+  - mcp-github-mcproute.yaml
+  - mcp-grafana-mcproute.yaml
+  - mcp-kubernetes-mcproute.yaml
+  - mcp-mcproute-mcproute.yaml
+  - mcp-n8n-mcproute.yaml
+  - mcp-photprism-mmontes-mcproute.yaml
+  - mcp-photprism-xiaowen-mcproute.yaml
