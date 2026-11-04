@@ -1,0 +1,30 @@
+# MCPRoute: `github` MCP server (ghcr.io/github/github-mcp-server) — LAB-377.
+#
+# The client's Authorization header (Bearer GITHUB_TOKEN, as opencode
+# already sends it) is forwarded to the backend verbatim.
+apiVersion: aigateway.envoyproxy.io/v1beta1
+kind: MCPRoute
+metadata:
+  name: mcp-github
+spec:
+  # Must match the websecure listener's hostname on the ai-gateway Gateway
+  # (k8s-infrastructure), same convention as the AIGatewayRoute.
+  hostnames:
+    - mmontes-llm.duckdns.org
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      # websecure (443) only: the http listener is redirect-only and locked
+      # to the Gateway's own namespace (k8s-infrastructure, LAB-374), so
+      # tenant routes can no longer attach to :80.
+      name: ai-gateway
+      namespace: networking
+      sectionName: websecure
+  # Distinct exact-match path per MCP server (LAB-377).
+  path: /mcp/github
+  backendRefs:
+    - name: mcp-github
+      port: 8080
+      path: /mcp
+      forwardHeaders:
+        - name: Authorization

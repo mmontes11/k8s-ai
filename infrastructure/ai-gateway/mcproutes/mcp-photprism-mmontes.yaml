@@ -1,0 +1,22 @@
+# MCPRoute: `photprism-mmontes` MCP server — LAB-377.
+#
+# No client authentication: opencode sends no headers for it, so there is
+# no forwardHeaders.
+apiVersion: aigateway.envoyproxy.io/v1beta1
+kind: MCPRoute
+metadata:
+  name: mcp-photprism-mmontes
+spec:
+  hostnames:
+    - mmontes-llm.duckdns.org
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ai-gateway
+      namespace: networking
+      sectionName: websecure
+  path: /mcp/photprism-mmontes
+  backendRefs:
+    - name: mcp-photoprism-mmontes
+      port: 9001
+      path: /mcp

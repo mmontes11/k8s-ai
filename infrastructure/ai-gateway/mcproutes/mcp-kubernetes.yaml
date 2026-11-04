@@ -1,0 +1,23 @@
+# MCPRoute: `kubernetes` MCP server (containers/kubernetes-mcp-server,
+# read-only) — LAB-377.
+#
+# No client authentication: the server carries its own kubeconfig and
+# opencode sends no headers for it, so there is no forwardHeaders.
+apiVersion: aigateway.envoyproxy.io/v1beta1
+kind: MCPRoute
+metadata:
+  name: mcp-kubernetes
+spec:
+  hostnames:
+    - mmontes-llm.duckdns.org
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ai-gateway
+      namespace: networking
+      sectionName: websecure
+  path: /mcp/kubernetes
+  backendRefs:
+    - name: mcp-kubernetes
+      port: 8080
+      path: /mcp

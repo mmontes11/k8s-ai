@@ -1,0 +1,25 @@
+# MCPRoute: `github-mariadb-operator` MCP server — LAB-377.
+#
+# Same upstream Service as mcp-github (one github-mcp-server deployment);
+# opencode authenticates with a different token (GITHUB_TOKEN_MARIADB_OPERATOR),
+# which arrives on the Authorization header and is forwarded verbatim.
+apiVersion: aigateway.envoyproxy.io/v1beta1
+kind: MCPRoute
+metadata:
+  name: mcp-github-mariadb-operator
+spec:
+  hostnames:
+    - mmontes-llm.duckdns.org
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ai-gateway
+      namespace: networking
+      sectionName: websecure
+  path: /mcp/github-mariadb-operator
+  backendRefs:
+    - name: mcp-github
+      port: 8080
+      path: /mcp
+      forwardHeaders:
+        - name: Authorization
