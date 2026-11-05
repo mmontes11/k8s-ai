@@ -10,9 +10,11 @@
 # `x-ai-eg-model` header before the routing decision, so the rules below
 # select the engine by model, in Gateway API first-match-wins order:
 #
-#   1. qwen38:27b-nvfp4 -> AIServiceBackend qwen38-27b-nvfp4 (vLLM via KServe)
-#   2. gemma4:12b-nvfp4 -> AIServiceBackend gemma4-12b-nvfp4 (vLLM via KServe)
-#   3. everything else  -> AIServiceBackend llamacpp (multi-model router)
+#   1.  qwen38:27b-nvfp4 -> AIServiceBackend qwen38-27b-nvfp4 (vLLM via KServe)
+#   2.  gemma4:12b-nvfp4 -> AIServiceBackend gemma4-12b-nvfp4 (vLLM via KServe)
+#   3-10. the llama.cpp models (one explicit rule per served name, below)
+#         -> AIServiceBackend llamacpp (multi-model router)
+#   11. everything else  -> AIServiceBackend llamacpp (catch-all fallback)
 #
 # The match values are the vLLM `--served-model-name` values (colon, not the
 # hyphenated resource names): that is the name clients send in the request
@@ -29,20 +31,22 @@
 # re-added in front of a model that grows past one ready endpoint (GAIE
 # v1.6.2 makes endpointPickerRef optional).
 #
-# Rule 3 has no matches: it is the Gateway API catch-all. The Agent Router
-# controller appends its own `route-not-found` 404 rule after the user
-# rules, so this catch-all takes precedence and unknown model names reach
-# the llama.cpp router — which answers with its own model-not-found error —
-# instead of the gateway's generic 404. New models added to the llama.cpp
-# `--models-preset` route through this rule with no manifest change.
+# The last rule has no matches: it is the Gateway API catch-all. The Agent
+# Router controller appends its own `route-not-found` 404 rule after the
+# user rules, so this catch-all takes precedence and unknown model names
+# reach the llama.cpp router — which answers with its own model-not-found
+# error — instead of the gateway's generic 404. Trade-off vs the explicit
+# llama.cpp rules: a model added to the `--models-preset` (models.ini)
+# still routes here with no manifest change, but it is not advertised in
+# /v1/models until an explicit rule is added.
 #
 # The controller generates the HTTPRoute (and a hostname-rewrite filter)
 # from this object; no handwritten HTTPRoute is needed. GET /v1/models is
 # answered by the gateway itself, built from the Exact matches above: the
-# two vLLM models are advertised under their served names, the llama.cpp
-# router models are not (catch-all rules do not contribute to the model
-# list). Clients already configure model names explicitly, so discovery of
-# the router models is not required.
+# two vLLM models are advertised under their served names, and the llama.cpp
+# models are matched explicitly (one rule per served name) precisely so
+# they appear in /v1/models — catch-all rules do not contribute to the
+# model list.
 #
 # The object name deliberately differs from the legacy `llamacpp`
 # HTTPRoute (infrastructure/llamacpp, parent traefik-internal): that route
@@ -102,7 +106,87 @@ spec:
       timeouts:
         request: 10m
       modelsOwnedBy: vllm
-    # Fallback: llama.cpp router models and any unknown model name.
+    # Explicit llama.cpp rules: one per served model name — the `alias`
+    # values in infrastructure/llamacpp/llamacpp-configmap.yaml (models.ini,
+    # loaded via --models-preset) — so /v1/models advertises them (a
+    # catch-all match does not contribute to the model list). Keep this
+    # list in sync with models.ini. `qwen3-vl` is a second alias of
+    # `qwen3-vl:30b-instruct` (the Photoprism vision clients use it).
+    - matches:
+        - headers:
+            - name: x-ai-eg-model
+              type: Exact
+              value: gemma4:26b-ctx256k
+      backendRefs:
+        - name: llamacpp
+      timeouts:
+        request: 10m
+    - matches:
+        - headers:
+            - name: x-ai-eg-model
+              type: Exact
+              value: qwen3-coder:30b-instruct
+      backendRefs:
+        - name: llamacpp
+      timeouts:
+        request: 10m
+    - matches:
+        - headers:
+            - name: x-ai-eg-model
+              type: Exact
+              value: qwen3-vl:30b-instruct
+      backendRefs:
+        - name: llamacpp
+      timeouts:
+        request: 10m
+    - matches:
+        - headers:
+            - name: x-ai-eg-model
+              type: Exact
+              value: qwen3-vl
+      backendRefs:
+        - name: llamacpp
+      timeouts:
+        request: 10m
+    - matches:
+        - headers:
+            - name: x-ai-eg-model
+              type: Exact
+              value: qwen36:35b
+      backendRefs:
+        - name: llamacpp
+      timeouts:
+        request: 10m
+    - matches:
+        - headers:
+            - name: x-ai-eg-model
+              type: Exact
+              value: qwen36:35b-ctx256k
+      backendRefs:
+        - name: llamacpp
+      timeouts:
+        request: 10m
+    - matches:
+        - headers:
+            - name: x-ai-eg-model
+              type: Exact
+              value: qwen38:27b-q4-ctx157k
+      backendRefs:
+        - name: llamacpp
+      timeouts:
+        request: 10m
+    - matches:
+        - headers:
+            - name: x-ai-eg-model
+              type: Exact
+              value: qwen38:27b-q5-ctx90k
+      backendRefs:
+        - name: llamacpp
+      timeouts:
+        request: 10m
+    # Fallback: any model name not matched above still reaches the llama.cpp
+    # router (its own model-not-found error beats the gateway's 404); it is
+    # not advertised in /v1/models.
     - backendRefs:
         - name: llamacpp
       timeouts:
