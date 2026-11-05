@@ -16,8 +16,8 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: ai-gateway
-      namespace: networking
+      name: envoy-internal
+      namespace: envoy-internal
       sectionName: websecure
   path: /mcp/n8n
   backendRefs:
