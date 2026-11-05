@@ -121,6 +121,7 @@ spec:
         - name: llamacpp
       timeouts:
         request: 10m
+      modelsOwnedBy: llamacpp
     - matches:
         - headers:
             - name: x-ai-eg-model
@@ -139,33 +140,7 @@ spec:
         - name: llamacpp
       timeouts:
         request: 10m
-    - matches:
-        - headers:
-            - name: x-ai-eg-model
-              type: Exact
-              value: qwen3-vl
-      backendRefs:
-        - name: llamacpp
-      timeouts:
-        request: 10m
-    - matches:
-        - headers:
-            - name: x-ai-eg-model
-              type: Exact
-              value: qwen36:35b
-      backendRefs:
-        - name: llamacpp
-      timeouts:
-        request: 10m
-    - matches:
-        - headers:
-            - name: x-ai-eg-model
-              type: Exact
-              value: qwen36:35b-ctx256k
-      backendRefs:
-        - name: llamacpp
-      timeouts:
-        request: 10m
+      modelsOwnedBy: llamacpp
     - matches:
         - headers:
             - name: x-ai-eg-model
@@ -175,6 +150,7 @@ spec:
         - name: llamacpp
       timeouts:
         request: 10m
+      modelsOwnedBy: llamacpp
     - matches:
         - headers:
             - name: x-ai-eg-model
@@ -184,6 +160,7 @@ spec:
         - name: llamacpp
       timeouts:
         request: 10m
+      modelsOwnedBy: llamacpp
     # Fallback: any model name not matched above still reaches the llama.cpp
     # router (its own model-not-found error beats the gateway's 404); it is
     # not advertised in /v1/models.
@@ -191,3 +168,4 @@ spec:
         - name: llamacpp
       timeouts:
         request: 10m
+      modelsOwnedBy: llamacpp
