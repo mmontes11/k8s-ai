@@ -10,7 +10,7 @@ spec:
       kind: Gateway
       name: envoy-internal
       namespace: envoy-internal
-      sectionName: websecure
+      sectionName: https
   path: "/mcp"
   backendRefs:
     - name: mcp-github

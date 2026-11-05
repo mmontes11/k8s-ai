@@ -7,19 +7,19 @@ kind: MCPRoute
 metadata:
   name: mcp-github
 spec:
-  # Must match the websecure listener's hostname on the envoy-internal Gateway
+  # Must match the https listener's hostname on the envoy-internal Gateway
   # (k8s-infrastructure), same convention as the AIGatewayRoute.
   hostnames:
     - mmontes-llm.duckdns.org
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      # websecure (443) only: the http listener is redirect-only and locked
+      # https (443) only: the http listener is redirect-only and locked
       # to the Gateway's own namespace (k8s-infrastructure, LAB-374), so
       # tenant routes can no longer attach to :80.
       name: envoy-internal
       namespace: envoy-internal
-      sectionName: websecure
+      sectionName: https
   # Distinct exact-match path per MCP server (LAB-377).
   path: /mcp/github
   backendRefs:

@@ -14,7 +14,7 @@ spec:
       kind: Gateway
       name: envoy-internal
       namespace: envoy-internal
-      sectionName: websecure
+      sectionName: https
   path: /mcp/photprism-mmontes
   backendRefs:
     - name: mcp-photoprism-mmontes
