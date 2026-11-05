@@ -17,7 +17,7 @@ spec:
     ollama:
       enabled: false
     openaiBaseApiUrls:
-      - http://llamacpp.ai.svc.cluster.local:8080/v1
+      - https://mmontes-llm.duckdns.org/v1
     pipelines:
       enabled: false
     websocket:
