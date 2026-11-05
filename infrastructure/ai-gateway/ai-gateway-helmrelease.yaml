@@ -10,7 +10,7 @@ spec:
   # CRDs are installed by the separate `ai-gateway-crds` Kustomization
   # (./crds); the controller chart ships no CRDs of its own, but Skip makes
   # the ownership explicit and matches the Envoy Gateway HelmRelease
-  # (k8s-infrastructure PR #126).
+  # (k8s-infrastructure PR #127).
   install:
     crds: Skip
   upgrade:
