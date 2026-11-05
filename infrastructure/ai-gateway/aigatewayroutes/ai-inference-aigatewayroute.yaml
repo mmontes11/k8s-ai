@@ -53,21 +53,24 @@ kind: AIGatewayRoute
 metadata:
   name: ai-inference
 spec:
-  # Must match the websecure listener's hostname on the ai-gateway Gateway
-  # (k8s-infrastructure): a route only binds to a listener whose
+  # Must match the websecure listener's hostname on the envoy-internal
+  # Gateway (k8s-infrastructure): a route only binds to a listener whose
   # hostname it matches.
   hostnames:
     - mmontes-llm.duckdns.org
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      # Named `ai-gateway` (renamed from `envoy-gateway` in LAB-374): in the
-      # GatewayNamespace deploy mode the controller's own resources
-      # (Deployment/Service/ServiceAccount from the Helm release) are called
-      # `envoy-gateway` in this namespace, so the Gateway cannot share that
-      # name or its proxy would never be created.
+      # The Gateway lives in its own dedicated `envoy-internal` namespace
+      # (k8s-infrastructure, traefik-internal pattern). The name cannot be
+      # `envoy-gateway`: the gateway-helm chart hardcodes the controller's
+      # own resources (Deployment/Service/ServiceAccount) to that name in
+      # the Gateway's namespace, and the GatewayNamespace data plane takes
+      # its ServiceAccount name from the Gateway, so a Gateway named
+      # `envoy-gateway` would collide with the controller and never get a
+      # proxy.
       name: envoy-internal
-      namespace: networking
+      namespace: envoy-internal
       # websecure (443) only: the http listener is redirect-only and locked
       # to the Gateway's own namespace (k8s-infrastructure, LAB-374), so
       # tenant routes can no longer attach to :80.

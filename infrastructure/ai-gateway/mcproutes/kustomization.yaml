@@ -1,7 +1,7 @@
 # The opencode MCP servers (apps/opencode/opencode-configmap.yaml) exposed
 # through the Agent Router MCP gateway (LAB-377).
 #
-# Design — one MCPRoute per MCP server, not one unified route:
+# Design — one MCPRoute per MCP server, plus a unified /mcp route:
 #   * An MCPRoute is a single unified endpoint: all of its backends are
 #     aggregated behind spec.path with tool names prefixed
 #     `<backendRef-name>__`. The issue asks for a distinct path per server
@@ -23,16 +23,19 @@
 #
 # Client endpoints (exact path match, streamable HTTP):
 #   https://mmontes-llm.duckdns.org/mcp/github
-#   https://mmontes-llm.duckdns.org/mcp/github-mariadb-operator
 #   https://mmontes-llm.duckdns.org/mcp/grafana
 #   https://mmontes-llm.duckdns.org/mcp/kubernetes
 #   https://mmontes-llm.duckdns.org/mcp/n8n
 #   https://mmontes-llm.duckdns.org/mcp/photprism-mmontes
 #   https://mmontes-llm.duckdns.org/mcp/photprism-xiaowen
+#   https://mmontes-llm.duckdns.org/mcp   (unified: every server in one
+#     route, tools prefixed with the backend Service name)
 #
-# The two github routes target the same upstream Service (mcp-github):
-# opencode authenticates against it with two different tokens, and
-# forwardHeaders keeps that distinction per request.
+# The unified /mcp route (mcp-mcproute.yaml) aggregates every server
+# behind one path; its mcp-github backend forwards the request's
+# Authorization header verbatim, so both github tokens
+# (GITHUB_TOKEN, GITHUB_TOKEN_MARIADB_OPERATOR) work against the same
+# upstream Service.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: ai
@@ -40,7 +43,7 @@ resources:
   - mcp-github-mcproute.yaml
   - mcp-grafana-mcproute.yaml
   - mcp-kubernetes-mcproute.yaml
-  - mcp-mcproute-mcproute.yaml
+  - mcp-mcproute.yaml
   - mcp-n8n-mcproute.yaml
   - mcp-photprism-mmontes-mcproute.yaml
   - mcp-photprism-xiaowen-mcproute.yaml

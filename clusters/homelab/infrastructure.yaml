@@ -239,7 +239,7 @@ spec:
   dependsOn:
     - name: ai-gateway
     - name: ai-gateway-crds
-    - name: envoy-gateway
+    - name: envoy-internal
       namespace: flux-system
     - name: kserve-models
     - name: llamacpp
@@ -267,7 +267,7 @@ spec:
   dependsOn:
     - name: ai-gateway
     - name: ai-gateway-crds
-    - name: envoy-gateway
+    - name: envoy-internal
       namespace: flux-system
     - name: mcp-github
     - name: mcp-grafana
