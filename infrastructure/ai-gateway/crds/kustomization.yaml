@@ -1,6 +1,6 @@
 # Agent Router (aigateway.envoyproxy.io) CRDs — LAB-363.
 #
-# Laid out like the Envoy Gateway CRDs in k8s-infrastructure PR #126: a
+# Laid out like the Envoy Gateway CRDs in k8s-infrastructure PR #127: a
 # dedicated `crds/` subdirectory that is its own Flux Kustomization, so the
 # CRDs reconcile first and the controller Kustomization `dependsOn` it.
 #
