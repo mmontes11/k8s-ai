@@ -15,7 +15,7 @@ spec:
       kind: Gateway
       name: envoy-internal
       namespace: envoy-internal
-      sectionName: websecure
+      sectionName: https
   path: /mcp/kubernetes
   backendRefs:
     - name: mcp-kubernetes

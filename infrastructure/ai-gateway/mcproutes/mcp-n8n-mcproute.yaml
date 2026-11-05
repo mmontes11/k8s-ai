@@ -18,7 +18,7 @@ spec:
       kind: Gateway
       name: envoy-internal
       namespace: envoy-internal
-      sectionName: websecure
+      sectionName: https
   path: /mcp/n8n
   backendRefs:
     - name: n8n-main

@@ -57,7 +57,7 @@ kind: AIGatewayRoute
 metadata:
   name: ai-inference
 spec:
-  # Must match the websecure listener's hostname on the envoy-internal
+  # Must match the https listener's hostname on the envoy-internal
   # Gateway (k8s-infrastructure): a route only binds to a listener whose
   # hostname it matches.
   hostnames:
@@ -75,10 +75,10 @@ spec:
       # proxy.
       name: envoy-internal
       namespace: envoy-internal
-      # websecure (443) only: the http listener is redirect-only and locked
+      # https (443) only: the http listener is redirect-only and locked
       # to the Gateway's own namespace (k8s-infrastructure, LAB-374), so
       # tenant routes can no longer attach to :80.
-      sectionName: websecure
+      sectionName: https
   rules:
     - matches:
         - headers:
