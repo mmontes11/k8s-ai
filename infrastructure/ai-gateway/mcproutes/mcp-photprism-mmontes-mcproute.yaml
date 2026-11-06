@@ -1,7 +1,3 @@
-# MCPRoute: `photprism-mmontes` MCP server — LAB-377.
-#
-# No client authentication: opencode sends no headers for it, so there is
-# no forwardHeaders.
 apiVersion: aigateway.envoyproxy.io/v1beta1
 kind: MCPRoute
 metadata:

@@ -1,7 +1,3 @@
-# MCPRoute: `grafana` MCP server (grafana-mcp, HelmRelease mcp-grafana) — LAB-377.
-#
-# The client's Authorization header (Bearer GRAFANA_MCP_TOKEN) is forwarded
-# to the backend verbatim.
 apiVersion: aigateway.envoyproxy.io/v1beta1
 kind: MCPRoute
 metadata:
