@@ -51,6 +51,7 @@ spec:
         - name: llamacpp
       timeouts:
         request: 10m
+      modelsOwnedBy: llamacpp
     - matches:
         - headers:
             - name: x-ai-eg-model
