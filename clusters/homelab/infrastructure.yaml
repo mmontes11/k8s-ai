@@ -187,10 +187,6 @@ spec:
   prune: true
   timeout: 10m
 ---
-# Agent Router (formerly Envoy AI Gateway) control plane, per ADR-001.
-# Installed in the ai tenant namespace; the CRDs must reconcile before the
-# controller (ai-gateway-crds -> ai-gateway). The crds/ subdir layout mirrors
-# the Envoy Gateway install in k8s-infrastructure PR #127.
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
@@ -223,13 +219,6 @@ spec:
   prune: true
   timeout: 5m
 ---
-# The AIGatewayRoute that serves the single OpenAI endpoint on the Envoy
-# Gateway (LAB-364). No InferencePools or EPPs: the rules point at one
-# AIServiceBackend per model server (ADR-0001 IMP-009). Ordering: the
-# AIGatewayRoute needs its CRDs (ai-gateway-crds), the Agent Router
-# control plane that reconciles it (ai-gateway), the Envoy Gateway data
-# plane (parentRef, k8s-infrastructure) and the model server Services the
-# Backend objects wrap (kserve-models, llamacpp).
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
@@ -239,10 +228,6 @@ spec:
   dependsOn:
     - name: ai-gateway
     - name: ai-gateway-crds
-    - name: envoy-internal
-      namespace: flux-system
-    - name: kserve-models
-    - name: llamacpp
   interval: 5m
   sourceRef:
     kind: GitRepository
@@ -252,12 +237,6 @@ spec:
   prune: true
   timeout: 5m
 ---
-# The MCPRoute set exposing the opencode MCP servers on the Agent Router
-# MCP gateway (LAB-377): one route per server, distinct path per server
-# (see the mcproutes/ kustomization for the design). Ordering: the routes
-# need the Agent Router control plane (ai-gateway), the CRDs (ai-gateway-crds),
-# the Envoy Gateway data plane (parentRef, k8s-infrastructure) and the
-# MCP server Services the backendRefs point at.
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
@@ -267,14 +246,6 @@ spec:
   dependsOn:
     - name: ai-gateway
     - name: ai-gateway-crds
-    - name: envoy-internal
-      namespace: flux-system
-    - name: mcp-github
-    - name: mcp-grafana
-    - name: mcp-kubernetes
-    - name: mcp-photoprism-mmontes
-    - name: mcp-photoprism-xiaowen
-    - name: n8n
   interval: 5m
   sourceRef:
     kind: GitRepository
