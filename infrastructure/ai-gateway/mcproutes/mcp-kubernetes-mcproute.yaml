@@ -1,8 +1,3 @@
-# MCPRoute: `kubernetes` MCP server (containers/kubernetes-mcp-server,
-# read-only) — LAB-377.
-#
-# No client authentication: the server carries its own kubeconfig and
-# opencode sends no headers for it, so there is no forwardHeaders.
 apiVersion: aigateway.envoyproxy.io/v1beta1
 kind: MCPRoute
 metadata:

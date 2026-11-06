@@ -3,9 +3,6 @@ kind: Kustomization
 namespace: ai
 resources:
   - ai-inference-aigatewayroute.yaml
-  # One file per model server (LAB-364, ADR-0001 IMP-009): each carries the
-  # Envoy Gateway Backend wrapping the model Service plus the
-  # AIServiceBackend the AIGatewayRoute rules reference.
   - qwen38-27b-nvfp4-aiservicebackend.yaml
   - gemma4-12b-nvfp4-aiservicebackend.yaml
   - llamacpp-aiservicebackend.yaml

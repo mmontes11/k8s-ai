@@ -1,10 +1,3 @@
-# ServiceMonitor for the Agent Router (aigateway.envoyproxy.io) controller
-# (LAB-365). The ai-gateway-helm chart (v1.2.0) serves the controller's
-# Prometheus metrics — the gateway-side gen_ai_* series that back the
-# Modular-handbook TTFT/TPOT/duration metrics for engines that expose no
-# engine-level metrics (llama.cpp) — on the Service port `http-metrics`
-# (8080) at /metrics. The Service `ai-gateway-controller` is created by the
-# ai-gateway HelmRelease in this directory.
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
