@@ -115,7 +115,7 @@ data:
         "servers": {
           "github": {
             "type": "remote",
-            "url": "http://mcp-github.ai.svc.cluster.local:8080/mcp",
+            "url": "https://mmontes-llm.duckdns.org/mcp/github",
             "oauth": false,
             "headers": {
               "Authorization": "Bearer {env:GITHUB_TOKEN}"
@@ -124,7 +124,7 @@ data:
           },
           "github-mariadb-operator": {
             "type": "remote",
-            "url": "http://mcp-github.ai.svc.cluster.local:8080/mcp",
+            "url": "https://mmontes-llm.duckdns.org/mcp/github",
             "oauth": false,
             "headers": {
               "Authorization": "Bearer {env:GITHUB_TOKEN_MARIADB_OPERATOR}"
@@ -133,7 +133,7 @@ data:
           },
           "grafana": {
             "type": "remote",
-            "url": "http://mcp-grafana.ai.svc.cluster.local:8000/mcp",
+            "url": "https://mmontes-llm.duckdns.org/mcp/grafana",
             "headers": {
               "Authorization": "Bearer {env:GRAFANA_MCP_TOKEN}"
             },
@@ -141,12 +141,12 @@ data:
           },
           "kubernetes": {
             "type": "remote",
-            "url": "http://mcp-kubernetes.ai.svc.cluster.local:8080/mcp",
+            "url": "https://mmontes-llm.duckdns.org/mcp/kubernetes",
             "disabled": false
           },
           "n8n": {
             "type": "remote",
-            "url": "http://n8n-main.ai.svc.cluster.local:5678/mcp-server/http",
+            "url": "https://mmontes-llm.duckdns.org/mcp/n8n",
             "oauth": false,
             "headers": {
               "Authorization": "Bearer {env:N8N_TOKEN}"
@@ -155,12 +155,12 @@ data:
           },
           "photprism-mmontes": {
             "type": "remote",
-            "url": "http://mcp-photoprism-mmontes.ai.svc.cluster.local:9001/mcp",
+            "url": "https://mmontes-llm.duckdns.org/mcp/photprism-mmontes",
             "disabled": true
           },
           "photprism-xiaowen": {
             "type": "remote",
-            "url": "http://mcp-photoprism-xiaowen.ai.svc.cluster.local:9001/mcp",
+            "url": "https://mmontes-llm.duckdns.org/mcp/photprism-xiaowen",
             "disabled": true
           }
         }
