@@ -156,6 +156,9 @@ spec:
             - name: opencode
               mountPath: /home/mmontes/.config/opencode/opencode.json
               subPath: opencode.json
+            - name: opencode
+              mountPath: /home/mmontes/.config/opencode/cli.json
+              subPath: cli.json
             - name: run
               mountPath: /var/run
         - name: dind
@@ -244,9 +247,6 @@ spec:
             - name: opencode
               mountPath: /home/mmontes/.config/opencode/opencode.json
               subPath: opencode.json
-            - name: opencode
-              mountPath: /home/mmontes/.config/opencode/cli.json
-              subPath: cli.json
             - name: run
               mountPath: /var/run
   volumeClaimTemplates:
