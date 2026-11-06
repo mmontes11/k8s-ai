@@ -1,83 +1,15 @@
-# Single OpenAI-compatible endpoint for the ai tenant (LAB-364, ADR-0001 R1).
-#
-# Every model — llama.cpp router models, vLLM/KServe models, and anything
-# unknown — arrives at mmontes-llm.duckdns.org (the Gateway's HTTPS
-# hostname, ADR-001 IMP-008) with the plain OpenAI API. Plain HTTP hits to
-# :80 are redirected to this hostname over HTTPS by the gateway-level
-# catch-all redirect (k8s-infrastructure, LAB-374). The Agent Router filter
-# (installed by feature-agent-router) reads
-# the `model` field from the request body and exposes it as the
-# `x-ai-eg-model` header before the routing decision, so the rules below
-# select the engine by model, in Gateway API first-match-wins order:
-#
-#   1.  qwen38:27b-nvfp4 -> AIServiceBackend qwen38-27b-nvfp4 (vLLM via KServe)
-#   2.  gemma4:12b-nvfp4 -> AIServiceBackend gemma4-12b-nvfp4 (vLLM via KServe)
-#   3-10. the llama.cpp models (one explicit rule per served name, below)
-#         -> AIServiceBackend llamacpp (multi-model router)
-#   11. everything else  -> AIServiceBackend llamacpp (catch-all fallback)
-#
-# The match values are the vLLM `--served-model-name` values (colon, not the
-# hyphenated resource names): that is the name clients send in the request
-# body's `model` field, and what the filter puts in the header.
-#
-# Each AIServiceBackend wraps an Envoy Gateway Backend (AIServiceBackend
-# only accepts the gateway.envoyproxy.io Backend kind as backendRef — plain
-# k8s Services are not supported yet, upstream envoyproxy/ai-gateway#902),
-# which in turn points at the model server Service FQDN. There is no
-# InferencePool and no endpoint picker (LAB-364 decision, ADR-0001 IMP-009):
-# with one ready pod per model, EPP picking degenerates to "forward to the
-# only pod", and the Agent Router already collects the per-request gen_ai.*
-# metrics the pool+EPP would add control-plane surface for. A pool can be
-# re-added in front of a model that grows past one ready endpoint (GAIE
-# v1.6.2 makes endpointPickerRef optional).
-#
-# The last rule has no matches: it is the Gateway API catch-all. The Agent
-# Router controller appends its own `route-not-found` 404 rule after the
-# user rules, so this catch-all takes precedence and unknown model names
-# reach the llama.cpp router — which answers with its own model-not-found
-# error — instead of the gateway's generic 404. Trade-off vs the explicit
-# llama.cpp rules: a model added to the `--models-preset` (models.ini)
-# still routes here with no manifest change, but it is not advertised in
-# /v1/models until an explicit rule is added.
-#
-# The controller generates the HTTPRoute (and a hostname-rewrite filter)
-# from this object; no handwritten HTTPRoute is needed. GET /v1/models is
-# answered by the gateway itself, built from the Exact matches above: the
-# two vLLM models are advertised under their served names, and the llama.cpp
-# models are matched explicitly (one rule per served name) precisely so
-# they appear in /v1/models — catch-all rules do not contribute to the
-# model list.
-#
-# The object name deliberately differs from the legacy `llamacpp`
-# HTTPRoute (infrastructure/llamacpp, parent traefik-internal): that route
-# stays in place until the DNS cutover to the Envoy Gateway, and Gateway
-# API hostnames are scoped per Gateway, so both can coexist.
 apiVersion: aigateway.envoyproxy.io/v1beta1
 kind: AIGatewayRoute
 metadata:
   name: ai-inference
 spec:
-  # Must match the https listener's hostname on the envoy-internal
-  # Gateway (k8s-infrastructure): a route only binds to a listener whose
-  # hostname it matches.
   hostnames:
     - mmontes-llm.duckdns.org
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      # The Gateway lives in its own dedicated `envoy-internal` namespace
-      # (k8s-infrastructure, traefik-internal pattern). The name cannot be
-      # `envoy-gateway`: the gateway-helm chart hardcodes the controller's
-      # own resources (Deployment/Service/ServiceAccount) to that name in
-      # the Gateway's namespace, and the GatewayNamespace data plane takes
-      # its ServiceAccount name from the Gateway, so a Gateway named
-      # `envoy-gateway` would collide with the controller and never get a
-      # proxy.
       name: envoy-internal
       namespace: envoy-internal
-      # https (443) only: the http listener is redirect-only and locked
-      # to the Gateway's own namespace (k8s-infrastructure, LAB-374), so
-      # tenant routes can no longer attach to :80.
       sectionName: https
   rules:
     - matches:
@@ -86,14 +18,8 @@ spec:
               type: Exact
               value: qwen38:27b-nvfp4
       backendRefs:
-        # AIServiceBackend reference (no group/kind) — see
-        # qwen38-27b-nvfp4-aiservicebackend.yaml.
         - name: qwen38-27b-nvfp4
       timeouts:
-        # Timeouts.Request bounds the whole response including all streamed
-        # chunks; the Agent Router default of 60s would cut off long local
-        # generations (27B on a 24GB GPU streams at single-digit to low
-        # double-digit tok/s). Judgement call, kept uniform across rules.
         request: 10m
       modelsOwnedBy: vllm
     - matches:
@@ -106,12 +32,6 @@ spec:
       timeouts:
         request: 10m
       modelsOwnedBy: vllm
-    # Explicit llama.cpp rules: one per served model name — the `alias`
-    # values in infrastructure/llamacpp/llamacpp-configmap.yaml (models.ini,
-    # loaded via --models-preset) — so /v1/models advertises them (a
-    # catch-all match does not contribute to the model list). Keep this
-    # list in sync with models.ini. `qwen3-vl` is a second alias of
-    # `qwen3-vl:30b-instruct` (the Photoprism vision clients use it).
     - matches:
         - headers:
             - name: x-ai-eg-model
