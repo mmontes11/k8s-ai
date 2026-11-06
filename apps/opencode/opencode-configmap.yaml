@@ -203,5 +203,5 @@ data:
       },
       "keybinds": {
         "input.newline": "shift+enter,ctrl+j",
-      },
+      }
     }
