@@ -12,5 +12,10 @@ spec:
   upgrade:
     crds: Skip
   values:
+    controller:
+      watch:
+        namespaces:
+          - envoy-internal
+          - ai
     envoyGateway:
       namespace: envoy-internal
