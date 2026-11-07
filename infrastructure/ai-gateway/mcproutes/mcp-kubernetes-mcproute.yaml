@@ -4,14 +4,14 @@ metadata:
   name: mcp-kubernetes
 spec:
   hostnames:
-    - mmontes-llm.duckdns.org
+    - mcp.mmontes-llm.duckdns.org
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: envoy-internal
       namespace: envoy-internal
       sectionName: https
-  path: /mcp/kubernetes
+  path: /kubernetes
   backendRefs:
     - name: mcp-kubernetes
       port: 8080

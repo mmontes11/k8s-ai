@@ -4,14 +4,14 @@ metadata:
   name: mcp-photprism-mmontes
 spec:
   hostnames:
-    - mmontes-llm.duckdns.org
+    - mmcp.montes-llm.duckdns.org
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: envoy-internal
       namespace: envoy-internal
       sectionName: https
-  path: /mcp/photprism-mmontes
+  path: /photprism-mmontes
   backendRefs:
     - name: mcp-photoprism-mmontes
       port: 9001
