@@ -209,7 +209,6 @@ metadata:
   namespace: ai
 spec:
   dependsOn:
-    - name: envoy-internal
     - name: ai-gateway-crds
   interval: 5m
   sourceRef:
