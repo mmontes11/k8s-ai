@@ -4,7 +4,7 @@ metadata:
   name: mcp-photprism-mmontes
 spec:
   hostnames:
-    - mmcp.montes-llm.duckdns.org
+    - mcp.montes-llm.duckdns.org
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
