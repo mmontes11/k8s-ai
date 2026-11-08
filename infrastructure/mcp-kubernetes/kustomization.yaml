@@ -4,4 +4,3 @@ namespace: ai
 resources:
   - kubernetes-mcp-server-ocirepository.yaml
   - mcp-kubernetes-helmrelease.yaml
-  - mcp-kubernetes-httproute.yaml

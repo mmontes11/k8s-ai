@@ -5,4 +5,3 @@ resources:
   - grafana-mcp-ocirepository.yaml
   - grafana-token-sealedsecret.yaml
   - mcp-grafana-helmrelease.yaml
-  - mcp-grafana-httproute.yaml

@@ -3,5 +3,4 @@ kind: Kustomization
 namespace: ai
 resources:
   - mcp-github-deployment.yaml
-  - mcp-github-httproute.yaml
   - mcp-github-service.yaml

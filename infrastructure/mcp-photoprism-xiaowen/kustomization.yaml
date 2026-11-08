@@ -3,6 +3,5 @@ kind: Kustomization
 namespace: ai
 resources:
   - mcp-photoprism-xiaowen-deployment.yaml
-  - mcp-photoprism-xiaowen-httproute.yaml
   - mcp-photoprism-xiaowen-service.yaml
   - photoprism-xiaowen-sealedsecret.yaml
