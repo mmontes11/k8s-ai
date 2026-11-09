@@ -5,7 +5,7 @@ metadata:
 spec:
   namespaceSelector:
     matchNames:
-      - ai
+      - envoy-gateway-system
   selector:
     matchLabels:
       app.kubernetes.io/name: ai-gateway-helm
