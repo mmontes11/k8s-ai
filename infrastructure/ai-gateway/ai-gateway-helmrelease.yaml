@@ -3,10 +3,11 @@ kind: HelmRelease
 metadata:
   name: ai-gateway
 spec:
-  # Agent Router control plane runs in envoy-gateway-system alongside the Envoy
-  # Gateway controllers (LAB-385). watch.namespaces and envoyGateway.namespace are
-  # unchanged: the controller still watches envoy-internal + ai, and the Gateway /
-  # proxy it injects into stay in envoy-internal.
+  # Shared Agent Router control plane in envoy-gateway-system alongside the
+  # shared Envoy Gateway controller (LAB-385, k8s-infrastructure
+  # design/adr-001): watch is unset, so the controller watches all
+  # namespaces and its extproc webhook injects sidecars into Envoy proxies
+  # in every tenant namespace.
   targetNamespace: envoy-gateway-system
   chartRef:
     kind: OCIRepository
@@ -17,10 +18,8 @@ spec:
   upgrade:
     crds: Skip
   values:
-    controller:
-      watch:
-        namespaces:
-          - envoy-internal
-          - ai
+    # Namespace of the shared Envoy Gateway controller (k8s-infrastructure);
+    # the chart's InferencePool ClusterRoleBinding grants it to that
+    # controller's envoy-gateway ServiceAccount.
     envoyGateway:
-      namespace: envoy-internal
+      namespace: envoy-gateway-system
