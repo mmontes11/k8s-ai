@@ -3,6 +3,11 @@ kind: HelmRelease
 metadata:
   name: ai-gateway
 spec:
+  # Agent Router control plane runs in envoy-gateway-system alongside the Envoy
+  # Gateway controllers (LAB-385). watch.namespaces and envoyGateway.namespace are
+  # unchanged: the controller still watches envoy-internal + ai, and the Gateway /
+  # proxy it injects into stay in envoy-internal.
+  targetNamespace: envoy-gateway-system
   chartRef:
     kind: OCIRepository
     name: ai-gateway
