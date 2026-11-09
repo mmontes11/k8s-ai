@@ -205,29 +205,12 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: ai-gateway
-  namespace: ai
-spec:
-  dependsOn:
-    - name: ai-gateway-crds
-  interval: 5m
-  sourceRef:
-    kind: GitRepository
-    name: flux-tenant-ai
-    namespace: flux-system
-  path: ./infrastructure/ai-gateway
-  prune: true
-  timeout: 5m
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
   name: ai-gateway-aigatewayroutes
   namespace: ai
 spec:
   dependsOn:
-    - name: ai-gateway
-    - name: ai-gateway-crds
+    - name: envoy-crds
+      namespace: flux-system
   interval: 5m
   sourceRef:
     kind: GitRepository
@@ -244,8 +227,8 @@ metadata:
   namespace: ai
 spec:
   dependsOn:
-    - name: ai-gateway
-    - name: ai-gateway-crds
+    - name: envoy-crds
+      namespace: flux-system
   interval: 5m
   sourceRef:
     kind: GitRepository
