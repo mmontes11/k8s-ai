@@ -6,8 +6,8 @@ metadata:
     app.kubernetes.io/part-of: multica
 spec:
   parentRefs:
-    - name: traefik-external
-      namespace: networking
+    - name: envoy-external
+      namespace: envoy-external
   hostnames:
     - "multica-api.mmontes.duckdns.org"
   rules:
