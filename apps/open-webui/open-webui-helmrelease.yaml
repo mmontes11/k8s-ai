@@ -17,7 +17,7 @@ spec:
     ollama:
       enabled: false
     openaiBaseApiUrls:
-      - https://llm.mmontes-llm.duckdns.org/v1
+      - https://llm.mmontes-internal.duckdns.org/v1
     pipelines:
       enabled: false
     websocket:

@@ -4,8 +4,8 @@ metadata:
   name: ollama
 spec:
   parentRefs:
-    - name: traefik-internal
-      namespace: networking
+    - name: envoy-internal
+      namespace: envoy-internal
   hostnames:
     - "ollama.mmontes-internal.duckdns.org"
   rules:

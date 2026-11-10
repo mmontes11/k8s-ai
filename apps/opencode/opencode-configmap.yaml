@@ -61,7 +61,7 @@ data:
           "name": "Homelab",
           "package": "aisdk:@ai-sdk/openai-compatible",
           "settings": {
-            "baseURL": "https://llm.mmontes-llm.duckdns.org/v1"
+            "baseURL": "https://llm.mmontes-internal.duckdns.org/v1"
           },
           "models": {
             "gemma4:26b-ctx256k": {
@@ -115,7 +115,7 @@ data:
         "servers": {
           "github": {
             "type": "remote",
-            "url": "https://mcp.mmontes-llm.duckdns.org/github",
+            "url": "https://mcp.mmontes-internal.duckdns.org/github",
             "oauth": false,
             "headers": {
               "Authorization": "Bearer {env:GITHUB_TOKEN}"
@@ -124,7 +124,7 @@ data:
           },
           "github-mariadb-operator": {
             "type": "remote",
-            "url": "https://mcp.mmontes-llm.duckdns.org/github",
+            "url": "https://mcp.mmontes-internal.duckdns.org/github",
             "oauth": false,
             "headers": {
               "Authorization": "Bearer {env:GITHUB_TOKEN_MARIADB_OPERATOR}"
@@ -133,7 +133,7 @@ data:
           },
           "grafana": {
             "type": "remote",
-            "url": "https://mcp.mmontes-llm.duckdns.org/grafana",
+            "url": "https://mcp.mmontes-internal.duckdns.org/grafana",
             "headers": {
               "Authorization": "Bearer {env:GRAFANA_MCP_TOKEN}"
             },
@@ -141,12 +141,12 @@ data:
           },
           "kubernetes": {
             "type": "remote",
-            "url": "https://mcp.mmontes-llm.duckdns.org/kubernetes",
+            "url": "https://mcp.mmontes-internal.duckdns.org/kubernetes",
             "disabled": false
           },
           "n8n": {
             "type": "remote",
-            "url": "https://mcp.mmontes-llm.duckdns.org/n8n",
+            "url": "https://mcp.mmontes-internal.duckdns.org/n8n",
             "oauth": false,
             "headers": {
               "Authorization": "Bearer {env:N8N_TOKEN}"
@@ -155,12 +155,12 @@ data:
           },
           "photprism-mmontes": {
             "type": "remote",
-            "url": "https://mcp.mmontes-llm.duckdns.org/photoprism-mmontes",
+            "url": "https://mcp.mmontes-internal.duckdns.org/photoprism-mmontes",
             "disabled": true
           },
           "photprism-xiaowen": {
             "type": "remote",
-            "url": "https://mcp.mmontes-llm.duckdns.org/photoprism-xiaowen",
+            "url": "https://mcp.mmontes-internal.duckdns.org/photoprism-xiaowen",
             "disabled": true
           }
         }
