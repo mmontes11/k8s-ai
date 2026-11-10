@@ -4,8 +4,8 @@ metadata:
   name: multica
 spec:
   parentRefs:
-    - name: traefik-internal
-      namespace: networking
+    - name: envoy-internal
+      namespace: envoy-internal
   hostnames:
     - "multica.mmontes-internal.duckdns.org"
   rules:
@@ -19,8 +19,8 @@ metadata:
   name: multica-api
 spec:
   parentRefs:
-    - name: traefik-internal
-      namespace: networking
+    - name: envoy-internal
+      namespace: envoy-internal
   hostnames:
     - "multica-api.mmontes-internal.duckdns.org"
   rules:

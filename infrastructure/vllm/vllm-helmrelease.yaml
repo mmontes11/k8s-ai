@@ -157,8 +157,8 @@ spec:
         main:
           enabled: true
           parentRefs:
-            - name: traefik-internal
-              namespace: networking
+            - name: envoy-internal
+              namespace: envoy-internal
           hostnames:
             - vllm.mmontes-internal.duckdns.org
 

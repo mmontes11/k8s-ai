@@ -4,7 +4,7 @@ metadata:
   name: mcp-n8n
 spec:
   hostnames:
-    - mcp.mmontes-llm.duckdns.org
+    - mcp.mmontes-internal.duckdns.org
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway

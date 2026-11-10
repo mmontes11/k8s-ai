@@ -4,8 +4,8 @@ metadata:
   name: n8n
 spec:
   parentRefs:
-    - name: traefik-internal
-      namespace: networking
+    - name: envoy-internal
+      namespace: envoy-internal
   hostnames:
     - "n8n.mmontes-internal.duckdns.org"
   rules:

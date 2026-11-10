@@ -34,5 +34,5 @@ spec:
         gateway:
           ingressGateway:
             enableGatewayApi: true
-            kserveGateway: networking/traefik-internal
+            kserveGateway: envoy-internal/envoy-internal
             createGateway: false    

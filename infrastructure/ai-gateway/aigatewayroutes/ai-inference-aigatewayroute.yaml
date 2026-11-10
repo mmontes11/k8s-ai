@@ -4,7 +4,7 @@ metadata:
   name: ai-inference
 spec:
   hostnames:
-    - llm.mmontes-llm.duckdns.org
+    - llm.mmontes-internal.duckdns.org
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
