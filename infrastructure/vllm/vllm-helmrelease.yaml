@@ -19,7 +19,10 @@ spec:
         release: "vllm"
       strategy:
         type: Recreate
-      runtimeClassName: nvidia
+      # DRA (LAB-399): no runtimeClassName (the chart default is "nvidia");
+      # the GPU is wired via resourceClaims injected by the postRenderers
+      # below, since the chart has no DRA values.
+      runtimeClassName: ""
       tolerations:
       - effect: NoSchedule
         key: node.mmontes.io/type
@@ -108,7 +111,9 @@ spec:
               value: "expandable_segments:True"
 
           replicaCount: 1
-          requestGPU: 1
+          # DRA (LAB-399): requestGPU removed - the chart would render
+          # nvidia.com/gpu limits; the GPU is provided by the vllm-gpu
+          # ResourceClaimTemplate (postRenderers below).
           requestCPU: 4
           requestMemory: 16Gi
 
@@ -174,6 +179,18 @@ spec:
               - op: add
                 path: /spec/template/spec/enableServiceLinks
                 value: false
+              # DRA (LAB-399): wire the vllm engine container (containers/0)
+              # to the vllm-gpu ResourceClaimTemplate; the chart (0.1.10)
+              # has no DRA values.
+              - op: add
+                path: /spec/template/spec/resourceClaims
+                value:
+                  - name: gpu
+                    resourceClaimTemplateName: vllm-gpu
+              - op: add
+                path: /spec/template/spec/containers/0/resources/claims
+                value:
+                  - name: gpu
           # tolerations not supported in router
           # see: https://github.com/vllm-project/production-stack/blob/c5eb8dc21c7f81bfc2ee9f7cf74e82f206fe5776/helm/templates/deployment-router.yaml#L36
           - target:

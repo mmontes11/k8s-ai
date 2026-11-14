@@ -4,5 +4,6 @@ namespace: ai
 resources:
   - vllm-engine-servicemonitor.yaml
   - vllm-helmrelease.yaml
+  - vllm-resourceclaimtemplate.yaml
   - vllm-helmrepository.yaml
   - vllm-router-servicemonitor.yaml

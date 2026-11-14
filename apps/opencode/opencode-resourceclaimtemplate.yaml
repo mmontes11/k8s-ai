@@ -1,0 +1,17 @@
+# DRA claim template for the opencode StatefulSet (LAB-399).
+# The NVIDIA DRA driver publishes 8 consumable shares per GPU (see the
+# gpu-operator HelmRelease in mmontes11/k8s-infrastructure, LAB-398); a claim
+# without a capacity request consumes 1 share, so up to 8 workloads share the
+# GPU concurrently via CUDA time-slicing (compute mode DEFAULT) - equivalent
+# to the old device-plugin time-slicing.
+apiVersion: resource.k8s.io/v1
+kind: ResourceClaimTemplate
+metadata:
+  name: opencode-gpu
+spec:
+  spec:
+    devices:
+      requests:
+        - name: gpu
+          exactly:
+            deviceClassName: gpu.nvidia.com
