@@ -13,7 +13,6 @@ spec:
       labels:
         app: comfyui
     spec:
-      runtimeClassName: nvidia
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -21,6 +20,9 @@ spec:
             - matchExpressions:
               - key: nvidia.com/gpu.present
                 operator: Exists
+      resourceClaims:
+      - name: gpu
+        resourceClaimTemplateName: comfyui-gpu
       tolerations:
       - effect: NoSchedule
         key: node.mmontes.io/type
@@ -62,7 +64,8 @@ spec:
             memory: 8Gi
           limits:
             memory: 48Gi
-            nvidia.com/gpu: "1"
+          claims:
+            - name: gpu
       # livenessProbe:
         #   httpGet:
         #     path: /queue

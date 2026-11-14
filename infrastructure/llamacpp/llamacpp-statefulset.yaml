@@ -12,7 +12,6 @@ spec:
       labels:
         app: llamacpp
     spec:
-      runtimeClassName: nvidia
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -20,6 +19,9 @@ spec:
             - matchExpressions:
               - key: nvidia.com/gpu.present
                 operator: Exists
+      resourceClaims:
+      - name: gpu
+        resourceClaimTemplateName: llamacpp-gpu
       tolerations:
       - effect: NoSchedule
         key: node.mmontes.io/type
@@ -114,7 +116,8 @@ spec:
             memory: 8Gi
           limits:
             memory: 24Gi
-            nvidia.com/gpu: "1"
+          claims:
+            - name: gpu
         volumeMounts:
         - name: config
           mountPath: /config

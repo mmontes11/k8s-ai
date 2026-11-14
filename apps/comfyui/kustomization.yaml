@@ -4,6 +4,7 @@ namespace: ai
 resources:
   - comfyui-deployment.yaml
   - comfyui-httproute.yaml
+  - comfyui-resourceclaimtemplate.yaml
   - comfyui-pvc.yaml
   - comfyui-replicationsource.yaml
   - comfyui-replicationdestination.yaml

@@ -4,6 +4,7 @@ namespace: ai
 resources:
   - llamacpp-configmap.yaml
   - llamacpp-httproute.yaml
+  - llamacpp-resourceclaimtemplate.yaml
   - llamacpp-service.yaml
   - llamacpp-statefulset.yaml
   # TODO: Metrics disabled, as Prometheus scrapes will awake the models

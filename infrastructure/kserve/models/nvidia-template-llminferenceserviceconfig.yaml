@@ -4,7 +4,6 @@ metadata:
   name: nvidia-template
 spec:
   template:
-    runtimeClassName: nvidia
     affinity:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
@@ -12,6 +11,9 @@ spec:
           - matchExpressions:
             - key: nvidia.com/gpu.present
               operator: Exists
+    resourceClaims:
+    - name: gpu
+      resourceClaimTemplateName: nvidia-template-gpu
     tolerations:
     - effect: NoSchedule
       key: node.mmontes.io/type
@@ -53,5 +55,5 @@ spec:
           requests:
             cpu: "1"
             memory: 4Gi
-          limits:
-            nvidia.com/gpu: "1"
+          claims:
+            - name: gpu

@@ -16,6 +16,11 @@ spec:
       port: 11434
       gpu:
         enabled: true
+        # DRA (LAB-399): the chart creates a ResourceClaimTemplate in the
+        # release namespace and wires the pod to it; no device plugin, no
+        # runtimeClassName. Each claim consumes 1 of the 8 consumable shares
+        # published by the NVIDIA DRA driver (see LAB-398).
+        draEnabled: true
         type: nvidia
         number: 1
       models:
@@ -38,7 +43,6 @@ spec:
         memory: 2Gi
       limits:
         memory: 8Gi
-        nvidia.com/gpu: "1"
     # See: https://github.com/ollama/ollama/blob/main/envconfig/config.go
     extraEnv:
       - name: OLLAMA_DEBUG
@@ -79,7 +83,6 @@ spec:
       enabled: true
       size: 300Gi
       storageClass: topolvm
-    runtimeClassName: nvidia
     affinity:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:

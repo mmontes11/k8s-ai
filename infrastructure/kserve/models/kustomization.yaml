@@ -6,4 +6,5 @@ resources:
   - hf-storage-clusterstoragecontainer.yaml
   - llminferenceservice-workload-servicemonitor.yaml
   - nvidia-template-llminferenceserviceconfig.yaml
+  - nvidia-template-resourceclaimtemplate.yaml
   - qwen38-27b-nvfp4-llminferenceservice.yaml
