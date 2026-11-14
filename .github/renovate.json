@@ -69,12 +69,12 @@
         "/(^|/)infrastructure/llamacpp/.*\\.yaml$/"
       ],
       "matchStrings": [
-        "image:\\s+ghcr\\.io/ggml-org/llama\\.cpp:(?<currentValue>full-cuda13-b[0-9]+)"
+        "image:\\s+ghcr\\.io/ggml-org/llama\\.cpp:(?<currentValue>full-cuda13-v[0-9.]+-b[0-9]+-[0-9a-f]+)"
       ],
       "datasourceTemplate": "docker",
       "packageNameTemplate": "ggml-org/llama.cpp",
       "registryUrlTemplate": "https://ghcr.io",
-      "versioningTemplate": "regex:^full-cuda13-b(?<major>\\d+)$"
+      "versioningTemplate": "regex:full-cuda13-v(?<major>[0-9]+)\\.(?<minor>[0-9]+)\\.(?<patch>[0-9]+)-b[0-9]+-[0-9a-f]+"
     },
     {
       "customType": "regex",
