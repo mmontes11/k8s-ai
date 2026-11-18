@@ -40,7 +40,7 @@ spec:
       backendRefs:
         - name: llamacpp
       timeouts:
-        request: 10m
+        request: 60m
       modelsOwnedBy: llamacpp
     - matches:
         - headers:
@@ -50,7 +50,7 @@ spec:
       backendRefs:
         - name: llamacpp
       timeouts:
-        request: 10m
+        request: 60m
       modelsOwnedBy: llamacpp
     - matches:
         - headers:
@@ -60,7 +60,7 @@ spec:
       backendRefs:
         - name: llamacpp
       timeouts:
-        request: 10m
+        request: 60m
       modelsOwnedBy: llamacpp
     - matches:
         - headers:
@@ -70,7 +70,7 @@ spec:
       backendRefs:
         - name: llamacpp
       timeouts:
-        request: 10m
+        request: 60m
       modelsOwnedBy: llamacpp
     - matches:
         - headers:
@@ -80,7 +80,7 @@ spec:
       backendRefs:
         - name: llamacpp
       timeouts:
-        request: 10m
+        request: 60m
       modelsOwnedBy: llamacpp
     # Fallback: any model name not matched above still reaches the llama.cpp
     # router (its own model-not-found error beats the gateway's 404); it is
@@ -88,5 +88,5 @@ spec:
     - backendRefs:
         - name: llamacpp
       timeouts:
-        request: 10m
+        request: 60m
       modelsOwnedBy: llamacpp

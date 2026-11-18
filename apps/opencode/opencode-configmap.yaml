@@ -61,7 +61,8 @@ data:
           "name": "Homelab",
           "package": "aisdk:@ai-sdk/openai-compatible",
           "settings": {
-            "baseURL": "https://llm.mmontes-internal.duckdns.org/v1"
+            "baseURL": "https://llm.mmontes-internal.duckdns.org/v1",
+            "headerTimeout": 1200000
           },
           "models": {
             "gemma4:26b-ctx256k": {
