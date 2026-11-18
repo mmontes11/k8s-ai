@@ -144,9 +144,9 @@ spec:
           resources:
             requests:
               cpu: "4"
-              memory: "16Gi"
+              memory: "8Gi"
             limits:
-              memory: "24Gi"
+              memory: "16Gi"
               nvidia.com/gpu: "1"
           ports:
             - containerPort: 4096
@@ -232,12 +232,16 @@ spec:
                   key: N8N_TOKEN
             - name: DOCKER_HOST
               value: unix:///var/run/docker.sock
+            # Agents run Go tooling (golangci-lint, go build/run) in this container. Without a bound, Go uses all
+            # node CPUs (24), which multiplies the memory usage and OOMKills the daemon along with every in-flight task.
+            - name: GOMAXPROCS
+              value: "8"
           resources:
             requests:
               cpu: "2"
-              memory: "4Gi"
+              memory: "12Gi"
             limits:
-              memory: "8Gi"
+              memory: "16Gi"
           volumeMounts:
             - name: home
               mountPath: /home/mmontes
