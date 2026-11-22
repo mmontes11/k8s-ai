@@ -69,8 +69,12 @@ spec:
               cp -R /opt/template/.local/bin /home/mmontes/.local/bin
               rsync -a /opt/template/.npm-global/ /home/mmontes/.npm-global/
               
-              # required for mermaid-render
-              cp -R /opt/template/.config/mermaid /home/mmontes/.config
+              # sync configuration
+              rsync -a --ignore-existing /opt/template/.config/mermaid/ /home/mmontes/.config/mermaid/
+              rsync -a --ignore-existing /opt/template/.config/opencode/ /home/mmontes/.config/opencode/
+              rsync -a --ignore-existing /opt/template/.agents/ /home/mmontes/.agents/
+              rsync -a --ignore-existing /opt/template/.claude/ /home/mmontes/.claude/
+              rsync -a --ignore-existing /opt/template/.config/caveman/ /home/mmontes/.config/caveman/
 
               # required for vscode debugger (delve)
               echo 1 > /proc/sys/kernel/yama/ptrace_scope
@@ -138,6 +142,10 @@ spec:
                   key: N8N_TOKEN
             - name: DOCKER_HOST
               value: unix:///var/run/docker.sock
+            - name: GOMAXPROCS
+              value: "8"
+            - name: CAVEMAN_DEFAULT_MODE
+              value: caveman
           envFrom:
             - secretRef:
                 name: opencode
@@ -232,10 +240,10 @@ spec:
                   key: N8N_TOKEN
             - name: DOCKER_HOST
               value: unix:///var/run/docker.sock
-            # Agents run Go tooling (golangci-lint, go build/run) in this container. Without a bound, Go uses all
-            # node CPUs (24), which multiplies the memory usage and OOMKills the daemon along with every in-flight task.
             - name: GOMAXPROCS
               value: "8"
+            - name: CAVEMAN_DEFAULT_MODE
+              value: caveman
           resources:
             requests:
               cpu: "2"
