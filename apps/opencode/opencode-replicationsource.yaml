@@ -22,6 +22,6 @@ spec:
         memory: 300Mi
       limits:
         memory: 4Gi
-    cacheCapacity: 5Gi
+    cacheCapacity: 10Gi
     cacheAccessModes:
       - ReadWriteOnce
