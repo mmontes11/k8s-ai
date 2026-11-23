@@ -39,7 +39,7 @@ spec:
 
       initContainers:
         - name: setup
-          image: ghcr.io/mmontes11/opencode:v2.3.2
+          image: ghcr.io/mmontes11/opencode:v2.4.1
           securityContext:
             privileged: true
             runAsUser: 0
@@ -85,7 +85,7 @@ spec:
             - name: home
               mountPath: /home/mmontes
         - name: multica-config
-          image: ghcr.io/mmontes11/opencode:v2.3.2
+          image: ghcr.io/mmontes11/opencode:v2.4.1
           securityContext:
             runAsUser: 1111
             runAsGroup: 1111
@@ -108,7 +108,7 @@ spec:
               mountPath: /home/mmontes
       containers:
         - name: opencode
-          image: ghcr.io/mmontes11/opencode:v2.3.2
+          image: ghcr.io/mmontes11/opencode:v2.4.1
           securityContext:
             runAsUser: 1111
             runAsGroup: 1111
@@ -184,7 +184,7 @@ spec:
             - name: docker
               mountPath: /var/lib/docker
         - name: multica
-          image: ghcr.io/mmontes11/opencode:v2.3.2
+          image: ghcr.io/mmontes11/opencode:v2.4.1
           securityContext:
             runAsUser: 1111
             runAsGroup: 1111
