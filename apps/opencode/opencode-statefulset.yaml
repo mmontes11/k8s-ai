@@ -40,6 +40,7 @@ spec:
       initContainers:
         - name: setup
           image: ghcr.io/mmontes11/opencode:v2.4.1
+          imagePullPolicy: Always
           securityContext:
             privileged: true
             runAsUser: 0
@@ -74,7 +75,6 @@ spec:
               rsync -a --ignore-existing /opt/template/.config/opencode/ /home/mmontes/.config/opencode/
               rsync -a --ignore-existing /opt/template/.agents/ /home/mmontes/.agents/
               rsync -a --ignore-existing /opt/template/.claude/ /home/mmontes/.claude/
-              rsync -a --ignore-existing /opt/template/.config/caveman/ /home/mmontes/.config/caveman/
 
               # required for vscode debugger (delve)
               echo 1 > /proc/sys/kernel/yama/ptrace_scope
@@ -86,6 +86,7 @@ spec:
               mountPath: /home/mmontes
         - name: multica-config
           image: ghcr.io/mmontes11/opencode:v2.4.1
+          imagePullPolicy: Always
           securityContext:
             runAsUser: 1111
             runAsGroup: 1111
@@ -109,6 +110,7 @@ spec:
       containers:
         - name: opencode
           image: ghcr.io/mmontes11/opencode:v2.4.1
+          imagePullPolicy: Always
           securityContext:
             runAsUser: 1111
             runAsGroup: 1111
@@ -144,8 +146,6 @@ spec:
               value: unix:///var/run/docker.sock
             - name: GOMAXPROCS
               value: "8"
-            - name: CAVEMAN_DEFAULT_MODE
-              value: caveman
           envFrom:
             - secretRef:
                 name: opencode
@@ -185,6 +185,7 @@ spec:
               mountPath: /var/lib/docker
         - name: multica
           image: ghcr.io/mmontes11/opencode:v2.4.1
+          imagePullPolicy: Always
           securityContext:
             runAsUser: 1111
             runAsGroup: 1111
@@ -242,8 +243,6 @@ spec:
               value: unix:///var/run/docker.sock
             - name: GOMAXPROCS
               value: "8"
-            - name: CAVEMAN_DEFAULT_MODE
-              value: caveman
           resources:
             requests:
               cpu: "2"
