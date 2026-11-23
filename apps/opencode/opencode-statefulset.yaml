@@ -40,7 +40,6 @@ spec:
       initContainers:
         - name: setup
           image: ghcr.io/mmontes11/opencode:v2.4.1
-          imagePullPolicy: Always
           securityContext:
             privileged: true
             runAsUser: 0
@@ -86,7 +85,6 @@ spec:
               mountPath: /home/mmontes
         - name: multica-config
           image: ghcr.io/mmontes11/opencode:v2.4.1
-          imagePullPolicy: Always
           securityContext:
             runAsUser: 1111
             runAsGroup: 1111
@@ -110,7 +108,6 @@ spec:
       containers:
         - name: opencode
           image: ghcr.io/mmontes11/opencode:v2.4.1
-          imagePullPolicy: Always
           securityContext:
             runAsUser: 1111
             runAsGroup: 1111
@@ -185,7 +182,6 @@ spec:
               mountPath: /var/lib/docker
         - name: multica
           image: ghcr.io/mmontes11/opencode:v2.4.1
-          imagePullPolicy: Always
           securityContext:
             runAsUser: 1111
             runAsGroup: 1111
